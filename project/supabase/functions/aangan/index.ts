@@ -4,7 +4,7 @@
 // Deployed to the `aangan` Supabase project with verify_jwt = false (it checks its own input and the admin password).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
-const ORIGINS = ['https://aangan-family.github.io', 'http://localhost:4179', 'http://localhost:5173'];
+const ORIGINS = ['https://aangan.family', 'https://aangan-family.github.io', 'http://localhost:4179', 'http://localhost:5173'];
 const STEPS = ['sheet_checked', 'settings_saved', 'seed_made', 'accounts_started', 'accounts_done', 'oneclick_chosen', 'byhand_chosen'];
 const PAGES = ['home', 'signup', 'sheet', 'settings', 'database', 'accounts'];
 const SIZES = ['under-50', '50-200', '200-plus'];

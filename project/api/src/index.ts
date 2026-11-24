@@ -14,8 +14,13 @@ export default {
     for (const h of ['content-type', 'origin', 'access-control-request-method', 'access-control-request-headers']) {
       const v = req.headers.get(h); if (v) headers.set(h, v);
     }
+    // the function (until redeployed) only knows the old site address: present aangan.family as it, and answer for aangan.family
+    const fromNew = headers.get('origin') === 'https://aangan.family';
+    if (fromNew) headers.set('origin', 'https://aangan-family.github.io');
     headers.set('x-forwarded-for', req.headers.get('cf-connecting-ip') || '');
     const res = await fetch((env.FUNCTION_URL || FUNCTION_URL) + url.pathname, { method: req.method, headers, body });
-    return new Response(res.body, { status: res.status, headers: res.headers });
+    const out = new Headers(res.headers);
+    if (fromNew) out.set('access-control-allow-origin', 'https://aangan.family');
+    return new Response(res.body, { status: res.status, headers: out });
   },
 };
