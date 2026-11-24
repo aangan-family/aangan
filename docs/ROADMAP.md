@@ -20,7 +20,7 @@
 ### 1. Setup is still too technical (most important)
 A 16-year-old can follow SETUP.md, but it is 10 steps across five websites.
 - ~~**Browser setup wizard**~~ — done (Nov 2026): [https://aangan-family.github.io/aangan/](https://aangan-family.github.io/aangan/) (`wizard/`). Checks the sheet in the browser (never uploading it; its CSP blocks every other site), previews the tree, writes `site.config.json`, `wrangler.toml` and `seed.sql`, and walks through each account with the family's own values to copy. Still to add: screenshots for each account step.
-- **One-click deploy**: a "Deploy to Cloudflare" button and a script that creates the Supabase tables, keys and secrets through their APIs.
+- ~~**One-click deploy**~~ — done (Nov 2026), untested against live accounts until the first family runs it: **Set up my site** (`.github/workflows/setup.yml` → `scripts/setup.mjs`) creates the Supabase project, tables, keys and sign-in settings (templates, SMTP, Google), the Worker and its secrets, the Pages site and domain, Resend's DNS records and a send-only key, and email forwarding; safe to re-run. **Deploy my site** (`deploy.yml`) redeploys on every push. Still by hand: making the accounts and keys, Google's OAuth client, backups' secrets, loading `seed.sql`.
 - **Video walkthrough** in Hindi and English.
 
 ### 2. Community words need review by native speakers

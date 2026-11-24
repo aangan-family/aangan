@@ -1,0 +1,39 @@
+name: Set up my site
+# One-click setup (scripts/setup.mjs): press Actions → "Set up my site" → Run workflow.
+# Needs the repository secrets listed in docs/SETUP.md ("One-click setup"). Safe to run again.
+# Family data never goes through here: load your tree with seed.sql from the setup wizard.
+on: workflow_dispatch
+permissions:
+  contents: write   # saves site.config.json, reminders/wrangler.toml and the sign-in emails back to your copy
+concurrency: { group: setup, cancel-in-progress: false }
+jobs:
+  setup:
+    if: github.repository != 'aangan-family/aangan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --no-audit --no-fund
+      - name: Set up (Supabase, Cloudflare, Resend)
+        run: node scripts/setup.mjs
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_ORG: ${{ secrets.SUPABASE_ORG }}
+          SUPABASE_REGION: ${{ secrets.SUPABASE_REGION }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          REMINDER_EMAIL: ${{ secrets.REMINDER_EMAIL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          PREVIEW_KEY: ${{ secrets.PREVIEW_KEY }}
+      - name: Save your settings to your copy
+        if: success() || failure()   # keep what was filled in, even if a later step stopped
+        run: |
+          git add site.config.json reminders/wrangler.toml supabase/templates
+          if git diff --cached --quiet; then echo "Settings unchanged."; exit 0; fi
+          git -c user.name="Set up my site" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Settings from Set up my site"
+          git push

@@ -14,6 +14,31 @@ Tick each step off as you go.
 
 ---
 
+## One-click setup (about 20 minutes)
+
+Instead of steps 3–8 by hand, a button in your GitHub copy creates the database, the helper service, the website and the emails through each service's own API. You still make the free accounts, and copy a few keys from them into GitHub once. Safe to run again: it carries on from wherever it stopped.
+
+1. Do **step 1** below (your private copy) and put your settings in it (the [setup wizard](https://aangan-family.github.io/aangan/) writes `site.config.json` for you).
+2. Make the accounts and copy these into your repository → **Settings → Secrets and variables → Actions → New repository secret**:
+
+| Secret | Where it comes from |
+| --- | --- |
+| `SUPABASE_ACCESS_TOKEN` | supabase.com → your avatar → **Account preferences → Access Tokens → Generate new token** |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare → **My Profile → API Tokens → Create Token → Edit Cloudflare Workers** template, then **+ Add more**: Account · Cloudflare Pages · Edit; Account · Workers AI · Read; Account · Email Routing Addresses · Edit; Zone · DNS · Edit; Zone · Email Routing Rules · Edit. Zone Resources: your domain. |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare → **Workers & Pages**: the Account ID on the right |
+| `REMINDER_EMAIL` | Your Gmail: daily reminders and health alerts come here |
+| `RESEND_API_KEY` | Own domain only: resend.com → **API Keys → Create** (Full access). The setup makes a send-only key for the website from it. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Optional (needed on the free setup): see *Continue with Google* below. You can add them later and run the setup again. |
+
+   On the own-domain setup, add your domain to Cloudflare first (step 3).
+3. **Actions → Set up my site → Run workflow.** It takes 10–20 minutes. When it finishes, the run's summary lists what it did and what's left (usually: load your family, Google sign-in, backups, confirm email forwarding).
+4. **Load your family:** in the setup wizard's Database step, download `seed.sql`, then Supabase → **SQL Editor → New query** → paste → **Run**. Delete the file afterwards. (Your family's data never goes through GitHub.)
+5. Do steps **9** and **10**.
+
+After this, every push to your copy redeploys the site and the helper service (**Deploy my site**), with the tests run first.
+
+---
+
 ## 1. Make your own private copy
 
 1. Sign in to GitHub, open this project and press **Use this template → Create a new repository**.

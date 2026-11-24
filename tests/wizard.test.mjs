@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { rowsToRecords } from '../scripts/lib/sheet.mjs';
 import { checkConfig, applyToWrangler } from '../scripts/lib/config.mjs';
 import { buildPreview, fullName } from '../wizard/src/tree.js';
-import { accountSteps } from '../wizard/src/steps.js';
+import { accountSteps, oneClickSteps } from '../wizard/src/steps.js';
 
 // made-up people only
 const COLS = { ID: '', 'First name': '', Surname: '', Gender: '', Father: '', Mother: '', Spouse: '', Living: '', Born: '' };
@@ -86,4 +86,19 @@ test('account walkthrough: free setup skips domain and email steps; values are f
   assert.ok(!free.find((s) => s.id === 'domain') && !free.find((s) => s.id === 'email'));
   assert.match(free.find((s) => s.id === 'google').title, /needed/);
   for (const s of own) for (const i of s.items) if (i.go) assert.ok(['sheet', 'settings', 'database', 'accounts'].includes(i.go));
+});
+
+test('one-click walkthrough: secrets to copy, the button, then loading the family locally', () => {
+  const own = oneClickSteps(good);
+  const ids = own.map((s) => s.id);
+  assert.deepEqual(ids, ['github', 'domain', 'keys', 'google', 'run', 'load', 'signin', 'family', 'extras']);
+  const names = own.find((s) => s.id === 'keys').items.filter((i) => i.copy).map((i) => i.copy);
+  assert.deepEqual(names, ['SUPABASE_ACCESS_TOKEN', 'CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'REMINDER_EMAIL', 'RESEND_API_KEY']);
+  // every secret the setup workflow reads is either listed here or optional
+  const wf = readFileSync(new URL('../.github/workflows/setup.yml', import.meta.url), 'utf8');
+  for (const n of names) assert.ok(wf.includes(`secrets.${n}`), n);
+  const free = oneClickSteps({ ...good, siteUrl: 'https://raos.pages.dev', apiUrl: '' });
+  assert.ok(!free.find((s) => s.id === 'domain'));
+  assert.ok(!free.find((s) => s.id === 'keys').items.some((i) => i.copy === 'RESEND_API_KEY'));
+  for (const s of own) assert.ok(s && s.title && s.items.length, 'no empty steps');
 });

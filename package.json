@@ -8,7 +8,8 @@
     "template": "node scripts/make-template.mjs",
     "import": "node scripts/import-sheet.mjs",
     "test": "node --test tests/*.test.mjs",
-    "sql": "node scripts/bundle-sql.mjs"
+    "sql": "node scripts/bundle-sql.mjs",
+    "setup": "node scripts/setup.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0"

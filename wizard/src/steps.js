@@ -144,3 +144,45 @@ export function accountSteps(cfg) {
   });
   return steps;
 }
+
+/** The one-click path: make the accounts, copy their keys into GitHub once, press Run workflow (docs/SETUP.md "One-click setup"). */
+export function oneClickSteps(cfg) {
+  const hand = accountSteps(cfg);
+  const by = (id) => hand.find((s) => s.id === id);
+  const free = host(cfg.siteUrl).endsWith('.pages.dev');
+  const steps = [{ ...by('github'), items: by('github').items.filter((i) => !(typeof i === 'string' && i.includes('wrangler.toml'))) }];   // the setup writes wrangler.toml itself
+  if (!free) steps.push(by('domain'));
+  steps.push({
+    id: 'keys', site: 'Supabase, Cloudflare' + (free ? '' : ', Resend') + ' → GitHub', title: 'Make the accounts and copy their keys',
+    why: 'Copied once into your private copy\'s secrets. Only the setup button and the deploys can read them.',
+    items: [
+      'In your GitHub copy: Settings → Secrets and variables → Actions → New repository secret, once for each line below.',
+      { text: 'Name', copy: 'SUPABASE_ACCESS_TOKEN' }, 'Value: supabase.com (sign up free) → your avatar → Account preferences → Access Tokens → Generate new token.',
+      { text: 'Name', copy: 'CLOUDFLARE_API_TOKEN' }, 'Value: Cloudflare → My Profile → API Tokens → Create Token → "Edit Cloudflare Workers", then + Add more: Account · Cloudflare Pages · Edit; Account · Workers AI · Read; Account · Email Routing Addresses · Edit; Zone · DNS · Edit; Zone · Email Routing Rules · Edit.',
+      { text: 'Name', copy: 'CLOUDFLARE_ACCOUNT_ID' }, 'Value: Cloudflare → Workers & Pages → Account ID (right-hand side).',
+      { text: 'Name', copy: 'REMINDER_EMAIL' }, 'Value: your Gmail.',
+      ...(free ? [] : [{ text: 'Name', copy: 'RESEND_API_KEY' }, 'Value: resend.com (sign up free) → API Keys → Create → Full access.']),
+    ],
+  });
+  steps.push({ ...by('google'), title: free ? 'Continue with Google (needed; can be after the first run)' : 'Continue with Google (recommended; can be later)', items: [...by('google').items.filter((i) => !(typeof i === 'string' && /^(Supabase|Keep)/.test(i))), 'Add the client ID and secret as the secrets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, then run the setup again.'] });
+  steps.push({
+    id: 'run', site: 'GitHub', title: 'Press the setup button',
+    why: 'Creates the database, the helper service, the website' + (free ? '' : ', the emails and email forwarding') + '. 10–20 minutes. Safe to run again.',
+    items: [
+      'In your copy: Actions → Set up my site → Run workflow → Run workflow.',
+      'When it finishes, open the run: its summary lists what was done and what\'s left.',
+      'Stopped with a message? Fix what it says and press Run workflow again: it carries on from where it stopped.',
+      ...(free ? [] : ['Open the email from Cloudflare (to your Gmail) and confirm forwarding.']),
+    ],
+  });
+  steps.push({
+    id: 'load', site: 'Supabase', title: 'Load your family',
+    why: 'Your tree goes straight from this computer to your database, never through GitHub.',
+    items: [
+      { text: 'Download seed.sql in the Database step.', go: 'database' },
+      'Supabase → your project → SQL Editor → New query → paste everything → Run. Then delete the file.',
+    ],
+  });
+  steps.push(by('signin'), by('family'), { ...by('extras'), title: 'Backups', items: by('extras').items.filter((i) => /^Backups/.test(i)) });
+  return steps;
+}

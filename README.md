@@ -44,7 +44,7 @@ Phone numbers, emails and addresses are never imported, even if the sheet has th
 
 Details in **[docs/HOSTING.md](docs/HOSTING.md)**; step by step in **[docs/SETUP.md](docs/SETUP.md)**, written so that a 16-year-old comfortable with a laptop can do it in an afternoon.
 
-**Easiest start: the [setup wizard](https://aangan-family.github.io/aangan/)**. It checks your family sheet in your browser (it's never uploaded), shows your tree, writes your settings and database files, and walks you through each account with your own values filled in.
+**Easiest start: the [setup wizard](https://aangan-family.github.io/aangan/)**. It checks your family sheet in your browser (it's never uploaded), shows your tree, writes your settings and database files, and walks you through each account with your own values filled in. Then **one-click setup** (a button in your GitHub copy) creates the database, website, helper service and emails for you.
 
 Try it now on your computer:
 

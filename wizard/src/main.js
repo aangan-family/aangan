@@ -7,7 +7,7 @@ import { checkConfig, applyToWrangler, COMMUNITIES } from '../../scripts/lib/con
 import wranglerToml from '../../reminders/wrangler.toml?raw';
 import { readSheetFile } from './read.js';
 import { buildPreview, fullName } from './tree.js';
-import { accountSteps } from './steps.js';
+import { accountSteps, oneClickSteps } from './steps.js';
 
 // ---- tiny DOM helper: text is always set as text, never as HTML ------------------------------------------
 function h(tag, attrs = {}, ...kids) {
@@ -29,7 +29,7 @@ const KEY = 'aangan-wizard';
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
 const saved = load();
 const state = {
-  s: Object.assign({ level: 'domain', community: 'hindi' }, saved.s || {}),   // settings form
+  s: Object.assign({ level: 'domain', community: 'hindi', mode: 'oneclick' }, saved.s || {}),   // settings form
   done: saved.done || {},                                                       // ticked account steps
   sheet: null,                                                                  // { name, rec, preview } — memory only
   adminEmail: '', adminPerson: '',
@@ -110,7 +110,7 @@ function render() {
 function stepMark(id) {
   if (id === 'sheet') return !!state.sheet && !state.sheet.rec.problems.length;
   if (id === 'settings') return !checkConfig(config()).blocking.length;
-  if (id === 'accounts') { const steps = accountSteps(config()); return steps.every((s) => state.done[s.id]); }
+  if (id === 'accounts') { const steps = stepsFor(); return steps.every((s) => state.done[state.s.mode + ':' + s.id]); }
   return false;
 }
 
@@ -261,22 +261,29 @@ function databasePage() {
 }
 
 // 4. Accounts ----------------------------------------------------------------------------------------------
+const stepsFor = () => (state.s.mode === 'hand' ? accountSteps : oneClickSteps)(config());
+
 function accountsPage() {
-  const steps = accountSteps(config());
-  const done = steps.filter((s) => state.done[s.id]).length;
+  const steps = stepsFor(), mode = state.s.mode;
+  const key = (st) => mode + ':' + st.id;   // ticks are kept per path
+  const done = steps.filter((st) => state.done[key(st)]).length;
+  const firstOpen = steps.findIndex((x) => !state.done[key(x)]);
   return h('section', {},
     h('h2', {}, 'Your accounts, one at a time.'),
-    h('p', {}, 'About an afternoon. Tick each one off; your ticks stay on this computer.'),
+    h('div', { class: 'seg', role: 'radiogroup', 'aria-label': 'How to set up' },
+      h('button', { role: 'radio', 'aria-checked': String(mode !== 'hand'), class: mode !== 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'oneclick'; save(); render(); } }, h('b', {}, 'One-click'), h('span', {}, 'About 20 minutes. Copy a few keys into GitHub, press a button.')),
+      h('button', { role: 'radio', 'aria-checked': String(mode === 'hand'), class: mode === 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'hand'; save(); render(); } }, h('b', {}, 'By hand'), h('span', {}, 'An afternoon. Every setting yourself, in each dashboard.'))),
+    h('p', {}, 'Tick each one off; your ticks stay on this computer.'),
     h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': steps.length, 'aria-valuenow': done }, h('div', { class: 'fill', 'data-w': Math.round((done / steps.length) * 100) })),
     h('p', { class: 'muted' }, `${done} of ${steps.length} done`),
-    steps.map((st, i) => h('details', { class: 'acct' + (state.done[st.id] ? ' done' : ''), open: !state.done[st.id] && steps.findIndex((x) => !state.done[x.id]) === i ? true : null },
-      h('summary', {}, h('span', { class: 'n' }, state.done[st.id] ? '✓' : i + 1), h('span', {}, h('b', {}, st.title), h('span', { class: 'site' }, st.site))),
+    steps.map((st, i) => h('details', { class: 'acct' + (state.done[key(st)] ? ' done' : ''), open: i === firstOpen ? true : null },
+      h('summary', {}, h('span', { class: 'n' }, state.done[key(st)] ? '✓' : i + 1), h('span', {}, h('b', {}, st.title), h('span', { class: 'site' }, st.site))),
       h('p', { class: 'muted' }, st.why),
       h('ol', {}, st.items.map((it) => h('li', {},
         typeof it === 'string' ? it
           : it.copy ? [it.text, ' ', h('code', {}, it.copy), ' ', h('button', { class: 'copy', onclick: (e) => copy(it.copy, e.target) }, 'Copy')]
           : [it.text, ' ', h('button', { class: 'link', onclick: () => go(it.go) }, `Open ${PAGES.find((p) => p.id === it.go).title}`)]))),
-      h('label', { class: 'tick' }, h('input', { type: 'checkbox', checked: !!state.done[st.id], onchange: (e) => { state.done[st.id] = e.target.checked; save(); render(); } }), 'Done'))),
+      h('label', { class: 'tick' }, h('input', { type: 'checkbox', checked: !!state.done[key(st)], onchange: (e) => { state.done[key(st)] = e.target.checked; save(); render(); } }), 'Done'))),
     h('p', { class: 'muted' }, 'A button has moved since this was written? Look for the nearest match, or ask in the project\'s Discussions on GitHub.'),
   );
 }
