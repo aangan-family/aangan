@@ -1,5 +1,7 @@
 # What's done, and what's still to build
 
+> **Next big step: the hosted edition.** Aangan runs a separate site per family; families never see the technical accounts. See [HOSTED.md](HOSTED.md).
+
 ## Done (November 2026)
 
 - Family tree, profiles with per-detail privacy and consent, roles (member, steward, admin), invitations and requests to join

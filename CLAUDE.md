@@ -181,6 +181,7 @@ Each family runs its own copy: its own Supabase project, Cloudflare account and 
 12. There is always at least one active admin (`keep_one_admin` trigger): the last admin can't be demoted, suspended or removed.
 
 ## Project files
+- **Hosted edition (decided 24 Nov 2026):** Aangan runs one separate site per family on Aangan's own accounts (a Supabase project, a Pages project and a Worker each, under the Aangan domain); families sign up, accept the agreement, pay a subscription and never see the providers. Plan and build order: `docs/HOSTED.md`. Legal drafts (terms, privacy notice, admin declaration; need a lawyer's review): `docs/legal/`. The self-host edition stays as it is; hosting reuses the same code (setup in a hosted mode).
 - `SECURITY.md` (private reporting), `CODE_OF_CONDUCT.md`, `.github/ISSUE_TEMPLATE/` (bug, idea, add my community, family words), PR checklist. `.github/workflows/project-check.yml` tests the project sign-up service daily (direct and through the helper).
 - Setup steps carry drawn where-to-click pictures (`wizard/src/pictures.js`); a test checks every step has one naming the step's own menu item.
 
