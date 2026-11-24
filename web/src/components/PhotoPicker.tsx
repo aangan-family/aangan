@@ -49,7 +49,7 @@ export function PhotoPicker({ onPick, onClose }: { onPick: (id: string, caption:
       </div>
       {tab === 'album' ? (
         <>
-          <input className="pickq" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search captions, like Sathabhishekam" aria-label="Search photos" />
+          <input className="pickq" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search captions, like wedding" aria-label="Search photos" />
           {list.length ? <div className="pgrid pickgrid">{list.map((p) => {
             const url = fileUrl(p.path);
             return (
@@ -66,7 +66,7 @@ export function PhotoPicker({ onPick, onClose }: { onPick: (id: string, caption:
             {file ? <img src={file.url} alt="" /> : <span className="dz-in">Tap to choose a photo<small>From your phone’s photos or files. Location data is removed.</small></span>}
             <input type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) setFile({ f, url: URL.createObjectURL(f) }); }} />
           </label>
-          <div><label htmlFor="pp-cap">Caption</label><input id="pp-cap" value={caption} maxLength={200} onChange={(e) => setCaption(e.target.value)} placeholder="Thatha and Paati, 1985" /></div>
+          <div><label htmlFor="pp-cap">Caption</label><input id="pp-cap" value={caption} maxLength={200} onChange={(e) => setCaption(e.target.value)} placeholder="Grandparents at the wedding, 1985" /></div>
           <div><label htmlFor="pp-year">Year taken</label><input id="pp-year" inputMode="numeric" value={year} maxLength={4} onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))} placeholder="1985" /></div>
           <div className="full"><label>Who’s in it</label><TagPicker ids={tags} onChange={setTags} /></div>
         </form>

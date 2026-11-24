@@ -1,5 +1,5 @@
 import type { Api } from './api';
-import type { Consent, DevDoc, DmMessage, Invitation, LogEntry, Member, Post, ProfileField, Reaction, Snapshot } from './types';
+import type { Consent, DevDoc, DmMessage, Invitation, LogEntry, Member, Post, ProfileField, Reaction, Snapshot, Theme } from './types';
 import { mentionIds } from './richtext';
 
 let devDocs: DevDoc[] = [
@@ -39,7 +39,7 @@ export function demoApi(): Api {
       policy: { version: 1, effective_from: new Date().toISOString(), body: d.policy || 'Demo consent text.' },
       info: d.info || { about: null, banner_path: null, roots_person_id: d.persons[0]?.id || null, gothram: null, sutram: null, vedam: null, kuladeivam: null },
       photos: d.photos || [], tags: d.tags || [], joins: d.joins || (me.person_id ? [{ person_id: me.person_id, joined_at: new Date().toISOString() }] : []),
-      prefs: { theme: 'blue', updates_seen_at: null }, threads: d.threads || [], recentPosts: d.recentPosts || [], childDrafts: d.childDrafts || [] };
+      prefs: { theme: '' as Theme, updates_seen_at: null }, threads: d.threads || [], recentPosts: d.recentPosts || [], childDrafts: d.childDrafts || [] };
     return snap;
   }
 

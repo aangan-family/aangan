@@ -144,15 +144,16 @@ export interface Photo { id: string; path: string; caption: string | null; taken
 export interface PhotoTag { photo_id: string; person_id: string; status: 'pending' | 'approved' | 'declined'; tagged_by: string; created_at: string; decided_at: string | null }
 /** Colours change only the accent; styles also change the background and surfaces (0026). */
 export const COLOURS = ['blue', 'kumkum', 'turmeric', 'peacock', 'tulsi', 'lotus'] as const;
-export const STYLES = ['clean', 'spotlight', 'playful', 'instagram', 'glass', 'aurora'] as const;
+export const STYLES = ['aangan', 'clean', 'spotlight', 'playful', 'instagram', 'glass', 'aurora'] as const;
 export const THEMES = [...COLOURS, ...STYLES] as const;
 export type Theme = (typeof THEMES)[number];
 export const THEME_LABEL: Record<Theme, string> = {
   blue: 'Blue', kumkum: 'Kumkum', turmeric: 'Turmeric', peacock: 'Peacock', tulsi: 'Tulsi', lotus: 'Lotus',
-  instagram: 'Instagram', glass: 'Glass', aurora: 'Aurora', clean: 'Clean', spotlight: 'Spotlight', playful: 'Playful',
+  aangan: 'Aangan', instagram: 'Instagram', glass: 'Glass', aurora: 'Aurora', clean: 'Clean', spotlight: 'Spotlight', playful: 'Playful',
 };
 export const STYLE_HINT: Record<(typeof STYLES)[number], string> = {
   clean: 'Crisp and neutral, in the style of shadcn/ui', spotlight: 'Glowing edges on a dotted grid, in the style of Magic UI and Aceternity', playful: 'Bold outlines and bouncy cards, in the style of React Bits',
+  aangan: 'Warm courtyard colours: saffron, marigold, leaf green and maroon on cream (the Aangan look)',
   instagram: 'Sunset gradient, like Instagram', glass: 'Soft frosted glass', aurora: 'Slowly moving northern lights',
 };
 export const MODES = ['auto', 'light', 'dark'] as const;

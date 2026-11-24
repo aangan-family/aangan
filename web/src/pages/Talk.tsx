@@ -16,15 +16,16 @@ import { revealIn } from '../lib/scroll';
 
 /** Ideas to get people talking: tap one to start a thread with it. */
 export const IDEAS: { title: string; category: Category }[] = [
-  { title: 'How do we do Avani Avittam at home?', category: 'traditions' },
-  { title: 'Paati’s sambar recipe', category: 'recipes' },
-  { title: 'Vatha kuzhambu: share your method', category: 'recipes' },
-  { title: 'What does it take to do an Upanayanam?', category: 'traditions' },
-  { title: 'Planning a Sathabhishekam: checklist', category: 'traditions' },
-  { title: 'Sumangali Prarthanai (Mangali Pondugal) at home', category: 'traditions' },
-  { title: 'Amavasya tarpanam dates and how to do it', category: 'calendar' },
-  { title: 'This month in the Tamil calendar', category: 'calendar' },
-  { title: 'Karthigai Deepam plans', category: 'festivals' },
+  // the same for every family, whatever its traditions (no one community's words in shared code)
+  { title: 'How do we celebrate our festivals at home?', category: 'traditions' },
+  { title: 'Grandma’s best recipe', category: 'recipes' },
+  { title: 'Our family’s special dish: share your method', category: 'recipes' },
+  { title: 'Stories from our native place', category: 'traditions' },
+  { title: 'Ceremonies we keep, and how to do them', category: 'traditions' },
+  { title: 'Who remembers our grandparents’ wedding?', category: 'traditions' },
+  { title: 'This month’s festivals and family days', category: 'calendar' },
+  { title: 'Planning the next family get-together', category: 'festivals' },
+  { title: 'Old photos: who’s who?', category: 'traditions' },
 ];
 
 /** Plain text for previews: drops the formatting markers. */
@@ -64,7 +65,7 @@ function TalkList() {
     <div className="wrap talk">
       <section className="tree-hero">
         <h2 className="headline">Talk.<HelpTip sections={['talk']} /></h2>
-        <p className="subhead">Ask, share and remember together: traditions, recipes, festivals, the Tamil calendar, family news. Only invited family can see this.</p>
+        <p className="subhead">Ask, share and remember together: traditions, recipes, festivals, the family calendar, family news. Only invited family can see this.</p>
         {amMinor && <p className="note kidnote">You’re under 18, so a parent checks what you write before it appears. <a href="#/child">See what’s waiting</a></p>}
         <div className="ctas" style={{ justifyContent: 'flex-start' }}><button className="pill" onClick={() => setStart({ title: '', category: cat === 'all' ? 'general' : cat })}>Start a conversation</button></div>
       </section>
@@ -132,7 +133,7 @@ function ThreadSheet({ initial, edit, onClose, onSaved }: { initial: { title: st
       </>}>
       <form className="form" onSubmit={(e) => { e.preventDefault(); save(); }}>
         <div className="full"><label htmlFor="th-title">Title</label>
-          <input id="th-title" value={title} maxLength={140} onChange={(e) => setTitle(e.target.value)} placeholder="How do we do Avani Avittam at home?" autoFocus={!initial.title} /></div>
+          <input id="th-title" value={title} maxLength={140} onChange={(e) => setTitle(e.target.value)} placeholder="How do we celebrate our festivals at home?" autoFocus={!initial.title} /></div>
         <div className="full"><label>Topic</label>
           <div className="chips">{CATEGORIES.map((c) => (
             <button type="button" key={c} className={`chip${category === c ? ' on' : ''}`} aria-pressed={category === c} onClick={() => setCategory(c)}>{CATEGORY_ICON[c]} {CATEGORY_LABEL[c]}</button>

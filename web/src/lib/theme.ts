@@ -1,3 +1,4 @@
+import cfg from '../../../site.config.json';
 import { MODES, THEMES, type Mode, type Theme } from './types';
 
 /** Theme = colour or style (data-theme on <html>); mode = light, dark or automatic (data-mode). Remembered on this device and on the account. */
@@ -5,7 +6,9 @@ const KEY = 'fam-theme';
 const MODE_KEY = 'fam-mode';
 export function savedTheme(): Theme {
   try { const t = localStorage.getItem(KEY) as Theme | null; if (t && THEMES.includes(t)) return t; } catch { /* storage off */ }
-  return 'blue';
+  // the family's choice in site.config.json ("theme"), else the Aangan look
+  const d = (cfg as { theme?: string }).theme as Theme | undefined;
+  return d && THEMES.includes(d) ? d : 'aangan';
 }
 export function savedMode(): Mode {
   try { const m = localStorage.getItem(MODE_KEY) as Mode | null; if (m && MODES.includes(m)) return m; } catch { /* storage off */ }

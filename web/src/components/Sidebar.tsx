@@ -5,7 +5,7 @@ import { useStore } from '../lib/store';
 import { usePresence } from '../lib/presence';
 import { go, type Route } from './common';
 import { InstallApp } from './InstallApp';
-import { applyMode, applyTextSize, applyTheme, savedTextSize, TEXT_SIZES, type TextSize } from '../lib/theme';
+import { applyMode, applyTextSize, applyTheme, savedTextSize, savedTheme, TEXT_SIZES, type TextSize } from '../lib/theme';
 import { COLOURS, MODES, MODE_LABEL, STYLES, STYLE_HINT, THEME_LABEL, type Mode, type Prefs, type Theme } from '../lib/types';
 import { hasUnseen } from '../lib/whatsnew';
 import { setHeritagePrefs, useHeritage } from './Heritage';
@@ -109,7 +109,7 @@ export function ThemePicker({ api }: { api: { savePrefs: (p: Partial<Prefs>) => 
   const choices = borderChoices(h.gender, h.community);
   const legacy = choices.every((b) => /^(veshti|saree)-/.test(b));   // the South's veshti/saree: just the colour
   const save = (patch: Partial<Prefs>) => { setHeritagePrefs(patch); api.savePrefs(patch).catch(() => {}); };
-  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || snap.prefs.theme || 'blue');
+  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || snap.prefs.theme || savedTheme());
   const [mode, setMode] = useState<Mode>(() => (document.documentElement.dataset.mode as Mode) || snap.prefs.mode || 'auto');
   const pickTheme = (t: Theme) => { setTheme(t); applyTheme(t); api.savePrefs({ theme: t }).catch(() => {}); };
   const pickMode = (m: Mode) => { setMode(m); applyMode(m); api.savePrefs({ mode: m }).catch(() => {}); };

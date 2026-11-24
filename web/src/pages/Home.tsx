@@ -115,7 +115,7 @@ export function Home() {
             </button>
           ))}</div>
         ) : (
-          <div className="nudge"><p>Ask the family how to do Avani Avittam, share Paati’s sambar recipe, or plan the next Sathabhishekam.</p>
+          <div className="nudge"><p>Ask the family about a tradition, share a favourite recipe, or plan the next get-together.</p>
             <button className="pill small" onClick={() => go('talk')}>Start a conversation</button></div>
         )}
       </section>

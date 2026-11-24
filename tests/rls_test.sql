@@ -1438,6 +1438,8 @@ select t.refused($$update member_prefs set border = 'not-a-border' where user_id
 update member_prefs set border = 'phulkari' where user_id = (select mp.user_id from member_prefs mp join members m on m.user_id = mp.user_id and m.status = 'active' join auth.users u on u.id = m.user_id where u.email is not null and m.person_id is not null limit 1);
 select t.ok((select count(*) from email_borders() where border = 'phulkari') = 1, 'the server sees the saved choice as it is');
 update member_prefs set border = '' where border = 'phulkari';
+-- 0055: the Aangan look can be saved as a theme
+select t.ok((select count(*) from pg_constraint where conname = 'member_prefs_theme_check' and pg_get_constraintdef(oid) like '%aangan%') = 1, 'members can pick the Aangan theme');
 -- 0054: borders for the north-east and Nepal
 select t.ok((select count(*) from pg_constraint where conname = 'member_prefs_border_check' and pg_get_constraintdef(oid) like '%jainsem%') = 1, 'the new borders (dhaka, phanek, puan, jainsem) can be saved');
 

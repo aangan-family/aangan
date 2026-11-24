@@ -2165,3 +2165,25 @@ html[data-menu=ta] .tabbar a span,html[data-menu=ta] .tabbar button span{font-si
 .native{color:var(--muted,#6e6e73);font-weight:400}
 .themeselect{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line,#d2d2d7);background:var(--card,#fff);color:inherit;font:inherit;margin:4px 0 6px}
 .festgroups{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin:6px 0 10px}
+
+
+/* Aangan (Nov 2026): the project's own look — saffron, marigold, leaf green and maroon on cream, from the aangan logo
+   and its illustration of Indian families. Light and dark. */
+[data-theme=aangan]{--blue:#c84a22;--blue-h:#d9562c;--link:#b2401c;--tint:rgba(222,92,42,.10);--accent2:#2b6e45;
+  --bg:#fff6e9;--surface:#fffdf8;--surface2:#fff9ef;--fill:#fbefdc;--fill2:#f4e2c7;--text:#2b2118;--text2:#6b5a48;--text3:#7a6a58;
+  --sep:rgba(120,70,20,.12);--sep2:rgba(120,70,20,.2);--nav:rgba(255,248,236,.86);--sel:rgba(222,92,42,.10);--hover:rgba(222,92,42,.06);
+  --shadow:0 4px 24px rgba(120,70,20,.08);--shadow-h:0 10px 36px rgba(120,70,20,.14);
+  --grad:linear-gradient(120deg,#f2a33a 0%,#de5c2a 45%,#8e1f22 100%)}
+[data-theme=aangan] body{background:radial-gradient(1200px 500px at 85% -10%,rgba(242,163,58,.16),transparent 60%),radial-gradient(900px 420px at -10% 110%,rgba(43,110,69,.10),transparent 60%),var(--bg) fixed}
+[data-theme=aangan] .btn.primary,[data-theme=aangan] .pill:not(.ghost),[data-theme=aangan] .chip.on,[data-theme=aangan] .avbtn{background:var(--grad);color:#fff}
+[data-theme=aangan] .btn.primary:hover,[data-theme=aangan] .pill:not(.ghost):hover{filter:brightness(1.05)}
+[data-theme=aangan] .navlinks a.on{background:linear-gradient(90deg,rgba(242,163,58,.22),rgba(222,92,42,.10))}
+[data-theme=aangan] .navlinks svg,[data-theme=aangan] .navrow svg:not(.navchev){color:#c84a22}
+[data-theme=aangan] .card,[data-theme=aangan] .section,[data-theme=aangan] .ovbox > *{border-color:rgba(120,70,20,.10)}
+@media (prefers-color-scheme:dark){html:not([data-mode=light])[data-theme=aangan]{--blue:#f28a4a;--blue-h:#f59a5e;--link:#f59a5e;--tint:rgba(242,138,74,.16);--accent2:#6cc08a;
+  --bg:#1c120c;--surface:#26180f;--surface2:#2c1c12;--fill:#332216;--fill2:#3d291b;--text:#fbefe0;--text2:#d6c2ab;--text3:#c0aa92;--sep:rgba(255,220,180,.10);--sep2:rgba(255,220,180,.18);--nav:rgba(30,19,12,.86)}
+  html:not([data-mode=light])[data-theme=aangan] body{background:radial-gradient(1200px 500px at 85% -10%,rgba(242,163,58,.10),transparent 60%),var(--bg) fixed}}
+html[data-mode=dark][data-theme=aangan]{--blue:#f28a4a;--blue-h:#f59a5e;--link:#f59a5e;--tint:rgba(242,138,74,.16);--accent2:#6cc08a;
+  --bg:#1c120c;--surface:#26180f;--surface2:#2c1c12;--fill:#332216;--fill2:#3d291b;--text:#fbefe0;--text2:#d6c2ab;--text3:#c0aa92;--sep:rgba(255,220,180,.10);--sep2:rgba(255,220,180,.18);--nav:rgba(30,19,12,.86)}
+html[data-mode=dark][data-theme=aangan] body{background:radial-gradient(1200px 500px at 85% -10%,rgba(242,163,58,.10),transparent 60%),var(--bg) fixed}
+.st-aangan i{background:linear-gradient(120deg,#fff6e9 0 30%,#f2a33a 30% 50%,#de5c2a 50% 70%,#2b6e45 70% 85%,#8e1f22 85%)}

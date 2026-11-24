@@ -1,4 +1,5 @@
 import { SITE_NAME, SiteAvatar, useIsSiteAdmin } from './SiteAdmin';
+import { MotifTile } from './Motifs';
 import { Banyan } from './Banyan';
 import { FAMILY } from '../lib/site';
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
@@ -69,7 +70,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
   const host = me ? (family.blood.has(me.id) ? me.id : (family.spouses.get(me.id) || []).find((s) => family.blood.has(s))) : undefined;
   const line = host ? lineageOf(family, host) : [];
   const gens = useMemo(() => Array.from({ length: family.maxGen }, (_, i) => snap.persons.filter((p) => family.gen.get(p.id) === i + 1).length), [family, snap.persons]);
-  const { border, south } = useHeritage();
+  const { border, south, motif } = useHeritage();
   const myGen = me ? family.gen.get(me.id) : undefined;
   const threads = [...snap.threads].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.last_activity_at.localeCompare(a.last_activity_at)).slice(0, 2);
   const photos = [...snap.photos].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 4);
@@ -176,8 +177,8 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
       {/* roots */}
       <Card i={6} cls="b-roots" label="Our traditions" onOpen={() => jump('h-roots')}>
         <small className="b-k">Our roots</small>
-        <div className="b-om"><KolamMark /></div>
-        {roots.length ? <div className="b-chips">{roots.map((r) => <span key={r}>{r}</span>)}</div> : <p className="b-empty">Gothram, sutram and vedam.</p>}
+        <div className="b-om">{motif && motif !== 'kolam' ? <MotifTile motif={motif} size={84} /> : <KolamMark />}</div>
+        {roots.length ? <div className="b-chips">{roots.map((r) => <span key={r}>{r}</span>)}</div> : <p className="b-empty">{south ? 'Gothram, sutram and vedam.' : `${pack.labels.gothram} and ${pack.labels.kuladeivam.toLowerCase()}.`}</p>}
         {info?.kuladeivam && <p className="b-kula">{info.kuladeivam.replace(/\s*\(.*\)/, '')}</p>}
       </Card>
 

@@ -1,7 +1,7 @@
 import { API_URL, FAMILY, PUBLISHABLE_KEY } from './site';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Api } from './api';
-import type { Announcement, ChildDraft, Consent, FamilyInfo, Join, LogEntry, Heartbeat, DmConversation, DmMessage, Member, Photo, PhotoTag, Post, PostStub, Prefs, Reaction, Snapshot, Thread, Invitation, InviteToApprove } from './types';
+import type { Announcement, ChildDraft, Consent, FamilyInfo, Join, LogEntry, Heartbeat, DmConversation, DmMessage, Member, Photo, PhotoTag, Post, PostStub, Prefs, Reaction, Theme, Snapshot, Thread, Invitation, InviteToApprove } from './types';
 
 /**
  * Indian internet providers block *.supabase.co, so the live site talks only to our API address (site.config.json → apiUrl), a plain
@@ -147,7 +147,7 @@ export function supabaseApi(): Api {
       const me = meRows[0] || null;
       if (!me || me.status !== 'active') {
         return { persons: [], links: [], partners: [], fields: [], joined: [], invited: [], me, consents: [], policy: null,
-          info: null, photos: [], tags: [], joins: [], prefs: { theme: 'blue', updates_seen_at: null }, threads: [], recentPosts: [] };
+          info: null, photos: [], tags: [], joins: [], prefs: { theme: '' as Theme, updates_seen_at: null }, threads: [], recentPosts: [] };
       }
       const since = new Date(Date.now() - 60 * 86400000).toISOString();
       const [persons, links, partners, fields, consents, joined, policies, info, photos, tags, joins, prefs, invited, threads, recentPosts, announcements, childDrafts, signedIn] = await Promise.all([
@@ -173,7 +173,7 @@ export function supabaseApi(): Api {
         persons: persons as Snapshot['persons'], links: links as Snapshot['links'], partners: partners as Snapshot['partners'],
         fields: fields as Snapshot['fields'], joined, signedIn, invited, me, consents, policy: (policies as Snapshot['policy'][])[0] || null,
         info: (info as FamilyInfo | null) || null, photos, tags, joins,
-        prefs: (prefs as Prefs | null) || { theme: 'blue', updates_seen_at: null },
+        prefs: (prefs as Prefs | null) || { theme: '' as Theme, updates_seen_at: null },
         threads, recentPosts, announcements, childDrafts,
       };
     },

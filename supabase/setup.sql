@@ -1,4 +1,4 @@
--- The whole family website database: privacy rules, tables and functions (54 steps).
+-- The whole family website database: privacy rules, tables and functions (55 steps).
 -- Paste all of this into Supabase → SQL Editor → New query, and press Run. Run it once, on a new project.
 -- Made by: npm run sql (from supabase/migrations/). Don't edit this file; edit the migrations.
 
@@ -4490,4 +4490,15 @@ begin;
 alter table public.member_prefs drop constraint if exists member_prefs_border_check;
 alter table public.member_prefs add constraint member_prefs_border_check
   check (border in ('', 'veshti-red', 'veshti-blue', 'saree-green', 'saree-red', 'kasavu', 'pochampally', 'ilkal', 'mysore-peta', 'banarasi', 'leheriya', 'phulkari', 'khes', 'bandhani', 'ajrak', 'paithani', 'pheta', 'laal-paar', 'dhuti', 'chikankari', 'zardozi', 'sambalpuri', 'mekhela', 'gamosa', 'kunbi', 'kani', 'gara', 'dhaka', 'phanek', 'puan', 'jainsem'));
+commit;
+
+-- ===================================================== 0055_aangan_theme.sql
+begin;
+-- 0055: the Aangan look (saffron, marigold, leaf green and maroon on cream) as a style members can pick, and the
+-- default for new families (site.config.json "theme" can choose another). '' = "the family's default": new accounts
+-- start there, so a family's choice applies until a member picks their own. Existing choices are kept.
+alter table public.member_prefs drop constraint if exists member_prefs_theme_check;
+alter table public.member_prefs add constraint member_prefs_theme_check
+  check (theme in ('', 'blue', 'kumkum', 'turmeric', 'peacock', 'tulsi', 'lotus', 'aangan', 'instagram', 'glass', 'aurora', 'clean', 'spotlight', 'playful'));
+alter table public.member_prefs alter column theme set default '';
 commit;
