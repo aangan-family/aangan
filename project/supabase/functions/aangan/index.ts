@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
         family_name: text(b.family_name, 120) || null, community: text(b.community, 40) || null,
         city: text(b.city, 80) || null, country: text(b.country, 80) || null,
         family_size: SIZES.includes(text(b.family_size, 20)) ? text(b.family_size, 20) : null,
-        heard_from: text(b.heard_from, 60) || null, consent_text: CONSENT,
+        consent_text: CONSENT,
       };
       if (!row.name) return reply({ error: 'Please write your name.' }, 400);
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(row.email)) return reply({ error: 'Please check your email address.' }, 400);

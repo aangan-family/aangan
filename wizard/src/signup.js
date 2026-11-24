@@ -3,7 +3,6 @@ import { h, people } from './ui.js';
 import { signup, me, forget } from './api.js';
 import { TRADITIONS } from './landing.js';
 
-const HEARD = ['WhatsApp', 'YouTube', 'Instagram', 'Facebook', 'A friend or relative', 'GitHub', 'A search engine', 'Somewhere else'];
 const SIZES = [['under-50', 'Under 50 people'], ['50-200', '50 to 200'], ['200-plus', 'More than 200']];
 export const CONSENT = 'I agree that Aangan keeps these sign-up details to count who is setting up a family website and to contact me about it. I can delete them any time.';
 
@@ -40,8 +39,6 @@ export function signupPage(go, onSigned) {
       field('country', 'Country', { autocomplete: 'country-name', value: 'India' }),
     ),
     h('div', { class: 'field' }, h('span', { class: 'lbl' }, 'Roughly how big is your family tree?'), sizes),
-    h('label', { class: 'field' }, h('span', { class: 'lbl' }, 'How did you hear about Aangan?'),
-      h('select', { name: 'heard_from', onchange: (e) => { f.heard_from = e.target.value; } }, h('option', { value: '' }, 'Choose'), HEARD.map((x) => h('option', { value: x }, x)))),
     // people never see or fill this; bots do
     h('label', { class: 'hp', 'aria-hidden': 'true' }, 'Website', h('input', { name: 'website', tabindex: '-1', autocomplete: 'off' })),
     h('label', { class: 'tick consent' }, h('input', { type: 'checkbox', name: 'consent' }), h('span', {}, CONSENT, ' ', h('a', { href: '#privacy' }, 'What we keep.'))),
@@ -73,7 +70,7 @@ export function privacyPage(go) {
     h('div', { class: 'card' },
       h('h3', {}, 'Your sign-up: only what you type.'),
       h('ul', {},
-        h('li', {}, 'Your name and email; your family’s name, traditions, city, country, rough family size and how you heard of us, if you give them; and the words you agreed to.'),
+        h('li', {}, 'Your name and email; your family’s name, traditions, city, country, and rough family size, if you give them; and the words you agreed to.'),
         h('li', {}, 'Which setup steps you reached (for example “checked the family sheet”), so we can see where people get stuck. Never what was in them.'),
         h('li', {}, 'How many people opened each page each day: a count only, with no cookies and nothing about who you are.')),
       h('p', {}, 'Why: to know who Aangan is reaching and to help people who get stuck. We don’t sell it, share it or use it for advertising. It’s stored in a database in Mumbai.')),

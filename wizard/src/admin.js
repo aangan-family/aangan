@@ -55,14 +55,14 @@ function dashboard(s, signOut) {
     h('div', { class: 'grid3' },
       breakdown('Traditions', s.community, (k) => NAME[k] || k),
       breakdown('Country', s.country), breakdown('City', s.city),
-      breakdown('Family size', s.family_size, (k) => SIZE[k] || k), breakdown('Heard about us', s.heard_from)),
+      breakdown('Family size', s.family_size, (k) => SIZE[k] || k)),
     h('div', { class: 'card' }, h('h3', {}, 'Latest sign-ups'),
       s.recent.length ? h('div', { class: 'tablewrap' }, h('table', {},
-        h('thead', {}, h('tr', {}, ['When', 'Name', 'Email', 'Family', 'Traditions', 'Place', 'Size', 'Heard', 'Got to'].map((t) => h('th', { scope: 'col' }, t)))),
+        h('thead', {}, h('tr', {}, ['When', 'Name', 'Email', 'Family', 'Traditions', 'Place', 'Size', 'Got to'].map((t) => h('th', { scope: 'col' }, t)))),
         h('tbody', {}, s.recent.map((r) => h('tr', {},
           h('td', {}, fmt(r.created_at)), h('td', {}, r.name), h('td', {}, h('a', { href: `mailto:${r.email}` }, r.email)), h('td', {}, r.family_name || ''),
           h('td', {}, NAME[r.community] || r.community || ''), h('td', {}, [r.city, r.country].filter(Boolean).join(', ')), h('td', {}, SIZE[r.family_size] || ''),
-          h('td', {}, r.heard_from || ''), h('td', {}, (STEPS.filter(([k]) => r.steps.includes(k)).pop() || STEPS[0])[1])))))) : h('p', { class: 'muted' }, 'No sign-ups yet.')),
+          h('td', {}, (STEPS.filter(([k]) => r.steps.includes(k)).pop() || STEPS[0])[1])))))) : h('p', { class: 'muted' }, 'No sign-ups yet.')),
   );
 }
 
@@ -111,7 +111,7 @@ function breakdown(title, obj, label = (k) => k) {
 }
 
 function csv(rows) {
-  const cols = ['created_at', 'name', 'email', 'family_name', 'community', 'city', 'country', 'family_size', 'heard_from', 'last_seen_at', 'steps'];
+  const cols = ['created_at', 'name', 'email', 'family_name', 'community', 'city', 'country', 'family_size', 'last_seen_at', 'steps'];
   const cell = (v) => { const s = Array.isArray(v) ? v.join(' ') : v == null ? '' : String(v); const safe = /^[=+\-@]/.test(s) ? `'${s}` : s; return /[",\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe; };
   return '﻿' + [cols.join(','), ...rows.map((r) => cols.map((c) => cell(r[c])).join(','))].join('\n') + '\n';
 }
