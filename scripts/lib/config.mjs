@@ -15,7 +15,8 @@ export function checkConfig(cfg, { communities = COMMUNITIES } = {}) {
   check(cfg.appName && cfg.appName.length <= 14, `App name: ${cfg.appName}`, 'appName: a short name (up to 14 letters) for the phone\'s home screen.');
   check(site && site.protocol === 'https:' && !site.host.endsWith('.example'), `Website: ${cfg.siteUrl}`, 'siteUrl: your website address, e.g. https://sharmafamily.in');
   check(api && api.protocol === 'https:' && !api.host.endsWith('.example') && site && (api.host.endsWith(site.host) || (free && api.host.endsWith('.workers.dev'))), `API address: ${cfg.apiUrl}`, free ? 'apiUrl: your Worker\'s workers.dev address, e.g. https://family-reminders.yourname.workers.dev' : 'apiUrl: "https://api." + your domain, e.g. https://api.sharmafamily.in');
-  if (free) check(cfg.emailSignIn === false, 'Free setup: sign-in with Google only (no emails)', 'emailSignIn: set to false on the free setup (email needs your own domain).');
+  // free setup: Google only, or email too through the admin's Gmail (GMAIL_USER + GMAIL_APP_PASSWORD secrets)
+  if (free) ok.push(cfg.emailSignIn === false ? 'Free setup: sign-in with Google only (add the admin\'s Gmail to also send sign-in links and reminders)' : 'Free setup: Google, and sign-in links by email through the admin\'s Gmail (needs the GMAIL_USER and GMAIL_APP_PASSWORD secrets)');
   else check(/@/.test(cfg.emailFrom || '') && !cfg.emailFrom.endsWith('.example') && site && cfg.emailFrom.endsWith('@' + site.host), `Emails come from: ${cfg.emailFrom}`, 'emailFrom: an address at your domain, e.g. family@sharmafamily.in');
   check(/@/.test(cfg.privacyEmail || '') && !cfg.privacyEmail.endsWith('.example'), `Privacy questions go to: ${cfg.privacyEmail}`, 'privacyEmail: where relatives write about their data.');
   check(cfg.admin?.name && cfg.admin.name !== 'Family Admin', `Admin: ${cfg.admin?.name}`, 'admin.name: your full name, so relatives know who runs the site.');

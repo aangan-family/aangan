@@ -162,6 +162,9 @@ export function oneClickSteps(cfg) {
       { text: 'Name', copy: 'CLOUDFLARE_ACCOUNT_ID' }, 'Value: Cloudflare → Workers & Pages → Account ID (right-hand side).',
       { text: 'Name', copy: 'REMINDER_EMAIL' }, 'Value: your Gmail.',
       ...(free ? [] : [{ text: 'Name', copy: 'RESEND_API_KEY' }, 'Value: resend.com (sign up free) → API Keys → Create → Full access.']),
+      ...(free ? ['Optional, for sign-in links and reminders by email without a domain (up to 500 a day): use the admin\'s Gmail.',
+        { text: 'Name', copy: 'GMAIL_USER' }, 'Value: the Gmail address the emails will come from.',
+        { text: 'Name', copy: 'GMAIL_APP_PASSWORD' }, 'Value: Google account → Security → 2-Step Verification (turn it on) → App passwords → make one called Aangan, copy the 16 letters.'] : []),
     ],
   });
   steps.push({ ...by('google'), title: free ? 'Continue with Google (needed; can be after the first run)' : 'Continue with Google (recommended; can be later)', items: [...by('google').items.filter((i) => !(typeof i === 'string' && /^(Supabase|Keep)/.test(i))), 'Add the client ID and secret as the secrets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, then run the setup again.'] });

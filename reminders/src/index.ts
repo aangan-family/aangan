@@ -23,6 +23,7 @@
  *   CALLMEBOT_APIKEY      optional: the key CallMeBot sends on WhatsApp
  */
 import { proxyToken, serverHeaders } from './keys';
+import { emailReady } from './mail';
 import { dailyMessages, monthlyMessage, todayIST, ymd, type FeedRow } from './messages';
 import { welcomeEmail, type WelcomeRow } from './welcome';
 import { groupByPerson, mentionEmail, type MentionRow } from './mentions';
@@ -47,6 +48,8 @@ export interface Env extends LimitEnv {
   CALLMEBOT_APIKEY?: string;
   PREVIEW_KEY?: string;
   RESEND_API_KEY?: string;
+  /** free setup: the admin's Gmail and an app password (smtp.ts), used when there's no Resend key */
+  GMAIL_USER?: string; GMAIL_APP_PASSWORD?: string;
   REMINDER_EMAIL?: string;
   EMAIL_FROM?: string;
   MS_CLIENT_ID?: string;
@@ -110,7 +113,7 @@ const sendEach = (env: Env, m: { subject: string; html: string; text: string }, 
 
 /** Tell the stewards and admins about new requests to join (names only; the phone stays on the site). */
 export async function sendJoinNotices(env: Env): Promise<string[]> {
-  if (!env.RESEND_API_KEY) return [];
+  if (!emailReady(env)) return [];
   const due = await rpc<JoinRow[]>(env, 'join_requests_due');
   const log: string[] = [];
   for (const row of due) {
@@ -138,7 +141,7 @@ export async function sendJoinNotices(env: Env): Promise<string[]> {
 
 /** Notify everyone by email (0048): separate emails in one Resend batch, rows deleted only after Resend accepts them. */
 export async function sendNews(env: Env): Promise<string[]> {
-  if (!env.RESEND_API_KEY) return [];
+  if (!emailReady(env)) return [];
   const due = await rpc<NewsRow[]>(env, 'news_due');
   if (!due.length) return [];
   const r = await sendBatch(env, due.map((x) => ({ ...newsEmail(x), to: [x.email] })), 'news');
@@ -156,7 +159,7 @@ async function loadBorders(env: Env) {
 
 /** "This week in the family" (0049): Sundays after the 7 am run. Each week goes out once; recorded only after Resend accepts it. */
 export async function sendWeekly(env: Env, day: Date, force = false): Promise<string> {
-  if (!env.RESEND_API_KEY) return 'weekly: email not set up';
+  if (!emailReady(env)) return 'weekly: email not set up';
   if (day.getUTCDay() !== 0 && !force) return 'weekly: not Sunday';
   const wk = ymd(day);
   const w = await rpc<WeeklyData | null>(env, 'weekly_digest', { wk });
@@ -176,7 +179,7 @@ export async function sendWeekly(env: Env, day: Date, force = false): Promise<st
 
 /** "You were mentioned": one email per person, marked sent only after Resend accepts it. */
 export async function sendMentions(env: Env): Promise<string[]> {
-  if (!env.RESEND_API_KEY) return [];
+  if (!emailReady(env)) return [];
   const due = await rpc<MentionRow[]>(env, 'mentions_due');
   const log: string[] = [];
   for (const rows of groupByPerson(due)) {
@@ -192,7 +195,7 @@ export async function sendMentions(env: Env): Promise<string[]> {
 
 /** Send each pending welcome email once. Marked sent only after Resend accepts it. */
 export async function sendWelcomes(env: Env): Promise<string[]> {
-  if (!env.RESEND_API_KEY) return ['welcome: email not set up'];
+  if (!emailReady(env)) return ['welcome: email not set up'];
   const due = await rpc<WelcomeRow[]>(env, 'welcome_due');
   const log: string[] = [];
   for (const row of due) {
@@ -251,7 +254,7 @@ export function emailHtml(items: { text: string; share: string | null }[], day: 
 }
 
 async function email(env: Env, subject: string, items: { text: string; share: string | null }[], day: string) {
-  if (!env.RESEND_API_KEY || !env.REMINDER_EMAIL) return 'email: not set up';
+  if (!emailReady(env) || !env.REMINDER_EMAIL) return 'email: not set up';
   const to = env.REMINDER_EMAIL.split(',').map((x) => x.trim()).filter(Boolean);
   const r = await sendEmail(env, { to, subject, html: emailHtml(items, day), text: items.map((i) => i.text).join('\n\n────────\n\n') }, 'digest');
   if (!r.ok) { console.error('email failed', r.status, r.body); return `email failed: ${r.status} ${r.body.slice(0, 200)}`; }

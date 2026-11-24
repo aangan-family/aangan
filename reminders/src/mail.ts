@@ -6,6 +6,7 @@
  * No open or click tracking: links stay plain links to the site.
  */
 import { borderForMember, DOMAIN, FAMILY, SITE, withBorder, type EmailBorder } from './brand';
+import { gmailReady, sendGmail, type SmtpEnv } from './smtp';
 import { EMAIL_FROM } from './site';
 
 /** Each member's border by email address (lower case), loaded by the Worker from email_borders(); unknown → default. */
@@ -19,7 +20,11 @@ export function setBorders(rows: { email: string; gender?: string; border: strin
 }
 export const borderOf = (email?: string) => (email && borders.get(email.toLowerCase())) || undefined;
 
-export interface MailEnv { RESEND_API_KEY?: string; EMAIL_FROM?: string }
+export interface MailEnv extends SmtpEnv { RESEND_API_KEY?: string; EMAIL_FROM?: string }
+/** Email is set up: Resend (own domain), or the admin's Gmail (free setup, smtp.ts). */
+export const emailReady = (env: MailEnv) => !!env.RESEND_API_KEY || gmailReady(env);
+/** With Gmail, mail goes out from the Gmail address itself (Gmail rewrites any other sender). */
+const gmailFrom = (env: MailEnv) => `${FAMILY} <${env.GMAIL_USER}>`;
 export type Kind = 'welcome' | 'mention' | 'news' | 'weekly' | 'join' | 'invite' | 'digest' | 'alert';
 export interface Mail { to: string[]; bcc?: string[]; subject: string; html: string; text: string }
 
@@ -52,6 +57,10 @@ export function payload(env: MailEnv, m: Mail, kind: Kind, ref: string = crypto.
 }
 
 export async function sendEmail(env: MailEnv, m: Mail, kind: Kind): Promise<{ ok: boolean; status: number; body: string }> {
+  if (!env.RESEND_API_KEY && gmailReady(env)) {
+    const p = payload(env, m, kind);
+    return sendGmail(env, { from: gmailFrom(env), to: [...p.to, ...(p.bcc || [])], subject: p.subject, html: p.html, text: p.text, headers: p.headers });
+  }
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -63,6 +72,11 @@ export async function sendEmail(env: MailEnv, m: Mail, kind: Kind): Promise<{ ok
 /** Several separate emails in one request (Resend's batch endpoint, up to 100). */
 export async function sendBatch(env: MailEnv, ms: Mail[], kind: Kind): Promise<{ ok: boolean; status: number; body: string }> {
   if (!ms.length) return { ok: true, status: 200, body: '' };
+  if (!env.RESEND_API_KEY && gmailReady(env)) {   // Gmail: one message per connection
+    let last = { ok: true, status: 250, body: '' };
+    for (const m of ms.slice(0, 100)) { const r = await sendEmail(env, m, kind); if (!r.ok) last = r; }
+    return last;
+  }
   const r = await fetch('https://api.resend.com/emails/batch', {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },

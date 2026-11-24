@@ -1,4 +1,5 @@
 import { probeProvider } from './oauth';
+import { emailReady } from './mail';
 /**
  * Health checks and alert emails (0022). Runs on the 10-minute cron after the email jobs.
  *
@@ -17,6 +18,7 @@ export interface HealthEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_KEY: string;
   RESEND_API_KEY?: string;
+  GMAIL_USER?: string; GMAIL_APP_PASSWORD?: string;
   REMINDER_EMAIL?: string;
   EMAIL_FROM?: string;
   AI?: Ai;
@@ -99,7 +101,8 @@ export async function runChecks(env: HealthEnv, now: Date, withAi: boolean, with
     withSignin && env.YAHOO_CLIENT_ID ? probeProvider('yahoo', env) : Promise.resolve(null),
     withSignin && env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET ? probeProvider('google', env) : Promise.resolve(null),
   ]);
-  const missing = (['SUPABASE_SERVICE_KEY', 'RESEND_API_KEY', 'REMINDER_EMAIL'] as const).filter((k) => !env[k]);
+  // email is set up either with Resend (own domain) or with the admin's Gmail (free setup)
+  const missing = [...(['SUPABASE_SERVICE_KEY', 'REMINDER_EMAIL'] as const).filter((k) => !env[k]), ...(emailReady(env) ? [] : ['RESEND_API_KEY or GMAIL_APP_PASSWORD'])];
   const checks: Check[] = [
     { key: 'site', name: 'Website', ...site },
     { key: 'database', name: 'Database', ...db },
@@ -164,7 +167,7 @@ ${FIX[x.key] ? `<p style="margin:0;color:${C.ink};font-size:14px"><b>What to do:
 }
 
 async function send(env: HealthEnv, m: { subject: string; html: string; text: string }): Promise<string> {
-  if (!env.RESEND_API_KEY || !env.REMINDER_EMAIL) return 'alert: email not set up';
+  if (!emailReady(env) || !env.REMINDER_EMAIL) return 'alert: email not set up';
   const r = await sendEmail(env, { ...m, to: env.REMINDER_EMAIL.split(',').map((x) => x.trim()).filter(Boolean) }, 'alert');
   return r.ok ? `alert sent: ${m.subject}` : `alert failed: ${r.status}`;
 }

@@ -195,7 +195,8 @@ export async function setup(io, { seed } = {}) {
       resendKey = mask((await rs('POST', '/api-keys', { name: `${cfg.familyName} website`.slice(0, 50), permission: 'sending_access', domain_id: d.id }))?.token);
       ok('Made a send-only email key for the website');
     }
-  } else if (!free) todo.push('Emails: add a RESEND_API_KEY secret (resend.com → API Keys → Full access) and run this again. Until then sign-in emails come from Supabase\'s own sender, which allows only a few an hour.');
+  } else if (free && !(env.GMAIL_USER && env.GMAIL_APP_PASSWORD)) todo.push('Emails (optional on the free setup): to send sign-in links and reminders without a domain, use the admin\'s Gmail. Google account → Security → 2-Step Verification → App passwords → make one, then add GMAIL_USER (the Gmail address) and GMAIL_APP_PASSWORD secrets and run this again. Up to 500 emails a day.');
+  else if (!free) todo.push('Emails: add a RESEND_API_KEY secret (resend.com → API Keys → Full access) and run this again. Until then sign-in emails come from Supabase\'s own sender, which allows only a few an hour.');
 
   // ---- 9. Supabase sign-in settings --------------------------------------------------------------------
   const authPatch = {
@@ -207,9 +208,11 @@ export async function setup(io, { seed } = {}) {
     mailer_templates_magic_link_content: io.read('supabase/templates/magic-link.html'),
   };
   if (resendKey) Object.assign(authPatch, { smtp_host: 'smtp.resend.com', smtp_port: '465', smtp_user: 'resend', smtp_pass: resendKey, smtp_admin_email: cfg.emailFrom, smtp_sender_name: cfg.familyName });
+  // free setup: sign-in emails through the admin's Gmail (app password), from that Gmail address
+  else if (env.GMAIL_USER && env.GMAIL_APP_PASSWORD) Object.assign(authPatch, { smtp_host: 'smtp.gmail.com', smtp_port: '465', smtp_user: env.GMAIL_USER, smtp_pass: mask(env.GMAIL_APP_PASSWORD), smtp_admin_email: env.GMAIL_USER, smtp_sender_name: cfg.familyName });
   if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) Object.assign(authPatch, { external_google_enabled: true, external_google_client_id: env.GOOGLE_CLIENT_ID, external_google_secret: env.GOOGLE_CLIENT_SECRET });
   await sb('PATCH', `/v1/projects/${ref}/config/auth`, authPatch);
-  ok(`Set the sign-in settings: site address, emails in your family's name${resendKey ? ', sender' : ''}${authPatch.external_google_enabled ? ', Google' : ''}`);
+  ok(`Set the sign-in settings: site address, emails in your family's name${resendKey ? ', sender' : env.GMAIL_APP_PASSWORD ? ', Gmail sender' : ''}${authPatch.external_google_enabled ? ', Google' : ''}`);
   if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) todo.push(`${free ? 'Needed on the free setup: ' : 'Recommended: '}Continue with Google. In Google Cloud make an OAuth client (Web): origin ${cfg.siteUrl}, redirect ${cfg.apiUrl}/oauth/google/callback. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET secrets and run this again.`);
 
   // ---- 10. the helper service (Worker) -----------------------------------------------------------------
@@ -219,6 +222,7 @@ export async function setup(io, { seed } = {}) {
   if (env.PREVIEW_KEY) secrets.PREVIEW_KEY = env.PREVIEW_KEY;
   else if (!existing.has('PREVIEW_KEY')) { secrets.PREVIEW_KEY = mask(password()); todo.push('A PREVIEW_KEY (for the health page) was made up and not shown. To use the health page, set your own: Worker → Settings → Variables and Secrets.'); }
   if (resendKey) secrets.RESEND_API_KEY = resendKey;
+  else if (env.GMAIL_USER && env.GMAIL_APP_PASSWORD) { secrets.GMAIL_USER = env.GMAIL_USER; secrets.GMAIL_APP_PASSWORD = mask(env.GMAIL_APP_PASSWORD); }
   if (env.GOOGLE_CLIENT_SECRET) secrets.GOOGLE_CLIENT_SECRET = env.GOOGLE_CLIENT_SECRET;
   if (vapidPrivate) secrets.VAPID_PRIVATE = vapidPrivate;
   const dir = mkdtempSync(join(tmpdir(), 'aangan-'));
