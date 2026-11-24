@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { hasPages, setPagesOn, usePagesOn } from '../lib/i18n/pages';
 import { MOTIF_NAME } from '../lib/motif';
 import { useStore } from '../lib/store';
 import { usePresence } from '../lib/presence';
@@ -175,6 +176,7 @@ function TextSizeRow() {
 /** Menus in English or the member's language, on this device. */
 function MenuLangRow() {
   const l = useMenuLang();
+  const pages = usePagesOn();
   const pack = usePack();
   const opts: [string, string, string][] = [['en', 'English', 'en']];
   if (pack.lang !== 'en') opts.push([pack.lang, pack.native, pack.lang]);
@@ -184,6 +186,7 @@ function MenuLangRow() {
       {opts.map(([k, label, lang]) =>
         <button key={k} role="radio" lang={lang} aria-checked={l === k} className={l === k ? 'on' : ''} onClick={() => setMenuLang(k)}>{label}</button>)}
     </div>
+    {hasPages(l) && <label className="themetoggle"><input type="checkbox" checked={pages} onChange={(e) => setPagesOn(e.target.checked)} /> Pages too <span className="muted">(first draft)</span></label>}
   </>);
 }
 

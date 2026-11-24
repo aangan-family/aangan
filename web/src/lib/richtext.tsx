@@ -115,7 +115,8 @@ export function RichText({ text, className, extended = false, photo }: { text: s
     para.push(line);
   }
   flush();
-  return <div className={`rich ${className || ''}`}>{blocks}</div>;
+  // translate="no": people's own words are never swapped by the page translator (lib/i18n/pages.ts)
+  return <div className={`rich ${className || ''}`} translate="no">{blocks}</div>;
 }
 
 /** Anchor id for a heading (DevCenter's contents list). */

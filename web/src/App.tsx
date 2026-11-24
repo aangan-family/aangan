@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { applyPageLang, usePagesOn } from './lib/i18n/pages';
+import { useMenuLang } from './lib/menulang';
 import { FAMILY } from './lib/site';
 import { TwoStepBanner } from './components/TwoStep';
 import { countVisit, listenForOpens, refreshSubscription } from './lib/push';
@@ -61,6 +63,9 @@ export function App() {
   useEffect(() => { if (email) reload(); }, [email, reload]);
   // phone notifications: count visits for the one-time invitation, follow taps, keep this device's address fresh
   useEffect(() => { listenForOpens(); }, []);
+  // page text in the member's language, when they asked for it (Theme → Menus in → Pages too)
+  const menuLang = useMenuLang(), pagesOn = usePagesOn();
+  useEffect(() => { void applyPageLang(menuLang, pagesOn); }, [menuLang, pagesOn]);
   useEffect(() => { if (email && snap?.me) { countVisit(); refreshSubscription(api); } }, [email, !!snap?.me]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!api.configured) return <NotConfigured />;

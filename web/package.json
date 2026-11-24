@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "review-kit": "UPDATE_REVIEW=1 vitest run src/lib/community/review.test.ts",
     "email-art": "EMAIL_ART=1 vitest run src/components/emailArt.test.tsx",
-    "icon-art": "ICON_ART=1 vitest run src/components/iconArt.test.tsx"
+    "icon-art": "ICON_ART=1 vitest run src/components/iconArt.test.tsx",
+    "phrases": "node scripts/phrases.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

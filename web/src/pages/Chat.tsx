@@ -222,7 +222,7 @@ function Conversation({ personId, onChanged }: { personId: string; onChanged: ()
             <Fragment key={m.id}>
               {newDay && <div className="convo-day"><span>{dayLabel(m.created_at)}</span></div>}
               <div className={`msg ${mine ? 'mine' : 'theirs'}${grouped ? ' grouped' : ''}`}>
-                <div className={`bubble${onlyEmoji(m.body) ? ' big' : ''}`} onClick={(e) => { if (mine) { e.stopPropagation(); setMenu(menu === m.id ? null : m.id); } }}>
+                <div translate="no" className={`bubble${onlyEmoji(m.body) ? ' big' : ''}`} onClick={(e) => { if (mine) { e.stopPropagation(); setMenu(menu === m.id ? null : m.id); } }}>
                   <Text s={m.body} />
                   <span className="msg-time">{time(m.created_at)}</span>
                 </div>
