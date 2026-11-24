@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+// Checks site.config.json and copies its values into reminders/wrangler.toml.
+//   npm run check
+import { readFileSync, writeFileSync } from 'node:fs';
+
+const cfgUrl = new URL('../site.config.json', import.meta.url);
+const tomlUrl = new URL('../reminders/wrangler.toml', import.meta.url);
+const cfg = JSON.parse(readFileSync(cfgUrl, 'utf8'));
+const todo = [], ok = [];
+const check = (good, yes, no) => (good ? ok : todo).push(good ? yes : no);
+
+const url = (u) => { try { return new URL(u); } catch { return null; } };
+const site = url(cfg.siteUrl), api = url(cfg.apiUrl);
+check(cfg.familyName && cfg.familyName !== 'Our Family', `Family name: ${cfg.familyName}`, 'familyName: write your family\'s name (e.g. "Sharma Parivar").');
+check(cfg.appName && cfg.appName.length <= 14, `App name: ${cfg.appName}`, 'appName: a short name (up to 14 letters) for the phone\'s home screen.');
+check(site && site.protocol === 'https:' && !site.host.endsWith('.example'), `Website: ${cfg.siteUrl}`, 'siteUrl: your website address, e.g. https://sharmafamily.in');
+check(api && api.protocol === 'https:' && !api.host.endsWith('.example') && site && api.host.endsWith(site.host), `API address: ${cfg.apiUrl}`, 'apiUrl: "https://api." + your domain, e.g. https://api.sharmafamily.in');
+check(/@/.test(cfg.emailFrom) && !cfg.emailFrom.endsWith('.example') && site && cfg.emailFrom.endsWith('@' + site.host), `Emails come from: ${cfg.emailFrom}`, 'emailFrom: an address at your domain, e.g. family@sharmafamily.in');
+check(/@/.test(cfg.privacyEmail) && !cfg.privacyEmail.endsWith('.example'), `Privacy questions go to: ${cfg.privacyEmail}`, 'privacyEmail: where relatives write about their data.');
+check(cfg.admin?.name && cfg.admin.name !== 'Family Admin', `Admin: ${cfg.admin?.name}`, 'admin.name: your full name, so relatives know who runs the site.');
+check(/\d{10}/.test((cfg.admin?.phone || '').replace(/\D/g, '')), `Admin phone: ${cfg.admin?.phone}`, 'admin.phone: your mobile with country code, e.g. +91 98450 12345. It goes on the emails so relatives know they are genuine.');
+check(/^https:\/\/[a-z0-9]{20}\.supabase\.co$/.test(cfg.supabaseProjectUrl || ''), 'Supabase project: set', 'supabaseProjectUrl: from Supabase → Project Settings → Data API (https://xxxx.supabase.co).');
+check(/^sb_publishable_/.test(cfg.supabasePublishableKey || ''), 'Supabase publishable key: set', 'supabasePublishableKey: from Supabase → Project Settings → API Keys (starts sb_publishable_).');
+check(/\.apps\.googleusercontent\.com$/.test(cfg.googleClientId || ''), 'Google sign-in: set', 'googleClientId: optional but recommended (Continue with Google). See docs/SETUP.md step 6.');
+check((cfg.vapidPublicKey || '').length > 60, 'Phone notifications: set', 'vapidPublicKey: optional, for phone notifications. See docs/SETUP.md step 8.');
+
+// copy into the Worker's settings
+let toml = readFileSync(tomlUrl, 'utf8');
+const set = (name, value) => { toml = toml.replace(new RegExp(`^${name} = ".*"$`, 'm'), `${name} = ${JSON.stringify(value)}`); };
+if (api) toml = toml.replace(/routes = \[\{ pattern = "[^"]*"/, `routes = [{ pattern = "${api.host}"`);
+if (/supabase\.co$/.test(cfg.supabaseProjectUrl || '')) set('SUPABASE_URL', cfg.supabaseProjectUrl);
+set('EMAIL_FROM', `${cfg.familyName} <${cfg.emailFrom}>`);
+if (cfg.googleClientId) set('GOOGLE_CLIENT_ID', cfg.googleClientId);
+if (cfg.vapidPublicKey) set('VAPID_PUBLIC', cfg.vapidPublicKey);
+writeFileSync(tomlUrl, toml);
+
+console.log('\nYour settings (site.config.json)\n');
+ok.forEach((l) => console.log('  ✓ ' + l));
+if (todo.length) { console.log('\nStill to do:'); todo.forEach((l) => console.log('  • ' + l)); }
+console.log(`\nCopied the API address and sender into reminders/wrangler.toml.${todo.length ? '' : '\nAll set.'}\n`);
+const required = todo.filter((l) => !/optional/.test(l));
+process.exit(required.length ? 1 : 0);

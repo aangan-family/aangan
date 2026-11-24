@@ -1,0 +1,29 @@
+{
+  "name": "family-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "demo": "VITE_DEMO=1 vite",
+    "build": "vitest run && tsc --noEmit && vite build && node -e \"if(require('fs').existsSync('dist/demo-data.json')){console.error('demo data leaked into dist');process.exit(1)}\"",
+    "build:demo": "tsc --noEmit && VITE_DEMO=1 vite build --outDir dist-demo",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0",
+    "@types/qrcode": "^1.5.6"
+  }
+}

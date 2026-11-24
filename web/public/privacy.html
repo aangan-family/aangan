@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Privacy · %FAMILY% family website</title>
+<style>
+  :root { color-scheme: light dark; --text:#1d1d1f; --muted:#6e6e73; --bg:#fff; --line:#d2d2d7; --blue:#0066cc; }
+  @media (prefers-color-scheme: dark) { :root { --text:#f5f5f7; --muted:#a1a1a6; --bg:#000; --line:#424245; --blue:#2997ff; } }
+  body { margin:0; background:var(--bg); color:var(--text); font:17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing:antialiased; }
+  main { max-width: 680px; margin: 0 auto; padding: 72px 24px 96px; }
+  .eyebrow { color: var(--muted); font-weight: 600; margin: 0 0 8px; }
+  h1 { font-size: 48px; line-height: 1.08; letter-spacing: -.02em; margin: 0 0 20px; }
+  h2 { font-size: 24px; margin: 40px 0 8px; letter-spacing: -.01em; }
+  p, li { color: var(--text); }
+  .lead { font-size: 21px; color: var(--muted); }
+  ul { padding-left: 20px; }
+  a { color: var(--blue); text-decoration: none; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">%FAMILY%</p>
+  <h1>Your privacy.</h1>
+  <p class="lead">This is a private website for one family. It is not public, not searchable, and nothing on it is sold or shared.</p>
+
+  <h2>Who can see it</h2>
+  <p>Only relatives invited by a family admin, or approved after asking to join, can sign in. Anyone else, including people who sign in without an invitation, sees nothing except their own request to join.</p>
+
+  <h2>What signing in shares</h2>
+  <p>You can sign in with an email link, or with your Google, Microsoft or Yahoo account. The site receives only your name and email address, to check that you were invited. It never sees your password and asks for no other access to your account.</p>
+
+  <h2>What the site holds</h2>
+  <ul>
+    <li>The family tree: names, how people are related, birth years, and dates of passing.</li>
+    <li>Details each person chooses to add, such as a photo, where they live, what they do, or family traditions. Each detail has its own setting: the whole family, close family, or only the person themselves.</li>
+    <li>A record of each person’s agreement to share, which they can withdraw at any time. Withdrawing hides their details straight away.</li>
+    <li>What members write in Talk (seen by all members), photos they share, and private Messages, which only the two people in the conversation can read. Admins cannot read private Messages.</li>
+    <li>Whether you are online, unless you turn that off in My privacy.</li>
+  </ul>
+  <p>Phone numbers, email addresses and home addresses are never stored for anyone under 18, and parents decide what is shown for their children.</p>
+
+  <h2>Writing help</h2>
+  <p>If you tap <b>Help me write</b> or the microphone, your words or your recording are sent to Cloudflare’s AI service to be rewritten or turned into English text. Nothing is kept: the result comes back to your own text box, and nothing is sent to anyone until you press send. Nothing is sent to the AI unless you tap one of these buttons.</p>
+
+  <h2>Children under 18</h2>
+  <p>Children can have their own login once a family steward or admin confirms who they are. Following India’s Digital Personal Data Protection Act, a parent gives consent for a child’s details, and nothing a child adds (details, conversations, replies, photos) is shown to the family until a parent approves it; if the parent declines, it is deleted. We don’t keep phone numbers, emails or addresses for anyone under 18, we don’t record when a child is online, and writing help (AI) isn’t offered to children. There is no advertising or tracking of anyone on this site.</p>
+
+  <h2>Phone notifications</h2>
+  <p>Notifications are off until you turn them on, device by device, in “My privacy”. We then keep that device’s push address, which only the site’s own reminders service can read. A notification says who, never what: “Kavya sent you a message” or “New details on Kavya’s profile”, never the message or the details themselves. You choose which kinds you get. Close family hear about new profile details only when those details are shared with the family and the person has agreed to share. Apple, Google or Mozilla deliver it, depending on your phone or browser, and they only ever see it encrypted. The address is deleted when you turn notifications off, sign out on that device, or sign out everywhere.</p>
+
+  <h2>Where it is kept, and who helps run the site</h2>
+  <p>The data is stored with Supabase in Mumbai, India, and protected by rules in the database itself, so a mistake in the website cannot reveal a private detail. Photos are kept in private storage, and location data is removed from them before upload. Every change is logged.</p>
+  <ul>
+    <li><b>Supabase</b> (Mumbai, India): the database, sign-in accounts and photos.</li>
+    <li><b>Cloudflare</b>: hosts the website, passes requests to the database, and runs writing help.</li>
+    <li><b>Resend</b>: sends the site’s emails (sign-in links, welcome emails, reminders, the Sunday “This week in the family” email and family notices; you can turn the last two off in My privacy).</li>
+    <li><b>Google, Microsoft, Yahoo</b>: only if you choose to sign in with them.</li>
+    <li><b>Apple, Google, Mozilla</b>: deliver phone notifications, encrypted, only if you turn them on.</li>
+    <li><b>GitHub</b>: keeps the nightly backup, encrypted so that only the family admin can open it.</li>
+  </ul>
+  <p>The site has no advertising and no tracking or analytics, and nothing is sold or shared with anyone else.</p>
+
+  <h2>How long things are kept</h2>
+  <p>Your details stay until you, or a family admin at your request, remove them. Some things are cleared automatically:</p>
+  <ul>
+    <li>Requests to join: 90 days after they are decided. The phone number on a request is removed as soon as it is decided.</li>
+    <li>Invitations that are never used: 6 months.</li>
+    <li>The log of changes: 3 years. Entries about someone removed from the tree are cleared after 1 year.</li>
+    <li>Phone notifications waiting to be sent: 3 days at most (12 hours if they can’t be delivered).</li>
+    <li>Backups: 30 days.</li>
+  </ul>
+
+  <h2>Your choices</h2>
+  <p>From the “My privacy” page you can download everything held about you, change who sees each detail, withdraw your agreement, or ask for your details to be deleted. You can also ask the family admin who invited you.</p>
+
+  <h2>Questions and complaints</h2>
+  <p>Write to <a href="mailto:%PRIVACY_EMAIL%">%PRIVACY_EMAIL%</a>. %ADMIN_NAME%, the family admin who runs the site, will reply within 30 days. If something ever goes wrong with your data, we will tell you promptly and in plain words what happened and what we have done about it.</p>
+
+  <footer>This notice applies to the %FAMILY% family website at %DOMAIN%. Last updated %CONFIG_DATE%. <a href="/">Go to the site</a></footer>
+</main>
+</body>
+</html>

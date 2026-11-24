@@ -1,0 +1,56 @@
+name: restore-test
+# Monthly proof that the newest backup can be opened and restored: downloads the latest backup artifact,
+# decrypts it with BACKUP_PASSPHRASE, loads it into a throwaway Postgres on this runner and checks the key
+# tables came back (scripts/restore-test.sh). Only counts are shown; the runner and its files are discarded.
+# A failure here means the backups can't be relied on: GitHub emails the repo owner, and the fix is in the
+# docs/OPERATIONS.md → Operations → Backups.
+on:
+  schedule:
+    - cron: '30 22 3 * *'   # 04:00 India time on the 4th of each month (after that night's backup)
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency: restore-test
+
+jobs:
+  restore:
+    # only in your own private copy: never on the public project or a public fork
+    if: github.event.repository.private == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find the newest backup
+        run: |
+          if [ -z "$BACKUP_PASSPHRASE" ]; then echo "::error::Secret BACKUP_PASSPHRASE is not set"; exit 1; fi
+          read -r name run_id created < <(gh api "repos/${{ github.repository }}/actions/artifacts?per_page=100" \
+            --jq '[.artifacts[] | select(.name | startswith("fam-backup-")) | select(.expired | not)] | sort_by(.created_at) | last | "\(.name) \(.workflow_run.id) \(.created_at)"')
+          if [ -z "$name" ] || [ "$name" = "null" ]; then echo "::error::No backup found. Has the backup workflow run in the last 30 days?"; exit 1; fi
+          age_h=$(( ( $(date +%s) - $(date -d "$created" +%s) ) / 3600 ))
+          echo "Newest backup: $name ($age_h hours old)"
+          if [ "$age_h" -gt 72 ]; then echo "::warning::The newest backup is $age_h hours old: check the nightly backup workflow"; fi
+          echo "NAME=$name" >> "$GITHUB_ENV"; echo "RUN_ID=$run_id" >> "$GITHUB_ENV"
+      - name: Download and decrypt
+        run: |
+          gh run download "$RUN_ID" -n "$NAME" -D enc
+          gpg --batch --quiet --decrypt --pinentry-mode loopback --passphrase-fd 3 enc/*.gpg 3<<<"$BACKUP_PASSPHRASE" | tar xzf -
+          rm -rf enc
+          du -sh backup/public.dump backup/auth.dump 2>/dev/null || true
+          test -s backup/public.dump || { echo "::error::public.dump is missing from the backup"; exit 1; }
+      - name: Install Postgres 17
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL --retry 6 --retry-all-errors --retry-delay 5 -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get -o Acquire::Retries=5 update -q && sudo apt-get -o Acquire::Retries=5 install -yq postgresql-17
+      - name: Restore and check
+        run: scripts/restore-test.sh backup
+      - name: Remove the decrypted copy
+        if: always()
+        run: rm -rf backup

@@ -1,0 +1,2 @@
+Confirm signup: You're invited to the Our Family family website
+Magic Link: Your sign-in link for ourfamily.example

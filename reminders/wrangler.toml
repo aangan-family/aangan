@@ -1,0 +1,53 @@
+name = "family-reminders"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+workers_dev = true
+preview_urls = false
+# keep variables and secrets set in the dashboard when deploying from Git
+keep_vars = true
+
+# api.<your domain>: pass-through to Supabase for relatives whose provider blocks supabase.co (src/proxy.ts)
+# Set by setup: your API address (site.config.json → apiUrl, without https://)
+routes = [{ pattern = "api.ourfamily.example", custom_domain = true }]
+
+[triggers]
+crons = ["30 1 * * *", "*/10 * * * *", "* * * * *"]   # 07:00 India time daily (reminders); every 10 minutes (emails); every minute (phone notifications)
+
+[vars]
+# Set by setup (docs/SETUP.md): your Supabase project address
+SUPABASE_URL = "https://YOUR-PROJECT.supabase.co"
+EMAIL_FROM = "Our Family <family@ourfamily.example>"
+# phone notifications: public half of the VAPID key pair (the private half is the VAPID_PRIVATE secret)
+VAPID_PUBLIC = ""
+# public app identifiers for Microsoft / Yahoo / Google sign-in (the secrets are set in the dashboard)
+MS_CLIENT_ID = ""
+GOOGLE_CLIENT_ID = ""
+YAHOO_CLIENT_ID = ""
+
+# Workers AI for writing help (src/ai.ts): rewrite text, and speech → English text
+[ai]
+binding = "AI"
+
+# Rate limits (src/limits.ts): 300 requests a minute per person on the API address; 10 key tries a minute per IP
+[[ratelimits]]
+name = "API_LIMIT"
+namespace_id = "2401"
+simple = { limit = 300, period = 60 }
+
+[[ratelimits]]
+name = "KEY_LIMIT"
+namespace_id = "2402"
+simple = { limit = 10, period = 60 }
+
+# sign-in emails: 5 requests a minute per IP (Supabase sees only this Worker's address, so its per-IP limits can't)
+[[ratelimits]]
+name = "MAIL_LIMIT"
+namespace_id = "2403"
+simple = { limit = 5, period = 60 }
+
+[observability]
+enabled = true
+
+# deploys only if the Worker tests pass (Workers Builds runs this before uploading)
+[build]
+command = "npm test"

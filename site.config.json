@@ -1,0 +1,23 @@
+{
+  "_help": "Your family's settings. The setup guide (docs/SETUP.md) tells you what to put in each line. Nothing here is secret.",
+  "familyName": "Our Family",
+  "appName": "Our Family",
+  "familyStoryHint": "Our family began with…",
+  "siteUrl": "https://ourfamily.example",
+  "apiUrl": "https://api.ourfamily.example",
+  "otherSiteUrls": [],
+  "emailFrom": "family@ourfamily.example",
+  "privacyEmail": "privacy@ourfamily.example",
+  "admin": {
+    "name": "Family Admin",
+    "shortName": "Family Admin",
+    "phone": "",
+    "whatsapp": ""
+  },
+  "supabaseProjectUrl": "https://YOUR-PROJECT.supabase.co",
+  "supabasePublishableKey": "",
+  "googleClientId": "",
+  "vapidPublicKey": "",
+  "community": "tamil",
+  "menuLanguages": ["en", "ta"]
+}
