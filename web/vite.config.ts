@@ -1,6 +1,6 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import cfg from '../site.config.json';
 
@@ -36,6 +36,13 @@ const VALUES: Record<string, string> = {
 const fill = (t: string) => Object.entries(VALUES).reduce((s, [k, v]) => s.split(k).join(v), t);
 const TEMPLATED = ['privacy.html', 'manifest.webmanifest', '_headers', '.well-known/security.txt'];
 
+// The app icon: South Indian traditions keep the gopuram; every other family gets the banyan (icons/banyan/,
+// drawn by npm run icon-art). Keep this list in step with lib/motif.ts (iconArt.test.tsx checks it).
+const SOUTH = ['kannada', 'malayalam', 'tamil', 'telugu'];
+const BANYAN: [string, string][] = [['icon-192.png', 'icon-192.png'], ['icon-512.png', 'icon-512.png'], ['icon-maskable-512.png', 'icon-maskable-512.png'],
+  ['apple-touch-icon.png', 'apple-touch-icon.png'], ['favicon-32.png', 'icons/favicon-32.png'], ['favicon-64.png', 'icons/favicon-64.png'], ['icon-192.png', 'icons/icon-192.png']];
+const useBanyan = !SOUTH.includes((cfg as { community?: string }).community || '');
+
 function familySettings(): Plugin {
   let outDir = 'dist';
   return {
@@ -53,6 +60,10 @@ function familySettings(): Plugin {
       for (const f of TEMPLATED) {
         const p = resolve(outDir, f);
         if (existsSync(p)) writeFileSync(p, fill(readFileSync(p, 'utf8')));
+      }
+      if (useBanyan) for (const [from, to] of BANYAN) {
+        const src = resolve(__dirname, 'public/icons/banyan', from);
+        if (existsSync(src) && existsSync(resolve(outDir, to))) copyFileSync(src, resolve(outDir, to));
       }
     },
   };

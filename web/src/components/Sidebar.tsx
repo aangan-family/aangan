@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { MOTIF_NAME } from '../lib/motif';
 import { useStore } from '../lib/store';
 import { usePresence } from '../lib/presence';
 import { go, type Route } from './common';
@@ -144,7 +145,7 @@ export function ThemePicker({ api }: { api: { savePrefs: (p: Partial<Prefs>) => 
       <TraditionsRow />
       <MenuLangRow />
       <TextSizeRow />
-      <label className="themetoggle"><input type="checkbox" checked={h.kolam} onChange={(e) => save({ kolam: e.target.checked })} /> Kolam background</label>
+      {h.motif && <label className="themetoggle"><input type="checkbox" checked={h.kolam} onChange={(e) => save({ kolam: e.target.checked })} /> Background art <span className="muted">({MOTIF_NAME[h.motif]})</span></label>}
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { usePack } from '../lib/community';
+import { motifFor } from '../lib/motif';
+import { MotifBackground } from './Motifs';
 import { useEffect, useId, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { Prefs } from '../lib/types';
 import { useStore } from '../lib/store';
@@ -26,7 +28,9 @@ export function useHeritage() {
     /** null when the member's traditions have no border (English) */
     border: borderFor(gender, p.border, pack.id),
     scripts: (south ? ((p.scripts as ScriptsPref) || 'both') : 'en') as ScriptsPref,
-    kolam: south && p.kolam !== false,
+    /** the background floor art is on (the member's Theme switch) */
+    kolam: p.kolam !== false && !!motifFor(pack.id),
+    motif: motifFor(pack.id),
     doors: p.doors !== false,
   };
 }
@@ -218,11 +222,13 @@ export function kolamPaths(R = 5, s = 14) {
 }
 
 /** Faint kolams across the background, fixed while the page scrolls. Off in Theme → Kolam background. */
+/** Faint floor art behind every page, from the member's traditions: kolam, rangoli, alpana, jali or vine (lib/motif.ts). */
 export function KolamBackground() {
-  const { kolam } = useHeritage();
+  const { kolam, motif } = useHeritage();
   const k = useMemo(() => kolamPaths(5, 14), []);
   const id = sid(useId());
-  if (!kolam) return null;
+  if (!kolam || !motif) return null;
+  if (motif !== 'kolam') return <MotifBackground motif={motif} />;
   const T = 380;
   return (
     <div className="kolam-bg" aria-hidden="true">

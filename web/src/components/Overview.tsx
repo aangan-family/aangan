@@ -1,4 +1,5 @@
 import { SITE_NAME, SiteAvatar, useIsSiteAdmin } from './SiteAdmin';
+import { Banyan } from './Banyan';
 import { FAMILY } from '../lib/site';
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Gopuram } from './Gopuram';
@@ -183,7 +184,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
       {/* generations */}
       <Card i={7} cls="b-gens" label="Every generation" onOpen={() => jump('h-generations')}>
         <small className="b-k">{WORDS[family.maxGen] || family.maxGen} generations</small>
-        {south ? <Gopuram compact counts={gens} mine={myGen} /> : <p className="gen-counts">{gens.map((n, i) => <span key={i} className={i + 1 === myGen ? 'mine' : ''}><b>{n}</b> <small>Gen {i + 1}</small></span>)}</p>}
+        {south ? <Gopuram compact counts={gens} mine={myGen} /> : <Banyan compact counts={gens} mine={myGen} />}
       </Card>
 
       {/* find anyone */}

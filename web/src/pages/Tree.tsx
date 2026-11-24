@@ -1,4 +1,5 @@
 import { useStore } from '../lib/store';
+import { Banyan } from '../components/Banyan';
 import { SearchBox, go } from '../components/common';
 import { useTreeList } from '../components/TreeList';
 import { MeCard } from '../components/MeCard';
@@ -23,7 +24,7 @@ export function Tree({ focusId }: { focusId?: string }) {
         <h2 className="headline">Family tree.<HelpTip sections={['tree', 'corrections']} /></h2>
         <p className="subhead">{snap.persons.length} people across {family.maxGen} generations. Tap a name to open their page, or the arrow to see their children.</p>
       </section>
-      {south && <div className="treegopuram"><Gopuram counts={counts} mine={mine} describe={describe} /></div>}
+      <div className="treegopuram">{south ? <Gopuram counts={counts} mine={mine} describe={describe} /> : <Banyan counts={counts} mine={mine} describe={describe} />}</div>
       <MeCard compact />
       <div className="treebar">
         <div className="tsearch"><SearchBox placeholder="Find someone in the tree…" onPick={(id) => go('p/' + id)} /></div>
