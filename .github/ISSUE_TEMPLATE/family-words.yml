@@ -12,7 +12,7 @@ body:
     id: language
     attributes:
       label: Language
-      options: [Hindi, Punjabi, Bengali, Marathi, Gujarati, Urdu, Tamil, Telugu, Kannada, Malayalam, Another language]
+      options: [Hindi, Punjabi, Bengali, Marathi, Gujarati, Urdu, Tamil, Telugu, Kannada, Malayalam, Odia, Assamese, Konkani, Sindhi, Kashmiri, Parsi, Goan Catholic, Syrian Christian, Another language]
     validations: { required: true }
   - type: input
     id: where

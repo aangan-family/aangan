@@ -1,6 +1,6 @@
 // The settings check for site.config.json. Pure: used by `npm run check` and by the setup wizard.
 
-export const COMMUNITIES = ['hindi', 'punjabi', 'bengali', 'marathi', 'gujarati', 'urdu', 'tamil', 'telugu', 'kannada', 'malayalam', 'english'];
+export const COMMUNITIES = ['hindi', 'punjabi', 'bengali', 'marathi', 'gujarati', 'urdu', 'tamil', 'telugu', 'kannada', 'malayalam', 'odia', 'assamese', 'konkani', 'sindhi', 'kashmiri', 'parsi', 'goan_catholic', 'syrian_christian', 'english'];
 
 const url = (u) => { try { return new URL(u); } catch { return null; } };
 

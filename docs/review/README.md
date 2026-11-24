@@ -27,8 +27,16 @@ Please write only words, never anyone's names or details. Your name goes in the 
 | Telugu | [telugu.csv](telugu.csv) | 8 | Not yet |
 | Kannada | [kannada.csv](kannada.csv) | 8 | Not yet |
 | Malayalam | [malayalam.csv](malayalam.csv) | 20 | Not yet |
+| Odia (first draft) | [odia.csv](odia.csv) | 31 | Not yet |
+| Assamese (first draft) | [assamese.csv](assamese.csv) | 41 | Not yet |
+| Konkani (first draft) | [konkani.csv](konkani.csv) | 67 | Not yet |
+| Sindhi (first draft, English letters only) | [sindhi.csv](sindhi.csv) | 56 | Not yet |
+| Kashmiri (first draft, English letters only) | [kashmiri.csv](kashmiri.csv) | 75 | Not yet |
+| Parsi (first draft) | [parsi.csv](parsi.csv) | 27 | Not yet |
+| Goan Catholic (first draft, Romi) | [goan_catholic.csv](goan_catholic.csv) | 69 | Not yet |
+| Syrian Christian, Kerala (first draft) | [syrian_christian.csv](syrian_christian.csv) | 20 | Not yet |
 
-A pack counts as reviewed once two people from different regions or communities have checked it.
+A pack counts as reviewed once two people from different regions or communities have checked it. Packs marked *first draft* show as such in the site's Theme → Traditions; Sindhi, Kashmiri, Parsi and Goan Catholic borrow another language's menus (the sheet says which) until a reviewer gives their own.
 
 ## For maintainers
 

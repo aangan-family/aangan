@@ -21,6 +21,21 @@ describe('festivals of every community', () => {
     expect(on('2026-01-13', 'Lohri') && on('2026-01-14', 'Makar Sankranti') && on('2026-01-14', 'Thai Pongal')).toBe(true);
     expect(on('2025-09-30', 'Durga Ashtami') && on('2026-10-19', 'Durga Ashtami')).toBe(true);
   });
+  it('Odia, Assamese, Sindhi and Parsi dates', () => {
+    expect(on('2025-06-14', 'Pahili Raja') && on('2025-06-15', 'Raja Sankranti') && on('2025-06-16', 'Basi Raja')).toBe(true);
+    expect(on('2026-06-14', 'Pahili Raja') && on('2026-06-15', 'Raja Sankranti')).toBe(true);
+    expect(on('2026-04-14', 'Pana Sankranti') && on('2025-04-14', 'Bohag Bihu')).toBe(true);
+    expect(on('2025-01-14', 'Magh Bihu') && on('2025-01-13', 'Uruka')).toBe(true);
+    // Assam starts its solar months by its own rule, so Bihu can be a day off the Tamil-rule date (2025: kept on Oct 18, shown Oct 17).
+    expect(on('2026-10-18', 'Kati Bihu')).toBe(true);
+    expect(on('2026-03-20', 'Cheti Chand')).toBe(true);
+    expect(on('2023-08-16', 'Parsi New Year') && on('2024-08-15', 'Parsi New Year') && on('2025-08-15', 'Parsi New Year') && on('2026-08-15', 'Parsi New Year')).toBe(true);
+    expect(on('2026-08-20', 'Khordad Sal') && on('2026-08-14', 'Pateti') && on('2026-03-21', 'Jamshedi Navroz')).toBe(true);
+  });
+  it('church days', () => {
+    expect(on('2026-02-18', 'Ash Wednesday') && on('2026-03-29', 'Palm Sunday') && on('2026-04-02', 'Maundy Thursday')).toBe(true);
+    expect(on('2026-07-03', 'Dukhrana') && on('2026-12-03', 'Feast of St Francis Xavier')).toBe(true);
+  });
   it('Sikh, Jain, Buddhist, Christian, national', () => {
     expect(on('2025-11-05', 'Guru Nanak Gurpurab') && on('2026-11-24', 'Guru Nanak Gurpurab')).toBe(true);
     expect(on('2025-04-10', 'Mahavir Jayanti') && on('2025-05-12', 'Buddha Purnima')).toBe(true);

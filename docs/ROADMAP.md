@@ -26,8 +26,9 @@ A 16-year-old can follow SETUP.md, but it is 10 steps across five websites.
 ### 2. Community words need review by native speakers
 The packs are a careful first draft. Words vary by region, caste and religion (a Lucknow Muslim family and a Jaipur Marwari family both speak "Hindi" at home, with different words). Needed: a reviewer for each language, and regional variants (e.g. Marwari, Bhojpuri, Sylheti, Konkani, Tulu, Kodava).
 - **Review kit** — done (Nov 2026): a sheet per language in [docs/review](review/README.md) (about 95 relationships plus menus, made from the packs and kept in step by a test) and a *Family words* issue form. Still needed: the reviewers themselves.
-- **Missing communities**: Odia, Assamese, Konkani, Sindhi, Kashmiri, Nepali, Manipuri, Khasi, Mizo, Tulu, Kodava, Parsi (Gujarati words with Zoroastrian festivals), Anglo-Indian, Goan Catholic, Syrian Christian (Malayalam with church calendar), Bohra and Khoja (Gujarati Muslim).
-- **Festival groups** to add: Odia (Rath Yatra, Raja), Assamese (the three Bihus), Sindhi (Cheti Chand), Parsi (Navroz, Khordad Sal), more regional Muslim and Christian days.
+- **New communities, first drafts** (Nov 2026): Odia, Assamese, Konkani, Sindhi, Kashmiri, Parsi, Goan Catholic, Syrian Christian. Words we weren't sure of are left out (the English shows); Sindhi, Kashmiri and Goan Catholic words are in English letters only, and Sindhi, Kashmiri, Parsi and Goan Catholic borrow Hindi, Urdu, Gujarati and Konkani menus for now. Each needs a native speaker.
+- **Still missing communities**: Nepali, Manipuri, Khasi, Mizo, Tulu, Kodava, Anglo-Indian, Bohra and Khoja (Gujarati Muslim).
+- **Festival groups added** (Nov 2026): Odia (Pana Sankranti, Raja, Rath Yatra, Kumar Purnima, Boita Bandana), Assamese (the three Bihus; Assam's own month rule can put them a day off), Sindhi (Cheti Chand), Parsi (Jamshedi Navroz, Parsi New Year, Pateti and Khordad Sal on the Shahenshahi calendar), Goan Catholic and Kerala Christian feasts, and Ash Wednesday, Palm Sunday and Maundy Thursday. Still to add: more regional Muslim days.
 
 ### 3. Pages are in English
 Menus are translated; page text isn't. Translating the whole interface (about 1,500 phrases) into ten languages needs a translation system and volunteers.

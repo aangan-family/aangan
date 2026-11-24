@@ -9,6 +9,14 @@ export interface Release { date: string; title: string; notes: Note[] }
 
 export const RELEASES: Release[] = [
   {
+    date: '2026-11-25',
+    title: 'More traditions.',
+    notes: [
+      { icon: '🪔', text: 'New in Theme → Traditions: Odia, Assamese, Konkani, Sindhi, Kashmiri, Parsi, Goan Catholic and Syrian Christian. They are first drafts: if a word is wrong, tell the admin.' },
+      { icon: '📅', text: 'New festivals you can switch on: Raja and Rath Yatra, the three Bihus, Cheti Chand, Parsi New Year and Khordad Sal, and more church days.', link: '#/calendar' },
+    ],
+  },
+  {
     date: '2026-11-24',
     title: 'Welcome to your family website.',
     notes: [

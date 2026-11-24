@@ -195,7 +195,7 @@ function TraditionsRow() {
   return (<>
     <p className="themelabel">Traditions</p>
     <select className="themeselect" aria-label="Traditions" value={id} onChange={(e) => pick(e.target.value as CommunityId)}>
-      {PACK_LIST.map((p) => <option key={p.id} value={p.id}>{p.id === 'english' ? p.name : `${p.name} · ${p.native}`}{p.id === FAMILY_DEFAULT ? ' (family default)' : ''}</option>)}
+      {PACK_LIST.map((p) => <option key={p.id} value={p.id}>{p.id === 'english' || p.native === p.name ? p.name : `${p.name} · ${p.native}`}{p.draft ? ' (first draft)' : ''}{p.id === FAMILY_DEFAULT ? ' (family default)' : ''}</option>)}
     </select>
     <p className="note small">Family words (Chacha, Mausi, Athai…), menus and the calendar follow this. Only on this device.</p>
     <button className="tlink" onClick={() => setOpen(!open)}>{open ? 'Hide festival list' : 'Festivals in the calendar'}</button>

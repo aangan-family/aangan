@@ -1,0 +1,129 @@
+﻿Row,Relationship,Who is speaking,Our word (English letters),Our word (own script),Correct? (Yes / No / Depends),Better word (English letters),Better word (own script),Where or who says it differently,Notes
+1,Father,anyone,Deuta,দেউতা,,,,,
+2,Mother,anyone,Ma,মা,,,,,
+3,Father's father,anyone,Koka,ককা,,,,,
+4,Father's mother,anyone,Aita,আইতা,,,,,
+5,Father's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+6,Father's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+7,Mother's father,anyone,Koka,ককা,,,,,
+8,Mother's mother,anyone,Aita,আইতা,,,,,
+9,Mother's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+10,Mother's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+11,Son,anyone,Lora,ল’ৰা,,,,,
+12,Daughter,anyone,Suwali,ছোৱালী,,,,,
+13,Son's son,anyone,Nati,নাতি,,,,,
+14,Son's daughter,anyone,Natini,নাতিনী,,,,,
+15,Daughter's son,anyone,Nati,নাতি,,,,,
+16,Daughter's daughter,anyone,Natini,নাতিনী,,,,,
+17,Great-grandson,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+18,Great-granddaughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+19,Husband,a woman,Swami,স্বামী,,,,,
+20,Wife,a man,Patni,পত্নী,,,,,
+21,Husband's father,a woman,Xohur,শহুৰ,,,,,
+22,Husband's mother,a woman,Xahu,শাহু,,,,,
+23,Husband's grandfather,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+24,Husband's grandmother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+25,Wife's father,a man,Xohur,শহুৰ,,,,,
+26,Wife's mother,a man,Xahu,শাহু,,,,,
+27,Wife's grandfather,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+28,Wife's grandmother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+29,Daughter's husband,anyone,Jowai,জোঁৱাই,,,,,
+30,Son's wife,anyone,Bowari,বোৱাৰী,,,,,
+31,Son's or daughter's father-in-law,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+32,Son's or daughter's mother-in-law,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+33,Elder brother,anyone,Dada,দাদা,,,,,
+34,Elder sister,anyone,Baideu,বাইদেউ,,,,,
+35,Younger brother,anyone,Bhai,ভাই,,,,,
+36,Younger sister,anyone,Bhoni,ভনী,,,,,
+37,Father's elder brother,anyone,Bordeuta,বৰদেউতা,,,,,
+38,Father's elder sister,anyone,Pehi,পেহী,,,,,
+39,Father's elder brother's wife,anyone,Borma,বৰমা,,,,,
+40,Father's elder sister's husband,anyone,Pehadeu,পেহাদেউ,,,,,
+41,Father's younger brother,anyone,Khura,খুড়া,,,,,
+42,Father's younger sister,anyone,Pehi,পেহী,,,,,
+43,Father's younger brother's wife,anyone,Khuri,খুড়ী,,,,,
+44,Father's younger sister's husband,anyone,Pehadeu,পেহাদেউ,,,,,
+45,Mother's elder brother,anyone,Mama,মামা,,,,,
+46,Mother's elder sister,anyone,Mahi,মাহী,,,,,
+47,Mother's elder brother's wife,anyone,Mami,মামী,,,,,
+48,Mother's elder sister's husband,anyone,Mohadeu,মহাদেউ,,,,,
+49,Mother's younger brother,anyone,Mama,মামা,,,,,
+50,Mother's younger sister,anyone,Mahi,মাহী,,,,,
+51,Mother's younger brother's wife,anyone,Mami,মামী,,,,,
+52,Mother's younger sister's husband,anyone,Mohadeu,মহাদেউ,,,,,
+53,Brother's son,anyone,Bhatija,ভতিজা,,,,,
+54,Brother's daughter,anyone,Bhatiji,ভতিজী,,,,,
+55,Sister's son,anyone,Bhagin,ভাগিন,,,,,
+56,Sister's daughter,anyone,Bhagini,ভাগিনী,,,,,
+57,Elder brother's wife,anyone,Bou,বৌ,,,,,
+58,Elder sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+59,Younger brother's wife,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+60,Younger sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+61,Father's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+62,Father's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+63,Father's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+64,Father's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+65,Father's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+66,Father's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+67,Father's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+68,Father's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+69,Mother's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+70,Mother's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+71,Mother's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+72,Mother's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+73,Mother's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+74,Mother's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+75,Mother's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+76,Mother's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+77,Father's parent's brother,anyone,Koka,ককা,,,,,
+78,Father's parent's sister,anyone,Aita,আইতা,,,,,
+79,Mother's parent's brother,anyone,Koka,ককা,,,,,
+80,Mother's parent's sister,anyone,Aita,আইতা,,,,,
+81,Husband's elder brother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+82,Husband's elder sister,a woman,Nonod,ননদ,,,,,
+83,Wife's elder brother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+84,Wife's elder sister,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+85,Husband's elder brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+86,Husband's younger brother,a woman,Deor,দেওৰ,,,,,
+87,Husband's younger sister,a woman,Nonod,ননদ,,,,,
+88,Wife's younger brother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+89,Wife's younger sister,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+90,Husband's younger brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+91,Husband's sister's husband,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+92,Wife's sister's husband,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+93,Wife's brother's wife,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+
+,Menus and labels,,English,Our translation,Correct? (Yes / No / Depends),,Better translation,,Notes
+94,Greeting used in wishes,,,Nomoskar,,,,,
+95,What the family line is called (gotra),,,Gotra,,,,,
+96,What the family deity is called,,,Kuladevata,,,,,
+97,Menu,,Home,মূল পৃষ্ঠা,,,,,
+98,Menu,,Family,পৰিয়াল,,,,,
+99,Menu,,Family tree,বংশবৃক্ষ,,,,,
+100,Menu,,Tree,বৃক্ষ,,,,,
+101,Menu,,How are we related?,আমাৰ সম্পৰ্ক কি?,,,,,
+102,Menu,,Calendar,কেলেণ্ডাৰ,,,,,
+103,Menu,,Photos,ফটো,,,,,
+104,Menu,,Conversations,কথা-বতৰা,,,,,
+105,Menu,,Talk,আড্ডা,,,,,
+106,Menu,,With the whole family,গোটেই পৰিয়ালৰ সৈতে,,,,,
+107,Menu,,Messages,বাৰ্তা,,,,,
+108,Menu,,"Private, one-to-one","ব্যক্তিগত, দুজনৰ মাজত",,,,,
+109,Menu,,You,আপুনি,,,,,
+110,Menu,,My profile,মোৰ প্ৰ'ফাইল,,,,,
+111,Menu,,My privacy,মোৰ গোপনীয়তা,,,,,
+112,Menu,,Theme,ৰূপ,,,,,
+113,Menu,,Help,সহায়,,,,,
+114,Menu,,Help & FAQ,সহায় আৰু প্ৰশ্ন,,,,,
+115,Menu,,What’s New!,নতুন কি!,,,,,
+116,Menu,,Add to home screen,হোম স্ক্ৰীণত যোগ কৰক,,,,,
+117,Menu,,Admin,পৰিচালক,,,,,
+118,Menu,,Steward,তত্ত্বাৱধায়ক,,,,,
+119,Menu,,Requests to join,যোগদানৰ অনুৰোধ,,,,,
+120,Menu,,Sign out,ছাইন আউট,,,,,
+121,Menu,,More,অধিক,,,,,
+122,Menu,,Back,উভতি যাওক,,,,,
+123,Menu,,Waiting for your OK,আপোনাৰ সন্মতিৰ অপেক্ষাত,,,,,
+124,Menu,,Waiting for a parent,অভিভাৱকৰ সন্মতিৰ অপেক্ষাত,,,,,
+125,Menu,,What a parent is checking,অভিভাৱকে কি চাইছে,,,,,
+126,Menu,,From your children,আপোনাৰ সন্তানৰ পৰা,,,,,

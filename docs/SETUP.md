@@ -100,7 +100,7 @@ Open `site.config.json` in the Codespace and fill in:
 | `admin.name`, `admin.shortName`, `admin.phone` | You. Your name and mobile go on the family's emails so relatives know they're genuine. |
 | `supabaseProjectUrl`, `supabasePublishableKey` | From step 4.5 (not the secret key) |
 | `familyStoryHint` | The first words of your family story, e.g. `Our family comes from…` |
-| `community` | Your family's traditions: `hindi`, `punjabi`, `bengali`, `marathi`, `gujarati`, `urdu`, `tamil`, `telugu`, `kannada`, `malayalam` or `english`. Family words, menus, calendar and festivals follow it. Each relative can still pick their own in Theme → Traditions. |
+| `community` | Your family's traditions: `hindi`, `punjabi`, `bengali`, `marathi`, `gujarati`, `urdu`, `tamil`, `telugu`, `kannada`, `malayalam`, or (first drafts) `odia`, `assamese`, `konkani`, `sindhi`, `kashmiri`, `parsi`, `goan_catholic`, `syrian_christian`; or `english`. Family words, menus, calendar and festivals follow it. Each relative can still pick their own in Theme → Traditions. |
 | `emailSignIn` | `true` with your own domain; `false` on the free setup (Google sign-in only) |
 
 Then check and save:

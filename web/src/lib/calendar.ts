@@ -139,6 +139,15 @@ function mark(days: CalDay[]) {
       add(x, F('Tamil New Year', '🌼', 'Puthandu', TA)); add(x, F('Vishu', '🪔', 'Kerala new year', ['kerala']));
       add(x, F('Vaisakhi', '🌾', 'Harvest and Khalsa day', ['punjab', 'sikh'])); add(x, F('Pohela Boishakh', '🎊', 'Bengali new year (date may differ by a day)', ['bengal']));
     }
+    if (x.tamilMonth === 0 && x.tamilDay === 1) {
+      add(x, F('Pana Sankranti', '🥤', 'Odia new year · Maha Vishuba Sankranti', ['odisha']));
+      add(x, F('Bohag Bihu', '🌸', 'Rongali Bihu, Assamese new year (date may differ by a day)', ['assam'])); add(days[i - 1], O('Goru Bihu', '🐄', undefined, ['assam']));
+    }
+    if (x.tamilMonth === 2 && x.tamilDay === 1) {   // Raja: three days around Mithuna Sankranti
+      add(days[i - 1], F('Pahili Raja', '🌧️', 'Raja Parba begins', ['odisha'])); add(x, F('Raja Sankranti', '🌧️', 'Mithuna Sankranti', ['odisha'])); add(days[i + 1], O('Basi Raja', '🌧️', 'Bhu Daha', ['odisha']));
+    }
+    if (x.tamilMonth === 6 && x.tamilDay === 1) add(x, F('Kati Bihu', '🪔', 'Kongali Bihu (date may differ by a day)', ['assam']));
+    if (x.tamilMonth === 9 && x.tamilDay === 1) { add(x, F('Magh Bihu', '🔥', 'Bhogali Bihu (date may differ by a day)', ['assam'])); add(days[i - 1], O('Uruka', '🍲', 'The feast the night before Magh Bihu', ['assam'])); }
     if (x.tamilMonth === 3 && x.tamilDay === 18) add(x, F('Aadi Perukku', '🌊', undefined, TA));
     if (x.tamilMonth === 11 && x.tamilDay === 1) add(x, F('Karadaiyan Nombu', '🧵', 'Savitri vratam', TA));
   }
@@ -188,12 +197,15 @@ function mark(days: CalDay[]) {
   lunarTithi(0, 14, F('Hanuman Jayanti', '🐒', undefined, ['north', 'maharashtra']));
   lunarTithi(1, 2, F('Akshaya Tritiya', '✨', 'Akha Teej', ['hindu', 'jain']));
   lunarTithi(1, 14, F('Buddha Purnima', '☸️', undefined, ['buddhist']));
-  lunarTithi(3, 1, F('Rath Yatra', '🛕', undefined, ['bengal']));
+  lunarTithi(3, 1, F('Rath Yatra', '🛕', undefined, ['bengal', 'odisha']));
+  lunarTithi(6, 14, F('Kumar Purnima', '🌕', undefined, ['odisha']));
+  lunarTithi(7, 14, F('Boita Bandana', '⛵', 'Kartik Purnima', ['odisha']));
+  lunarAt(0, 1, 'eveningTithi', F('Cheti Chand', '🌊', 'Sindhi new year · Jhulelal Jayanti', ['sindhi']));
   lunarTithi(3, 14, F('Guru Purnima', '🙏', undefined, ['hindu', 'buddhist', 'jain']));
   lunarTithi(4, 2, F('Hariyali Teej', '🌿', undefined, ['north']));
   lunarTithi(4, 4, F('Nag Panchami', '🐍', undefined, ['north', 'maharashtra']));
-  lunarTithi(6, 5, F('Durga Puja · Shashthi', '🪷', 'Durga Puja begins', ['bengal']));
-  lunarTithi(6, 7, F('Durga Ashtami', '🪷', 'Maha Ashtami', ['bengal', 'north']));
+  lunarTithi(6, 5, F('Durga Puja · Shashthi', '🪷', 'Durga Puja begins', ['bengal', 'odisha', 'assam']));
+  lunarTithi(6, 7, F('Durga Ashtami', '🪷', 'Maha Ashtami', ['bengal', 'north', 'odisha', 'assam']));
   lunarTithi(6, 14, F('Kojagari Lakshmi Puja', '🌕', 'Sharad Purnima', ['bengal']));
   lunarAt(6, 18, 'eveningTithi', F('Karva Chauth', '🌙', 'Time of moonrise varies by city', ['north', 'punjab']));
   lunarAt(6, 27, 'eveningTithi', F('Dhanteras', '🪙', undefined, ['north', 'gujarat', 'maharashtra']));
@@ -219,12 +231,27 @@ function mark(days: CalDay[]) {
     if (x.m === 7 && x.d === 15) add(x, F('Independence Day', '🇮🇳', undefined, ['national']));
     if (x.m === 9 && x.d === 2) add(x, F('Gandhi Jayanti', '🕊️', undefined, ['national']));
     if (x.m === 11 && x.d === 25) add(x, F('Christmas', '🎄', undefined, ['christian']));
+    if (x.m === 2 && x.d === 21) add(x, F('Jamshedi Navroz', '🌷', 'Spring new year', ['parsi']));
+    if (x.m === 6 && x.d === 3) add(x, F('Dukhrana', '✝️', 'St Thomas Day', ['kerala_christian']));
+    if (x.m === 11 && x.d === 3) add(x, F('Feast of St Francis Xavier', '✝️', undefined, ['goa']));
+    if (x.m === 5 && x.d === 24) add(x, F('São João', '🌊', 'Feast of St John the Baptist', ['goa']));
+    // Parsi (Shahenshahi) calendar: 365 days, no leap year, so it moves a day earlier every fourth year.
+    // New Year (Navroz) fell on 15 August 2024.
+    const sh = ((Math.round((x.date.getTime() - Date.UTC(2024, 7, 15)) / 86_400_000) % 365) + 365) % 365;
+    if (sh === 0) add(x, F('Parsi New Year', '🌷', 'Navroz (Shahenshahi)', ['parsi']));
+    if (sh === 364) add(x, O('Pateti', '🙏', 'The last day of the Parsi year', ['parsi']));
+    if (sh === 5) add(x, F('Khordad Sal', '🔥', 'Birth of Zarathushtra', ['parsi']));
   }
   { // Easter (Western, as kept by most Indian churches) and Good Friday
     const ys = new Set(days.map((x) => x.y));
     for (const y of ys) {
       const e = easter(y), i = days.findIndex((x) => x.y === y && x.m === e.m && x.d === e.d);
-      if (i >= 0) { add(days[i], F('Easter', '✝️', undefined, ['christian'])); if (i >= 2) add(days[i - 2], F('Good Friday', '✝️', undefined, ['christian'])); }
+      if (i >= 0) {
+        add(days[i], F('Easter', '✝️', undefined, ['christian'])); if (i >= 2) add(days[i - 2], F('Good Friday', '✝️', undefined, ['christian']));
+        if (i >= 3) add(days[i - 3], O('Maundy Thursday', '🍞', 'Pesaha', ['christian']));
+        if (i >= 7) add(days[i - 7], O('Palm Sunday', '🌿', 'Oshana', ['christian']));
+        if (i >= 46) add(days[i - 46], O('Ash Wednesday', '✝️', 'Lent begins', ['christian']));
+      }
     }
   }
   // ------------------------------------------------------------------ Islamic (Hijri) days

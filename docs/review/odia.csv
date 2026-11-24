@@ -1,0 +1,129 @@
+﻿Row,Relationship,Who is speaking,Our word (English letters),Our word (own script),Correct? (Yes / No / Depends),Better word (English letters),Better word (own script),Where or who says it differently,Notes
+1,Father,anyone,Bapa,ବାପା,,,,,
+2,Mother,anyone,Bou,ବୋଉ,,,,,
+3,Father's father,anyone,Jeje bapa,ଜେଜେ ବାପା,,,,,
+4,Father's mother,anyone,Jeje maa,ଜେଜେ ମା,,,,,
+5,Father's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+6,Father's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+7,Mother's father,anyone,Aja,ଅଜା,,,,,
+8,Mother's mother,anyone,Aai,ଆଈ,,,,,
+9,Mother's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+10,Mother's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+11,Son,anyone,Pua,ପୁଅ,,,,,
+12,Daughter,anyone,Jhia,ଝିଅ,,,,,
+13,Son's son,anyone,Nati,ନାତି,,,,,
+14,Son's daughter,anyone,Natuni,ନାତୁଣୀ,,,,,
+15,Daughter's son,anyone,Nati,ନାତି,,,,,
+16,Daughter's daughter,anyone,Natuni,ନାତୁଣୀ,,,,,
+17,Great-grandson,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+18,Great-granddaughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+19,Husband,a woman,Swami,ସ୍ୱାମୀ,,,,,
+20,Wife,a man,Stree,ସ୍ତ୍ରୀ,,,,,
+21,Husband's father,a woman,Shwashura,ଶ୍ୱଶୁର,,,,,
+22,Husband's mother,a woman,Shashu,ଶାଶୂ,,,,,
+23,Husband's grandfather,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+24,Husband's grandmother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+25,Wife's father,a man,Shwashura,ଶ୍ୱଶୁର,,,,,
+26,Wife's mother,a man,Shashu,ଶାଶୂ,,,,,
+27,Wife's grandfather,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+28,Wife's grandmother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+29,Daughter's husband,anyone,Juain,ଜ୍ୱାଇଁ,,,,,
+30,Son's wife,anyone,Bohu,ବୋହୂ,,,,,
+31,Son's or daughter's father-in-law,anyone,Samudi,ସମୁଦି,,,,,
+32,Son's or daughter's mother-in-law,anyone,Samuduni,ସମୁଦୁଣୀ,,,,,
+33,Elder brother,anyone,Bhai,ଭାଇ,,,,,
+34,Elder sister,anyone,Apa,ଅପା,,,,,
+35,Younger brother,anyone,Sana bhai,ସାନ ଭାଇ,,,,,
+36,Younger sister,anyone,Sana bhauni,ସାନ ଭଉଣୀ,,,,,
+37,Father's elder brother,anyone,Bada bapa,ବଡ ବାପା,,,,,
+38,Father's elder sister,anyone,Piusi,ପିଉସୀ,,,,,
+39,Father's elder brother's wife,anyone,Bada bou,ବଡ ବୋଉ,,,,,
+40,Father's elder sister's husband,anyone,Piusa,ପିଉସା,,,,,
+41,Father's younger brother,anyone,Dada,ଦାଦା,,,,,
+42,Father's younger sister,anyone,Piusi,ପିଉସୀ,,,,,
+43,Father's younger brother's wife,anyone,Khudi,ଖୁଡ଼ୀ,,,,,
+44,Father's younger sister's husband,anyone,Piusa,ପିଉସା,,,,,
+45,Mother's elder brother,anyone,Mamu,ମାମୁ,,,,,
+46,Mother's elder sister,anyone,Mausi,ମାଉସୀ,,,,,
+47,Mother's elder brother's wife,anyone,Main,ମାଇଁ,,,,,
+48,Mother's elder sister's husband,anyone,Mausa,ମଉସା,,,,,
+49,Mother's younger brother,anyone,Mamu,ମାମୁ,,,,,
+50,Mother's younger sister,anyone,Mausi,ମାଉସୀ,,,,,
+51,Mother's younger brother's wife,anyone,Main,ମାଇଁ,,,,,
+52,Mother's younger sister's husband,anyone,Mausa,ମଉସା,,,,,
+53,Brother's son,anyone,Putura,ପୁତୁରା,,,,,
+54,Brother's daughter,anyone,Jhiari,ଝିଆରୀ,,,,,
+55,Sister's son,anyone,Bhanaja,ଭଣଜା,,,,,
+56,Sister's daughter,anyone,Bhanaji,ଭଣଜୀ,,,,,
+57,Elder brother's wife,anyone,Bhauja,ଭାଉଜ,,,,,
+58,Elder sister's husband,anyone,Bhinoi,ଭିଣୋଇ,,,,,
+59,Younger brother's wife,anyone,Bhauja,ଭାଉଜ,,,,,
+60,Younger sister's husband,anyone,Bhinoi,ଭିଣୋଇ,,,,,
+61,Father's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+62,Father's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+63,Father's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+64,Father's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+65,Father's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+66,Father's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+67,Father's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+68,Father's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+69,Mother's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+70,Mother's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+71,Mother's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+72,Mother's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+73,Mother's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+74,Mother's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+75,Mother's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+76,Mother's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+77,Father's parent's brother,anyone,Jeje bapa,ଜେଜେ ବାପା,,,,,
+78,Father's parent's sister,anyone,Jeje maa,ଜେଜେ ମା,,,,,
+79,Mother's parent's brother,anyone,Aja,ଅଜା,,,,,
+80,Mother's parent's sister,anyone,Aai,ଆଈ,,,,,
+81,Husband's elder brother,a woman,Bhasura,ଭାସୁର,,,,,
+82,Husband's elder sister,a woman,Nanada,ନଣନ୍ଦ,,,,,
+83,Wife's elder brother,a man,Shala,ଶଳା,,,,,
+84,Wife's elder sister,a man,Shali,ଶାଳୀ,,,,,
+85,Husband's elder brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+86,Husband's younger brother,a woman,Diara,ଦିଅର,,,,,
+87,Husband's younger sister,a woman,Nanada,ନଣନ୍ଦ,,,,,
+88,Wife's younger brother,a man,Shala,ଶଳା,,,,,
+89,Wife's younger sister,a man,Shali,ଶାଳୀ,,,,,
+90,Husband's younger brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+91,Husband's sister's husband,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+92,Wife's sister's husband,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+93,Wife's brother's wife,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+
+,Menus and labels,,English,Our translation,Correct? (Yes / No / Depends),,Better translation,,Notes
+94,Greeting used in wishes,,,Namaskar,,,,,
+95,What the family line is called (gotra),,,Gotra,,,,,
+96,What the family deity is called,,,Kuladevata / Ishta devata,,,,,
+97,Menu,,Home,ମୂଳ ପୃଷ୍ଠା,,,,,
+98,Menu,,Family,ପରିବାର,,,,,
+99,Menu,,Family tree,ବଂଶବୃକ୍ଷ,,,,,
+100,Menu,,Tree,ବୃକ୍ଷ,,,,,
+101,Menu,,How are we related?,ଆମର ସମ୍ପର୍କ କ'ଣ?,,,,,
+102,Menu,,Calendar,କ୍ୟାଲେଣ୍ଡର,,,,,
+103,Menu,,Photos,ଫଟୋ,,,,,
+104,Menu,,Conversations,କଥାବାର୍ତ୍ତା,,,,,
+105,Menu,,Talk,ଗପସପ,,,,,
+106,Menu,,With the whole family,ପୁରା ପରିବାର ସହ,,,,,
+107,Menu,,Messages,ବାର୍ତ୍ତା,,,,,
+108,Menu,,"Private, one-to-one","ବ୍ୟକ୍ତିଗତ, ଦୁଇଜଣଙ୍କ ମଧ୍ୟରେ",,,,,
+109,Menu,,You,ଆପଣ,,,,,
+110,Menu,,My profile,ମୋ ପ୍ରୋଫାଇଲ,,,,,
+111,Menu,,My privacy,ମୋ ଗୋପନୀୟତା,,,,,
+112,Menu,,Theme,ରୂପ,,,,,
+113,Menu,,Help,ସାହାଯ୍ୟ,,,,,
+114,Menu,,Help & FAQ,ସାହାଯ୍ୟ ଓ ପ୍ରଶ୍ନ,,,,,
+115,Menu,,What’s New!,ନୂଆ କ'ଣ!,,,,,
+116,Menu,,Add to home screen,ହୋମ ସ୍କ୍ରିନରେ ଯୋଡ଼ନ୍ତୁ,,,,,
+117,Menu,,Admin,ପରିଚାଳକ,,,,,
+118,Menu,,Steward,ତତ୍ତ୍ୱାବଧାୟକ,,,,,
+119,Menu,,Requests to join,ଯୋଗଦାନ ଅନୁରୋଧ,,,,,
+120,Menu,,Sign out,ସାଇନ ଆଉଟ,,,,,
+121,Menu,,More,ଅଧିକ,,,,,
+122,Menu,,Back,ପଛକୁ,,,,,
+123,Menu,,Waiting for your OK,ଆପଣଙ୍କ ସମ୍ମତି ଅପେକ୍ଷାରେ,,,,,
+124,Menu,,Waiting for a parent,ଅଭିଭାବକଙ୍କ ସମ୍ମତି ଅପେକ୍ଷାରେ,,,,,
+125,Menu,,What a parent is checking,ଅଭିଭାବକ କ'ଣ ଦେଖୁଛନ୍ତି,,,,,
+126,Menu,,From your children,ଆପଣଙ୍କ ପିଲାଙ୍କଠାରୁ,,,,,

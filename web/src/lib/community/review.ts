@@ -108,6 +108,7 @@ export function reviewSheet(p: Pack): string {
     ['What the family deity is called', p.labels.kuladeivam],
   ];
   for (const [what, v] of extra) out.push(line([String(++n), what, '', '', v, '', '', '', '', '']));
+  if (p.menusFrom) out.push(line(['', `The menus below are ${p.menusFrom} for now. Write your language's own words in "Better translation".`, '', '', '', '', '', '', '', '']));
   for (const [en, tr] of Object.entries(p.menus)) out.push(line([String(++n), 'Menu', '', en, tr, '', '', '', '', '']));
   return '﻿' + out.join('\n') + '\n';
 }

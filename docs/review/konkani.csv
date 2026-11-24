@@ -1,0 +1,129 @@
+﻿Row,Relationship,Who is speaking,Our word (English letters),Our word (own script),Correct? (Yes / No / Depends),Better word (English letters),Better word (own script),Where or who says it differently,Notes
+1,Father,anyone,Baba,बाबा,,,,,
+2,Mother,anyone,Aai,आई,,,,,
+3,Father's father,anyone,Aajo,आजो,,,,,
+4,Father's mother,anyone,Aaji,आजी,,,,,
+5,Father's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+6,Father's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+7,Mother's father,anyone,Aajo,आजो,,,,,
+8,Mother's mother,anyone,Aaji,आजी,,,,,
+9,Mother's grandfather,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+10,Mother's grandmother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+11,Son,anyone,Put,पूत,,,,,
+12,Daughter,anyone,Dhuv,धूव,,,,,
+13,Son's son,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+14,Son's daughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+15,Daughter's son,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+16,Daughter's daughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+17,Great-grandson,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+18,Great-granddaughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+19,Husband,a woman,Ghov,घोव,,,,,
+20,Wife,a man,Bayl,बायल,,,,,
+21,Husband's father,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+22,Husband's mother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+23,Husband's grandfather,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+24,Husband's grandmother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+25,Wife's father,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+26,Wife's mother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+27,Wife's grandfather,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+28,Wife's grandmother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+29,Daughter's husband,anyone,Zanvoy,जांवय,,,,,
+30,Son's wife,anyone,Sun,सून,,,,,
+31,Son's or daughter's father-in-law,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+32,Son's or daughter's mother-in-law,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+33,Elder brother,anyone,Bhav,भाव,,,,,
+34,Elder sister,anyone,Bhoin,भयण,,,,,
+35,Younger brother,anyone,Bhav,भाव,,,,,
+36,Younger sister,anyone,Bhoin,भयण,,,,,
+37,Father's elder brother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+38,Father's elder sister,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+39,Father's elder brother's wife,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+40,Father's elder sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+41,Father's younger brother,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+42,Father's younger sister,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+43,Father's younger brother's wife,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+44,Father's younger sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+45,Mother's elder brother,anyone,Mam,माम,,,,,
+46,Mother's elder sister,anyone,Mavshi,मावशी,,,,,
+47,Mother's elder brother's wife,anyone,Mami,मामी,,,,,
+48,Mother's elder sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+49,Mother's younger brother,anyone,Mam,माम,,,,,
+50,Mother's younger sister,anyone,Mavshi,मावशी,,,,,
+51,Mother's younger brother's wife,anyone,Mami,मामी,,,,,
+52,Mother's younger sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+53,Brother's son,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+54,Brother's daughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+55,Sister's son,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+56,Sister's daughter,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+57,Elder brother's wife,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+58,Elder sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+59,Younger brother's wife,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+60,Younger sister's husband,anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+61,Father's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+62,Father's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+63,Father's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+64,Father's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+65,Father's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+66,Father's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+67,Father's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+68,Father's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+69,Mother's brother's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+70,Mother's brother's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+71,Mother's brother's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+72,Mother's brother's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+73,Mother's sister's son (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+74,Mother's sister's daughter (elder than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+75,Mother's sister's son (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+76,Mother's sister's daughter (younger than you),anyone,,,,,,,No word yet: the English is shown. Add one if families use it.
+77,Father's parent's brother,anyone,Aajo,आजो,,,,,
+78,Father's parent's sister,anyone,Aaji,आजी,,,,,
+79,Mother's parent's brother,anyone,Aajo,आजो,,,,,
+80,Mother's parent's sister,anyone,Aaji,आजी,,,,,
+81,Husband's elder brother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+82,Husband's elder sister,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+83,Wife's elder brother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+84,Wife's elder sister,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+85,Husband's elder brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+86,Husband's younger brother,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+87,Husband's younger sister,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+88,Wife's younger brother,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+89,Wife's younger sister,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+90,Husband's younger brother's wife,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+91,Husband's sister's husband,a woman,,,,,,,No word yet: the English is shown. Add one if families use it.
+92,Wife's sister's husband,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+93,Wife's brother's wife,a man,,,,,,,No word yet: the English is shown. Add one if families use it.
+
+,Menus and labels,,English,Our translation,Correct? (Yes / No / Depends),,Better translation,,Notes
+94,Greeting used in wishes,,,Namaskar,,,,,
+95,What the family line is called (gotra),,,Gotra,,,,,
+96,What the family deity is called,,,Kuldev / Kuldevi,,,,,
+97,Menu,,Home,मुखेल पान,,,,,
+98,Menu,,Family,कुटुंब,,,,,
+99,Menu,,Family tree,कुळावळ,,,,,
+100,Menu,,Tree,झाड,,,,,
+101,Menu,,How are we related?,आमचें नातें कितें?,,,,,
+102,Menu,,Calendar,दिनदर्शिका,,,,,
+103,Menu,,Photos,फोटो,,,,,
+104,Menu,,Conversations,उलोवणी,,,,,
+105,Menu,,Talk,गजाली,,,,,
+106,Menu,,With the whole family,सगळ्या कुटुंबा वांगडा,,,,,
+107,Menu,,Messages,संदेश,,,,,
+108,Menu,,"Private, one-to-one","खाजगी, दोगांमदीं",,,,,
+109,Menu,,You,तुमी,,,,,
+110,Menu,,My profile,म्हजी माहिती,,,,,
+111,Menu,,My privacy,म्हजी गुप्तताय,,,,,
+112,Menu,,Theme,रूप,,,,,
+113,Menu,,Help,आदार,,,,,
+114,Menu,,Help & FAQ,आदार आनी प्रस्न,,,,,
+115,Menu,,What’s New!,नवें कितें!,,,,,
+116,Menu,,Add to home screen,होम स्क्रीनाचेर जोडात,,,,,
+117,Menu,,Admin,प्रशासक,,,,,
+118,Menu,,Steward,कारभारी,,,,,
+119,Menu,,Requests to join,भितर येवपाच्यो विनंत्यो,,,,,
+120,Menu,,Sign out,सायन आउट,,,,,
+121,Menu,,More,आनीक,,,,,
+122,Menu,,Back,फाटीं,,,,,
+123,Menu,,Waiting for your OK,तुमच्या मान्यतायेची वाट,,,,,
+124,Menu,,Waiting for a parent,आवय-बापायच्या मान्यतायेची वाट,,,,,
+125,Menu,,What a parent is checking,आवय-बापूय कितें तपासतात,,,,,
+126,Menu,,From your children,तुमच्या भुरग्यां कडल्यान,,,,,
