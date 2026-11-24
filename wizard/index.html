@@ -3,16 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Nothing you open here leaves your computer: the browser refuses every connection to another site. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <!-- The family sheet never leaves this computer. The only thing this page sends is the sign-up form, step names and
+       page counts, to Aangan's own server (project/ in the repository); the browser refuses every other site. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://hpabuhhqdguxyfjwoxik.supabase.co https://*.workers.dev; form-action 'none'; base-uri 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
-  <link rel="icon" href="data:,">
-  <title>Set up your family website · Aangan</title>
+  <meta name="theme-color" content="#DE5C2A">
+  <meta name="description" content="Aangan: a private family website for every Indian family. Your family tree, traditions and festivals, in your own languages. Free and open source.">
+  <meta property="og:title" content="Aangan · A home online for your whole family">
+  <meta property="og:description" content="Your family tree, your traditions and your festivals, in your own languages. Private to your family, free to use.">
+  <meta property="og:image" content="https://aangan-family.github.io/aangan/brand/og.webp">
+  <link rel="icon" type="image/png" href="brand/lotus.png">
+  <link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+  <title>Aangan · A home online for your whole family</title>
   <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
   <div id="app"></div>
-  <noscript>This setup helper needs JavaScript. You can also follow docs/SETUP.md.</noscript>
+  <noscript>This site needs JavaScript. You can also follow docs/SETUP.md on GitHub.</noscript>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

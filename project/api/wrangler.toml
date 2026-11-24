@@ -1,0 +1,9 @@
+# The Aangan project site's helper: passes requests through to the `aangan` Edge Function,
+# because some Indian providers block supabase.co. Holds no secrets.
+name = "aangan-api"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[vars]
+FUNCTION_URL = "https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan"

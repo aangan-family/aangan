@@ -7,6 +7,9 @@ const FILES = {
   'family-tree-template.xlsx': '../templates/family-tree-template.xlsx',
   'sample-family.xlsx': '../templates/sample-family.xlsx',
   'setup.sql': '../supabase/setup.sql',
+  // border samples for the front page, drawn by the family site (web/public/email)
+  ...Object.fromEntries(['phulkari', 'bandhani', 'paithani', 'laal-paar', 'saree-red', 'sambalpuri', 'mekhela', 'kasavu', 'kunbi', 'kani', 'ajrak', 'gamosa']
+    .map((id) => [`borders/${id}.png`, `../web/public/email/${id}.png`])),
 };
 
 export default defineConfig({
@@ -21,7 +24,7 @@ export default defineConfig({
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        const m = /^\/files\/([\w.-]+)$/.exec(req.url || '');
+        const m = /^\/files\/([\w./-]+)$/.exec(req.url || '');
         if (!m || !FILES[m[1]]) return next();
         res.end(readFileSync(new URL(FILES[m[1]], import.meta.url)));
       });

@@ -8,21 +8,11 @@ import wranglerToml from '../../reminders/wrangler.toml?raw';
 import { readSheetFile } from './read.js';
 import { buildPreview, fullName } from './tree.js';
 import { accountSteps, oneClickSteps } from './steps.js';
-
-// ---- tiny DOM helper: text is always set as text, never as HTML ------------------------------------------
-function h(tag, attrs = {}, ...kids) {
-  const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs || {})) {
-    if (v === undefined || v === null || v === false) continue;
-    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
-    else if (k === 'class') el.className = v;
-    else if (k === 'value') el.value = v;
-    else if (k === 'checked') el.checked = !!v;
-    else el.setAttribute(k, v === true ? '' : String(v));
-  }
-  for (const c of kids.flat(Infinity)) if (c !== null && c !== undefined && c !== false) el.append(c instanceof Node ? c : document.createTextNode(String(c)));
-  return el;
-}
+import { h, download, copy, logo, people } from './ui.js';
+import { signedUp, me, step, view, retryPending } from './api.js';
+import { landingPage } from './landing.js';
+import { signupPage, privacyPage } from './signup.js';
+import { adminPage } from './admin.js';
 
 // ---- saved state (settings and ticks only; never the family sheet) ---------------------------------------
 const KEY = 'aangan-wizard';
@@ -64,19 +54,6 @@ function config() {
   };
 }
 
-function download(name, content, type = 'text/plain') {
-  const url = URL.createObjectURL(new Blob([content], { type }));
-  const a = h('a', { href: url, download: name });
-  document.body.append(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
-}
-
-async function copy(text, btn) {
-  try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied'; }
-  catch { btn.textContent = 'Select and copy'; }
-  setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
-}
-
 // ---- pages -----------------------------------------------------------------------------------------------
 const PAGES = [
   { id: 'sheet', n: 1, title: 'Family sheet' },
@@ -84,27 +61,51 @@ const PAGES = [
   { id: 'database', n: 3, title: 'Database' },
   { id: 'accounts', n: 4, title: 'Accounts' },
 ];
-const current = () => PAGES.find((p) => '#' + p.id === location.hash)?.id || 'sheet';
-const go = (id) => { location.hash = id; };
+const WIZARD = PAGES.map((p) => p.id);
+const OTHER = { signup: 'Sign up', privacy: 'Privacy', admin: 'Admin numbers' };
+const current = () => { const id = location.hash.replace(/^#\/?/, ''); return WIZARD.includes(id) || OTHER[id] ? id : ''; };
+let toast = '';
+const go = (id, message = '') => { toast = message; if (current() === id) render(); else location.hash = id; };
 
 function render() {
   const app = document.getElementById('app');
-  const page = current();
-  app.replaceChildren(
-    h('header', { class: 'top' },
-      h('p', { class: 'brand' }, 'Aangan'),
+  let page = current();
+  if (WIZARD.includes(page) && !signedUp()) { history.replaceState(null, '', '#signup'); page = 'signup'; }   // sign up first
+  view(page || 'home');
+  const wizard = WIZARD.includes(page);
+  const body = page === '' ? landingPage(go)
+    : page === 'signup' ? signupPage(go, (community) => { if (community && !state.s.communitySet) { state.s.community = community; state.s.communitySet = true; save(); } })
+    : page === 'privacy' ? privacyPage(go)
+    : page === 'admin' ? adminPage()
+    : { sheet: sheetPage, settings: settingsPage, database: databasePage, accounts: accountsPage }[page]();
+  app.className = page === '' ? 'home' : 'inner';
+  app.replaceChildren(...[
+    h('header', { class: 'bar' },
+      h('a', { href: '#', class: 'brandlink', 'aria-label': 'Aangan home' }, logo(false, 'bar-logo')),
+      h('nav', { class: 'barnav', 'aria-label': 'Site' },
+        h('a', { href: '#privacy' }, 'Privacy'),
+        h('a', { href: 'https://github.com/aangan-family/aangan', rel: 'noopener' }, 'GitHub'),
+        page === '' || page === 'privacy' ? h('button', { class: 'btn small', onclick: () => go(signedUp() ? 'sheet' : 'signup') }, signedUp() ? 'Continue setup' : 'Set up your family') : null)),
+    wizard ? h('div', { class: 'wizhead' },
       h('h1', {}, 'Set up your family website.'),
-      h('p', { class: 'lead' }, 'Four steps. Your family sheet is checked here, on this computer. This page can\'t send anything anywhere: your browser blocks it.'),
-    ),
-    h('nav', { class: 'steps', 'aria-label': 'Steps' },
-      PAGES.map((p) => h('a', { href: '#' + p.id, class: p.id === page ? 'on' : '', 'aria-current': p.id === page ? 'step' : null },
-        h('span', { class: 'n' }, stepMark(p.id) ? '✓' : p.n), p.title))),
-    h('main', {}, { sheet: sheetPage, settings: settingsPage, database: databasePage, accounts: accountsPage }[page]()),
+      h('p', { class: 'lead' }, `Four steps${me()?.name ? ', ' + me().name.split(' ')[0] : ''}. Your family sheet is checked here, on this computer, and never sent anywhere.`),
+      h('nav', { class: 'steps', 'aria-label': 'Steps' },
+        PAGES.map((p) => h('a', { href: '#' + p.id, class: p.id === page ? 'on' : '', 'aria-current': p.id === page ? 'step' : null },
+          h('span', { class: 'n' }, stepMark(p.id) ? '✓' : p.n), p.title)))) : null,
+    toast ? h('p', { class: 'toast', role: 'status' }, toast) : null,
+    h('main', { class: page === '' ? 'wide' : '' }, body),
     h('footer', {},
-      h('p', {}, 'Prefer the command line? Everything here is also in docs/SETUP.md.'),
-      h('button', { class: 'link', onclick: () => { if (confirm('Forget your settings and ticks on this computer?')) { localStorage.removeItem(KEY); location.reload(); } } }, 'Clear everything on this computer')),
-  );
-  document.title = `${PAGES.find((p) => p.id === page).title} · Set up your family website`;
+      people('people foot-people'),
+      h('div', { class: 'footin' },
+        logo(true, 'foot-logo'),
+        h('p', {}, 'Open source, free for every family. Your family’s data stays with your family.'),
+        h('p', { class: 'footlinks' },
+          h('a', { href: '#privacy' }, 'Privacy'), ' · ', h('a', { href: 'https://github.com/aangan-family/aangan', rel: 'noopener' }, 'GitHub'), ' · ',
+          h('a', { href: 'https://github.com/aangan-family/aangan/blob/main/docs/SETUP.md', rel: 'noopener' }, 'Setup guide'), ' · ', h('a', { href: '#admin' }, 'Admin'),
+          wizard ? [' · ', h('button', { class: 'link light', onclick: () => { if (confirm('Forget your settings and ticks on this computer?')) { localStorage.removeItem(KEY); location.reload(); } } }, 'Clear my settings on this computer')] : null))),
+  ].filter(Boolean));
+  toast = '';
+  document.title = page === '' ? 'Aangan · A home online for your whole family' : `${PAGES.find((p) => p.id === page)?.title || OTHER[page]} · Aangan`;
 }
 
 function stepMark(id) {
@@ -138,6 +139,7 @@ async function openSheet(file) {
   try {
     const rec = rowsToRecords(await readSheetFile(file));
     state.sheet = { name: file.name, rec, preview: buildPreview(rec) };
+    if (!rec.problems.length) step('sheet_checked');
     if (!rec.persons.some((p) => p.id === state.adminPerson)) state.adminPerson = '';
   } catch (e) { state.sheet = null; state.sheetError = e.message || String(e); }
   render();
@@ -190,7 +192,7 @@ function settingsPage() {
       h('h3', {}, blocking.length ? 'Still to fill in' : 'All set.'),
       h('ul', { class: 'checks' }, ok.map((l) => h('li', { class: 'ok' }, l)), todo.map((l) => h('li', { class: /optional/.test(l) ? 'opt' : 'todo' }, l))),
       h('div', { class: 'row' },
-        h('button', { class: 'btn', onclick: () => download('site.config.json', JSON.stringify(cfg, null, 2) + '\n', 'application/json') }, 'Download site.config.json'),
+        h('button', { class: 'btn', onclick: () => { download('site.config.json', JSON.stringify(cfg, null, 2) + '\n', 'application/json'); step('settings_saved'); } }, 'Download site.config.json'),
         h('button', { class: 'btn ghost', onclick: () => download('wrangler.toml', applyToWrangler(wranglerToml, cfg)) }, 'Download wrangler.toml')),
       h('p', { class: 'muted' }, 'Both files go into your GitHub copy (the Accounts step shows where). You can download them now and again later, once the Supabase keys are in.'));
   };
@@ -234,7 +236,7 @@ function settingsPage() {
 function databasePage() {
   const sheet = state.sheet;
   const ready = sheet && !sheet.rec.problems.length;
-  const makeBtn = h('button', { class: 'btn', onclick: () => download('seed.sql', toSQL(sheet.rec, { adminEmail: state.adminEmail.trim(), adminPerson: state.adminPerson }).replace('Generated from a Family Echo export', 'Generated from your family spreadsheet by the setup wizard')) }, 'Download seed.sql');
+  const makeBtn = h('button', { class: 'btn', onclick: () => step('seed_made') || download('seed.sql', toSQL(sheet.rec, { adminEmail: state.adminEmail.trim(), adminPerson: state.adminPerson }).replace('Generated from a Family Echo export', 'Generated from your family spreadsheet by the setup wizard')) }, 'Download seed.sql');
   const sync = () => { makeBtn.disabled = !(ready && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((state.adminEmail || '').trim()) && state.adminPerson); };
   sync();
   return h('section', {},
@@ -271,10 +273,10 @@ function accountsPage() {
   return h('section', {},
     h('h2', {}, 'Your accounts, one at a time.'),
     h('div', { class: 'seg', role: 'radiogroup', 'aria-label': 'How to set up' },
-      h('button', { role: 'radio', 'aria-checked': String(mode !== 'hand'), class: mode !== 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'oneclick'; save(); render(); } }, h('b', {}, 'One-click'), h('span', {}, 'About 20 minutes. Copy a few keys into GitHub, press a button.')),
-      h('button', { role: 'radio', 'aria-checked': String(mode === 'hand'), class: mode === 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'hand'; save(); render(); } }, h('b', {}, 'By hand'), h('span', {}, 'An afternoon. Every setting yourself, in each dashboard.'))),
+      h('button', { role: 'radio', 'aria-checked': String(mode !== 'hand'), class: mode !== 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'oneclick'; step('oneclick_chosen'); save(); render(); } }, h('b', {}, 'One-click'), h('span', {}, 'About 20 minutes. Copy a few keys into GitHub, press a button.')),
+      h('button', { role: 'radio', 'aria-checked': String(mode === 'hand'), class: mode === 'hand' ? 'on' : '', onclick: () => { state.s.mode = 'hand'; step('byhand_chosen'); save(); render(); } }, h('b', {}, 'By hand'), h('span', {}, 'An afternoon. Every setting yourself, in each dashboard.'))),
     h('p', {}, 'Tick each one off; your ticks stay on this computer.'),
-    h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': steps.length, 'aria-valuenow': done }, h('div', { class: 'fill', 'data-w': Math.round((done / steps.length) * 100) })),
+    h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': steps.length, 'aria-valuenow': done }, h('div', { class: 'fill', 'data-w': Math.round((done / steps.length) * 100) })),
     h('p', { class: 'muted' }, `${done} of ${steps.length} done`),
     steps.map((st, i) => h('details', { class: 'acct' + (state.done[key(st)] ? ' done' : ''), open: i === firstOpen ? true : null },
       h('summary', {}, h('span', { class: 'n' }, state.done[key(st)] ? '✓' : i + 1), h('span', {}, h('b', {}, st.title), h('span', { class: 'site' }, st.site))),
@@ -283,13 +285,14 @@ function accountsPage() {
         typeof it === 'string' ? it
           : it.copy ? [it.text, ' ', h('code', {}, it.copy), ' ', h('button', { class: 'copy', onclick: (e) => copy(it.copy, e.target) }, 'Copy')]
           : [it.text, ' ', h('button', { class: 'link', onclick: () => go(it.go) }, `Open ${PAGES.find((p) => p.id === it.go).title}`)]))),
-      h('label', { class: 'tick' }, h('input', { type: 'checkbox', checked: !!state.done[key(st)], onchange: (e) => { state.done[key(st)] = e.target.checked; save(); render(); } }), 'Done'))),
+      h('label', { class: 'tick' }, h('input', { type: 'checkbox', checked: !!state.done[key(st)], onchange: (e) => { state.done[key(st)] = e.target.checked; save(); step('accounts_started'); if (steps.every((x) => state.done[key(x)])) step('accounts_done'); render(); } }), 'Done'))),
     h('p', { class: 'muted' }, 'A button has moved since this was written? Look for the nearest match, or ask in the project\'s Discussions on GitHub.'),
   );
 }
 
-window.addEventListener('hashchange', () => { render(); document.querySelector('main')?.scrollTo(0, 0); });
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 render();
+retryPending();
 // progress bar width without inline styles (CSP: style-src 'self')
 new MutationObserver(() => document.querySelectorAll('.fill[data-w]').forEach((el) => { el.style.width = el.dataset.w + '%'; })).observe(document.getElementById('app'), { childList: true, subtree: true });
 document.querySelectorAll('.fill[data-w]').forEach((el) => { el.style.width = el.dataset.w + '%'; });
