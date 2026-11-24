@@ -1429,9 +1429,15 @@ select t.refused($$select * from email_borders()$$, 'members cannot read the ema
 reset role;
 select set_config('request.jwt.claim.sub', '', false);
 select t.ok((select count(*) > 0 from email_borders()), 'the server gets each member''s border');
-select t.eq((select count(*) from email_borders() where border not in ('veshti-red', 'veshti-blue', 'saree-green', 'saree-red')), 0::bigint, 'only the four borders');
 select t.eq((select count(*) from email_borders() e join auth.users u on u.email = e.email join members m on m.user_id = u.id join persons p on p.id = m.person_id
-             where (p.gender = 'm' and e.border not like 'veshti-%') or (p.gender = 'f' and e.border not like 'saree-%')), 0::bigint, 'men get a veshti border, women a saree border');
+             where e.gender is distinct from coalesce(p.gender, '')), 0::bigint, 'the server gets each member''s gender from the tree, for the border');
+
+-- 0052: borders from every community's dress
+select t.ok((select count(*) from information_schema.columns where table_name = 'member_prefs' and column_name = 'border') = 1, 'members keep a border choice');
+select t.refused($$update member_prefs set border = 'not-a-border' where user_id = (select user_id from member_prefs limit 1)$$, 'only borders we draw can be saved');
+update member_prefs set border = 'phulkari' where user_id = (select mp.user_id from member_prefs mp join members m on m.user_id = mp.user_id and m.status = 'active' join auth.users u on u.id = m.user_id where u.email is not null and m.person_id is not null limit 1);
+select t.ok((select count(*) from email_borders() where border = 'phulkari') = 1, 'the server sees the saved choice as it is');
+update member_prefs set border = '' where border = 'phulkari';
 
 -- ---------------------------------------------------------------- 0051 first admin (setup only)
 reset role;

@@ -7,7 +7,7 @@ import { applyMode, applyTextSize, applyTheme, savedTextSize, TEXT_SIZES, type T
 import { COLOURS, MODES, MODE_LABEL, STYLES, STYLE_HINT, THEME_LABEL, type Mode, type Prefs, type Theme } from '../lib/types';
 import { hasUnseen } from '../lib/whatsnew';
 import { setHeritagePrefs, useHeritage } from './Heritage';
-import { BORDER_LABEL, SCRIPTS, borderChoices, type Border, type Scripts } from '../lib/heritage';
+import { SCRIPTS, TEXTILE, borderChoices, borderName, type Border, type Scripts } from '../lib/heritage';
 import { setMenuLang, useMenuLang, useT } from '../lib/menulang';
 import { FAMILY_DEFAULT, FESTIVAL_GROUPS, PACK_LIST, PACKS, setCommunity, setFestivals, useCommunityId, useFestivals, usePack, type CommunityId, type FestivalGroup } from '../lib/community';
 
@@ -104,7 +104,8 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate: () =>
 export function ThemePicker({ api }: { api: { savePrefs: (p: Partial<Prefs>) => Promise<void> } }) {
   const { snap } = useStore();
   const h = useHeritage();
-  const choices = borderChoices(h.gender);
+  const choices = borderChoices(h.gender, h.community);
+  const legacy = choices.every((b) => /^(veshti|saree)-/.test(b));   // the South's veshti/saree: just the colour
   const save = (patch: Partial<Prefs>) => { setHeritagePrefs(patch); api.savePrefs(patch).catch(() => {}); };
   const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || snap.prefs.theme || 'blue');
   const [mode, setMode] = useState<Mode>(() => (document.documentElement.dataset.mode as Mode) || snap.prefs.mode || 'auto');
@@ -133,7 +134,7 @@ export function ThemePicker({ api }: { api: { savePrefs: (p: Partial<Prefs>) => 
       {choices.length > 0 && <>
         <p className="themelabel">Border</p>
         <div className="seg" role="radiogroup" aria-label="Border">
-          {choices.map((b: Border) => <button key={b} role="radio" aria-checked={h.border === b} className={h.border === b ? 'on' : ''} onClick={() => save({ border: b })}>{BORDER_LABEL[b].split(' · ')[1]}</button>)}
+          {choices.map((b: Border) => <button key={b} role="radio" aria-checked={h.border === b} className={h.border === b ? 'on' : ''} title={TEXTILE.get(b)?.from} onClick={() => save({ border: b })}>{legacy ? borderName(b).split(' · ')[1] : borderName(b)}</button>)}
         </div>
       </>}
       <p className="themelabel">Names in</p>

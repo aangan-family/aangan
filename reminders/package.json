@@ -5,7 +5,7 @@
   "scripts": {
     "test": "vitest run",
     "deploy": "wrangler deploy",
-    "templates": "node --experimental-strip-types --no-warnings scripts/templates.ts"
+    "templates": "esbuild scripts/templates.ts --bundle --platform=node --format=esm --log-level=warning --outfile=node_modules/.cache/templates.mjs && node node_modules/.cache/templates.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261112.1",

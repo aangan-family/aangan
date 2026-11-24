@@ -5,25 +5,11 @@
  */
 import type { Route } from '../components/common';
 
-export type Border = 'veshti-red' | 'veshti-blue' | 'saree-green' | 'saree-red';
 export type Scripts = 'both' | 'ml' | 'ta' | 'en';
 
-export const BORDER_LABEL: Record<Border, string> = {
-  'veshti-red': 'Veshti · Red', 'veshti-blue': 'Veshti · Blue', 'saree-green': 'Saree · Green', 'saree-red': 'Saree · Red',
-};
-export const SCRIPTS: [Scripts, string, string][] = [['both', 'Both', 'en'], ['ml', 'മലയാളം', 'ml'], ['ta', 'தமிழ்', 'ta'], ['en', 'English', 'en']];
+export { TEXTILES, TEXTILE, COMMUNITY_TEXTILES, borderChoices, borderFor, borderName, type Textile, type Border } from './textiles';
 
-/** Men wear the mayil kann veshti border, women the Kanjeevaram saree border. Anyone else sees the green saree. */
-export function borderChoices(gender: string): Border[] {
-  if (gender === 'm') return ['veshti-red', 'veshti-blue'];
-  if (gender === 'f') return ['saree-green', 'saree-red'];
-  return [];
-}
-export function borderFor(gender: string, pref?: string | null): Border {
-  const choices = borderChoices(gender);
-  if (pref && (choices as string[]).includes(pref)) return pref as Border;
-  return choices[0] ?? 'saree-green';
-}
+export const SCRIPTS: [Scripts, string, string][] = [['both', 'Both', 'en'], ['ml', 'മലയാളം', 'ml'], ['ta', 'தமிழ்', 'ta'], ['en', 'English', 'en']];
 
 export const showMl = (s: Scripts) => s === 'both' || s === 'ml';
 export const showTa = (s: Scripts) => s === 'both' || s === 'ta';

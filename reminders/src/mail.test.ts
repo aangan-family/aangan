@@ -1,3 +1,4 @@
+import { TEXTILES } from '../../web/src/lib/textiles';
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_FROM, payload, TEXT_FOOTER } from './mail';
 import { emailHtml } from './index';
@@ -42,14 +43,25 @@ describe('heritage borders on every email', () => {
     expect(html).toContain('https://ourfamily.example/email/thoranam.png');
     expect(html).toContain(BORDER_TOKEN);
   });
-  it('each recipient gets their own border; unknown addresses get the green saree', () => {
-    setBorders([{ email: 'Ravi@x.in', border: 'veshti-blue' }, { email: 'asha@x.in', border: 'saree-red' }, { email: 'bad@x.in', border: 'evil' }]);
+  it('each recipient gets their own border; others get their traditions\' default (sample settings: Hindi)', () => {
+    setBorders([
+      { email: 'Ravi@x.in', gender: 'm', border: 'veshti-blue' }, { email: 'asha@x.in', gender: 'f', border: 'phulkari' },
+      { email: 'meera@x.in', gender: 'f', border: '' }, { email: 'arjun@x.in', gender: 'm', border: '' },
+      { email: 'bad@x.in', gender: 'f', border: 'evil' }, { email: 'odd@x.in', gender: 'f', border: 'veshti-red' },
+    ]);
     const of = (to: string) => payload({}, { to: [to], subject: 's', html, text: 't' }, 'welcome').html;
     expect(of('ravi@x.in')).toContain('/email/veshti-blue.png');
-    expect(of('asha@x.in')).toContain('/email/saree-red.png');
-    expect(of('bad@x.in')).toContain('/email/saree-green.png');
-    expect(of('nobody@x.in')).toContain('/email/saree-green.png');
+    expect(of('asha@x.in')).toContain('/email/phulkari.png');       // a choice from another community's dress
+    expect(of('meera@x.in')).toContain('/email/banarasi.png');      // Hindi default for a woman
+    expect(of('arjun@x.in')).toContain('/email/leheriya.png');      // Hindi default for a man
+    expect(of('bad@x.in')).toContain('/email/banarasi.png');
+    expect(of('odd@x.in')).toContain('/email/banarasi.png');        // a veshti only for men
+    expect(of('nobody@x.in')).toContain('/email/leheriya.png');     // unknown: the family's default
     expect(of('ravi@x.in')).not.toContain(BORDER_TOKEN);
     setBorders([]);
+  });
+  it('every border an email can name has a picture on the site', async () => {
+    const { existsSync } = await import('node:fs');
+    for (const t of TEXTILES) expect(existsSync(new URL(`../../web/public/email/${t.id}.png`, import.meta.url)), t.id).toBe(true);
   });
 });

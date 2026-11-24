@@ -9,6 +9,8 @@
  * said is stored or logged here: the text/audio goes to the model and the answer goes back.
  * The member always reviews the result before anything is sent.
  */
+import { PACK } from './tradition.ts';
+import { REVIEW_ROWS } from '../../web/src/lib/community/review';
 import { SITES as SIGNIN_SITES } from './oauth';
 import { PROXY_HEADER, proxyToken } from './keys';
 
@@ -46,12 +48,19 @@ export function restore(text: string, tokens: string[]): string {
   return out;
 }
 
+/** Family words in the family's language, so the model keeps them as written (from the site's community pack). */
+function kinWords(): string {
+  const words = REVIEW_ROWS.map((r) => PACK.term(r.role)?.word).filter((w): w is string => !!w).map((w) => w.split(/[ /(]/)[0]);
+  return [...new Set(words)].slice(0, 14).join(', ');
+}
+
 export function rewritePrompt(style: Style): string {
+  const kin = PACK.id === 'english' ? '' : kinWords();
   return [
-    'You help members of a large Tamil Iyer family write messages to each other on their private family website.',
+    `You help members of a large ${PACK.id === 'english' ? 'Indian' : PACK.name} family write messages to each other on their private family website.`,
     STYLES[style],
     'Reply in the same language the message is written in.',
-    'Keep names, Tamil kinship words (Amma, Appa, Paati, Thatha, Mama, Mami, Athimber, Akka, Anna, Chithi, Periappa…), dates, numbers, emoji and links exactly as they are.',
+    `Keep names, family words${kin ? ` (${kin}…)` : ' (what relatives call each other)'}, dates, numbers, emoji and links exactly as they are.`,
     'Keep any placeholders like ⟦M1⟧ exactly as written; they are people being mentioned or photos, so keep each on its own line if it was.',
     'Keep simple formatting marks (**bold**, *italic*, lines starting with - or 1.) where they are.',
     'Use normal sentence case: a capital letter only at the start of a sentence and for names, never on every word.',

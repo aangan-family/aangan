@@ -26,9 +26,11 @@ describe('7 am notifications', () => {
     const p = dailyPushes([row({ janma_nakshatram: 'Karthigai|Anusham' }), row({ id: 'Z', is_living: false, shraddha_tithi: 'Karthigai|Dashami' })], day('2026-12-11'));
     expect(p.filter((x) => x.kind === 'occasion')).toEqual([]);
   });
-  it('announces Karthigai Deepam on its day', () => {
-    const f = dailyPushes([], day('2026-11-24')).find((x) => x.kind === 'festival');
-    expect(f?.title).toMatch(/Karthigai/);
-    expect(f?.url).toBe('#/calendar/2026-11-24');
+  it('announces the festivals of the family\'s traditions on their day (sample settings: Hindi)', () => {
+    const f = dailyPushes([], day('2026-11-08')).find((x) => x.kind === 'festival');
+    expect(f?.title).toMatch(/Diwali/);
+    expect(f?.url).toBe('#/calendar/2026-11-08');
+    // Karthigai Deepam is a Tamil festival: not announced to a Hindi family
+    expect(dailyPushes([], day('2026-11-24')).some((x) => /Karthigai/.test(x.title + x.body))).toBe(false);
   });
 });

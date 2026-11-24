@@ -5,6 +5,7 @@
  */
 import { box, button, C, DOMAIN, FAMILY, layout, p, signature, SIGNER, withBorder } from './brand.ts';
 import { EMAIL_FROM } from './site.ts';
+import { calendarDays } from './tradition.ts';
 
 // Links come to our own site (not supabase.co, which some Indian providers block); the site verifies the token.
 // Email scanners that merely open the link don't use it up, because nothing happens until the page runs.
@@ -28,7 +29,7 @@ export function confirmSignup(): string {
     body: [
       p('Hello,'),
       p(`I’m <b>${SIGNER.who}</b>, and I look after our family website, <b>${DOMAIN}</b>. You’re getting this email because you, or a relative on your behalf, asked to join it with this address.`),
-      p(`It’s a private home online for the ${FAMILY} family: our family tree going back seven generations, a family calendar with Tamil dates, birthdays and remembrance days, family photos, and conversations about our traditions, recipes and news. It’s only for family, and nothing on it is public.`),
+      p(`It’s a private home online for the ${FAMILY} family: our family tree, a family calendar with ${calendarDays() ? `${calendarDays()}, ` : ''}birthdays and remembrance days, family photos, and conversations about our traditions, recipes and news. It’s only for family, and nothing on it is public.`),
       p('All you need to do is confirm this is your email address:'),
       button(LINK, 'Confirm my email and join'),
       p(`<b>What happens next:</b> you’ll land on the website, find your place in the family tree, and read a short privacy note. You decide who sees each detail about you, and you can change your mind any time.`),

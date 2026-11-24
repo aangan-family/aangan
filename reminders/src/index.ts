@@ -151,7 +151,7 @@ export async function sendNews(env: Env): Promise<string[]> {
 let bordersAt = 0;
 async function loadBorders(env: Env) {
   if (Date.now() - bordersAt < 9 * 60000) return;
-  try { setBorders(await rpc<{ email: string; border: string }[]>(env, 'email_borders')); bordersAt = Date.now(); } catch (e) { console.error('email_borders', String(e)); }
+  try { setBorders(await rpc<{ email: string; gender: string; border: string }[]>(env, 'email_borders')); bordersAt = Date.now(); } catch (e) { console.error('email_borders', String(e)); }
 }
 
 /** "This week in the family" (0049): Sundays after the 7 am run. Each week goes out once; recorded only after Resend accepts it. */

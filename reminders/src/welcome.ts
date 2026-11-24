@@ -1,5 +1,6 @@
 /** The welcome email sent once, when someone joins the family website. */
 import { box, button, C, DOMAIN, esc, FAMILY, feature, features, h2, layout, p, signature, SIGNER, SITE } from './brand.ts';
+import { calendarDays, kinExamples, ownDays, PACK } from './tradition.ts';
 
 export interface WelcomeRow {
   user_id: string;
@@ -16,18 +17,21 @@ export function welcomeEmail(r: Pick<WelcomeRow, 'given_name' | 'invited_by_name
   const people = r.people > 0 ? `${r.people} people` : 'everyone';
   const invited = r.invited_by_name ? ` ${esc(r.invited_by_name)} invited you, and` : '';
   const admins = (r.admins || '').split(',').map((a) => a.trim()).filter(Boolean);
+  const kin = kinExamples(), cal = calendarDays();
+  const related = kin ? `Pick any two people and see how they’re related, in English and with the ${esc(PACK.name)} word: ${esc(kin)} and the rest.` : 'Pick any two people and see how they’re related, in plain words.';
+  const calendar = `${cal ? `${cal} for every day, ` : ''}the festivals you choose, and our own days: ${ownDays()}.`;
 
   const body = [
     p(`Hello ${hi},`),
     p(`You’re now part of <b>${DOMAIN}</b>, the private home online for our ${FAMILY} family.${invited} we’re so glad you’re here.`),
-    p(`It began as a family tree on paper, became a spreadsheet, and is now a website with ${people} across seven generations, from its founders to the youngest of us. Only invited family can sign in. Nothing on it is public or searchable.`),
+    p(`It’s our family tree, with ${people} in it so far, and a place to keep in touch. Only invited family can sign in. Nothing on it is public or searchable.`),
     button(SITE, 'Open the family website'),
 
     h2('What you can do.'),
     features([
       feature('🌳', 'Find yourself in the family tree', 'See your line back through the generations. Tap anyone to open their profile; <i>Show me</i> takes you straight to you.'),
-      feature('🔗', 'How are we related?', 'Pick any two people and see how they’re related, in English and with the Tamil word: athai, mama, periyamma, chithappa and the rest.'),
-      feature('📅', 'Family calendar', 'Tamil dates, nakshatram and tithi for every day, the festivals, and our own days: birthdays, Tamil birthdays, remembrance, shraddham and wedding anniversaries.'),
+      feature('🔗', 'How are we related?', related),
+      feature('📅', 'Family calendar', calendar[0].toUpperCase() + calendar.slice(1)),
       feature('💬', 'Talk', 'Conversations about traditions, recipes, festivals and family news. Start one, reply, or react with a 🙏.'),
       feature('📷', 'Photos', 'Share family photos, old and new, and tag who’s in them. Nobody is tagged without saying yes.'),
       feature('👤', 'Your profile', 'Add your birthday, star, work, city, phone and a photo, and tell us your wedding date. You choose who sees each one.'),
@@ -58,14 +62,14 @@ export function welcomeEmail(r: Pick<WelcomeRow, 'given_name' | 'invited_by_name
     `Hello ${name || 'and welcome'},`,
     '',
     `You're now part of ${DOMAIN}, the private home online for our ${FAMILY} family.${r.invited_by_name ? ` ${r.invited_by_name} invited you, and` : ''} we're so glad you're here.`,
-    `It began as a family tree on paper, became a spreadsheet, and is now a website with ${people} across seven generations. Only invited family can sign in.`,
+    `It's our family tree, with ${people} in it so far, and a place to keep in touch. Only invited family can sign in.`,
     '',
     `Open it: ${SITE}`,
     '',
     'What you can do:',
     '- Find yourself in the family tree',
-    '- How are we related? Any two people, with the Tamil word',
-    '- Family calendar: Tamil dates, festivals, birthdays, remembrance, anniversaries',
+    kin ? `- How are we related? Any two people, with the ${PACK.name} word` : '- How are we related? Any two people, in plain words',
+    `- Family calendar: ${cal ? cal + ', ' : ''}festivals, ${ownDays()}`,
     '- Talk: traditions, recipes, festivals, family news',
     '- Photos: share and tag (nobody is tagged without saying yes)',
     '- Your profile: you choose who sees each detail',

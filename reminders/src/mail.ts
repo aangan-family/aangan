@@ -5,14 +5,17 @@
  * notices into one thread), a List-Unsubscribe header on optional emails, and a Resend tag per kind.
  * No open or click tracking: links stay plain links to the site.
  */
-import { BORDERS, DOMAIN, FAMILY, SITE, withBorder, type EmailBorder } from './brand';
+import { borderForMember, DOMAIN, FAMILY, SITE, withBorder, type EmailBorder } from './brand';
 import { EMAIL_FROM } from './site';
 
 /** Each member's border by email address (lower case), loaded by the Worker from email_borders(); unknown → default. */
 const borders = new Map<string, EmailBorder>();
-export function setBorders(rows: { email: string; border: string }[]) {
+export function setBorders(rows: { email: string; gender?: string; border: string }[]) {
   borders.clear();
-  for (const r of rows) if (r.email && BORDERS.includes(r.border as EmailBorder)) borders.set(r.email.toLowerCase(), r.border as EmailBorder);
+  for (const r of rows) {
+    const b = r.email ? borderForMember(r.gender || '', r.border || '') : null;
+    if (b) borders.set(r.email.toLowerCase(), b);
+  }
 }
 export const borderOf = (email?: string) => (email && borders.get(email.toLowerCase())) || undefined;
 

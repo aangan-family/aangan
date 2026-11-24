@@ -14,6 +14,7 @@ export const RELEASES: Release[] = [
     notes: [
       { icon: '🪔', text: 'New in Theme → Traditions: Odia, Assamese, Konkani, Sindhi, Kashmiri, Parsi, Goan Catholic and Syrian Christian. They are first drafts: if a word is wrong, tell the admin.' },
       { icon: '📅', text: 'New festivals you can switch on: Raja and Rath Yatra, the three Bihus, Cheti Chand, Parsi New Year and Khordad Sal, and more church days.', link: '#/calendar' },
+      { icon: '🧵', text: 'A woven border from your own traditions’ dress: phulkari, bandhani, paithani, laal paar, Sambalpuri ikat, mekhela, kunbi, kasavu and more. Pick yours in Theme; your emails carry it too.' },
     ],
   },
   {

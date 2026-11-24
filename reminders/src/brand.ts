@@ -4,6 +4,8 @@
  * The sign-in emails in supabase/templates/ use the same look by hand.
  */
 
+import { TEXTILES, borderFor } from '../../web/src/lib/textiles';
+import { PACK } from './tradition.ts';
 import { SITE_URL, FAMILY as FAMILY_NAME, ADMIN, DOMAIN } from './site.ts';
 export const SITE = SITE_URL;
 export const FAMILY = FAMILY_NAME;
@@ -14,20 +16,27 @@ export const SIGNER = ADMIN;
 export const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /**
- * Every email carries the family's traditions at the top, as on the website: the woven border of the reader's own
- * cloth (mayil kann veshti for men, Kanjeevaram saree for women, green saree otherwise; their own colour choice from
- * Theme if they made one) with the mango-leaf thoranam hanging under it. The pictures are PNGs drawn from
- * web/src/components/Heritage.tsx and served from the site's /email/ folder (no family data in them).
- * layout() writes BORDER_TOKEN; mail.ts swaps it for each recipient's border just before sending.
+ * Every email carries the family's traditions at the top, as on the website: a woven border from the reader's own
+ * traditions' dress (web/src/lib/heritage.ts: the South's veshti for men and saree for women, phulkari, bandhani,
+ * paithani, laal paar…; their own choice from Theme if they made one) with the mango-leaf thoranam under it.
+ * The pictures are PNGs drawn from web/src/components (npm run email-art) and served from the site's /email/
+ * folder (no family data in them). layout() writes BORDER_TOKEN; mail.ts swaps it for each recipient's border.
+ * A family whose traditions have no border (English) gets none.
  */
-export type EmailBorder = 'veshti-red' | 'veshti-blue' | 'saree-green' | 'saree-red';
-export const BORDERS: EmailBorder[] = ['veshti-red', 'veshti-blue', 'saree-green', 'saree-red'];
-export const DEFAULT_BORDER: EmailBorder = 'saree-green';
+export type EmailBorder = string;
+export const BORDERS: EmailBorder[] = TEXTILES.map((t) => t.id);
+/** The border for someone we know nothing about: the family's traditions' default (none for English). */
+export const DEFAULT_BORDER: EmailBorder | null = borderFor('', null, PACK.id);
 export const BORDER_TOKEN = '__FAMILY_BORDER__';
 export const ART = `${SITE}/email`;
-/** Put a border in place of the token (unknown names fall back to the default). */
-export const withBorder = (html: string, b?: string | null) =>
-  html.split(BORDER_TOKEN).join(BORDERS.includes(b as EmailBorder) ? (b as EmailBorder) : DEFAULT_BORDER);
+/** The border for a member: same rule as the website (their choice if allowed, else their traditions' default). */
+export const borderForMember = (gender: string, pref: string) => borderFor(gender, pref, PACK.id);
+/** Put a border in place of the token (unknown names fall back to the default; no default = no border row). */
+export function withBorder(html: string, b?: string | null): string {
+  const use = b && BORDERS.includes(b) ? b : DEFAULT_BORDER;
+  if (!use) return html.replace(/<!--border-->[\s\S]*?<!--\/border-->/g, '');
+  return html.split(BORDER_TOKEN).join(use);
+}
 
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 export const C = { ink: '#1d1d1f', grey: '#6e6e73', light: '#86868b', soft: '#f5f5f7', line: '#e5e5ea', blue: '#0071e3', link: '#0066cc', green: '#1d8a3c' };
@@ -65,7 +74,7 @@ export function layout(o: { preheader: string; headline: string; body: string; b
 <div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(o.preheader)}</div>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${C.soft}"><tr><td align="center" style="padding:28px 14px">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:580px;background:#ffffff;border-radius:22px">
-<tr><td style="padding:0;font-size:0;line-height:0;border-radius:22px 22px 0 0;overflow:hidden"><img src="${ART}/${o.border || BORDER_TOKEN}.png" width="580" alt="" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:22px 22px 0 0"></td></tr>
+<!--border--><tr><td style="padding:0;font-size:0;line-height:0;border-radius:22px 22px 0 0;overflow:hidden"><img src="${ART}/${o.border || BORDER_TOKEN}.png" width="580" alt="" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:22px 22px 0 0"></td></tr><!--/border-->
 <tr><td style="padding:0 0 0;font-size:0;line-height:0"><img src="${ART}/thoranam.png" width="580" alt="" style="display:block;width:100%;max-width:580px;height:auto;border:0"></td></tr>
 <tr><td style="padding:14px 30px 34px;font-family:${FONT}">
 <p style="margin:0 0 6px;font-size:14px;font-weight:600;color:${C.blue}">${FAMILY}</p>

@@ -6,7 +6,8 @@
  * shraddhams are left out here: their stars and tithis can be close-family or private.
  */
 import { occasions, type Day, type FeedRow } from './messages';
-import { findDay } from '../../web/src/lib/calendar';
+import { findDay, shownFor } from '../../web/src/lib/calendar';
+import { PACK } from './tradition.ts';
 
 export interface DailyPush { kind: 'occasion' | 'festival'; title: string; body: string; url: string; tag: string }
 
@@ -29,7 +30,8 @@ export function dailyPushes(rows: FeedRow[], today: Day): DailyPush[] {
     }
     out.push({ kind: 'occasion', title: 'Today in the family', body, url: '#/', tag: `occasion-${ymd(today)}` });
   }
-  const fest = (findDay(ymd(today))?.events || []).filter((e) => e.kind === 'festival');
+  // festivals of the family's traditions (site.config.json community); members' own choices live on their devices
+  const fest = (findDay(ymd(today))?.events || []).filter((e) => e.kind === 'festival' && shownFor(e, PACK.festivals));
   if (fest.length) {
     const names = fest.map((e) => e.title);
     out.push({ kind: 'festival', title: `Today: ${names[0]}`, body: names.length > 1 ? `${names.join(' · ')}. See the calendar for the day.` : 'See the calendar for the day.', url: `#/calendar/${ymd(today)}`, tag: `festival-${ymd(today)}` });

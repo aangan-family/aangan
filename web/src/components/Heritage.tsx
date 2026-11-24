@@ -4,6 +4,7 @@ import type { Prefs } from '../lib/types';
 import { useStore } from '../lib/store';
 import { borderFor, pageName, showMl, showTa, type Border, type Scripts as ScriptsPref } from '../lib/heritage';
 import type { Route } from './common';
+import { TextileBorder } from './Textiles';
 
 /* Choices made in the Theme picker apply at once (and are saved in the background); they sit over the loaded prefs. */
 let local: Partial<Prefs> = {};
@@ -18,10 +19,12 @@ export function useHeritage() {
   const gender = (myId && family.byId.get(myId)?.gender) || '';
   const p = { ...snap.prefs, ...over };
   // South Indian art (veshti/saree borders, kolam, gopuram, Malayalam/Tamil page names) follows the member's traditions
-  const south = usePack().art === 'south';
+  const pack = usePack();
+  const south = pack.art === 'south';
   return {
-    gender, south,
-    border: borderFor(gender, p.border),
+    gender, south, community: pack.id,
+    /** null when the member's traditions have no border (English) */
+    border: borderFor(gender, p.border, pack.id),
     scripts: (south ? ((p.scripts as ScriptsPref) || 'both') : 'en') as ScriptsPref,
     kolam: south && p.kolam !== false,
     doors: p.doors !== false,
@@ -114,9 +117,10 @@ const SAREE: Record<'saree-green' | 'saree-red', string> = { 'saree-green': '#0E
  */
 export function WovenBorder({ kind, slim = false }: { kind: Border; slim?: boolean }) {
   const id = sid(useId());
+  if (!(kind in VESHTI) && !(kind in SAREE)) return <TextileBorder id={kind} slim={slim} />;
   const g = `z${id}`;
   if (kind === 'veshti-red' || kind === 'veshti-blue') {
-    const [c, dk] = VESHTI[kind];
+    const [c, dk] = VESHTI[kind as keyof typeof VESHTI];
     const eye = (
       <pattern id={`e${id}`} width="9" height="9" patternUnits="userSpaceOnUse">
         <rect width="9" height="9" fill={dk} /><path d="M4.5 .6 L8.4 4.5 L4.5 8.4 L.6 4.5 Z" fill={`url(#${g})`} /><circle cx="4.5" cy="4.5" r="1.3" fill={dk} />
@@ -137,7 +141,7 @@ export function WovenBorder({ kind, slim = false }: { kind: Border; slim?: boole
       </svg>
     );
   }
-  const G = SAREE[kind];
+  const G = SAREE[kind as keyof typeof SAREE];
   if (slim) return (
     <svg className="weave slim" width="100%" height="18" aria-hidden="true"><defs><Zari id={g} /><Creeper id={`c${id}`} g={g} ground={G} /></defs>
       <rect width="100%" height="18" fill={G} /><rect y="2" width="100%" height="1.4" fill={`url(#${g})`} /><rect y="3.4" width="100%" height="12" fill={`url(#c${id})`} />

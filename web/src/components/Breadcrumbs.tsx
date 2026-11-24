@@ -58,7 +58,7 @@ export function Breadcrumbs({ route }: { route: Route }) {
           </li>
         ))}
       </ol>
-      {south && <div className="crumbweave"><WovenBorder kind={border} slim /></div>}
+      {border && <div className="crumbweave"><WovenBorder kind={border} slim /></div>}
     </nav>
   );
 }

@@ -102,7 +102,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
             {isAdmin && <button className="tlink small nochev b-photo-edit" onClick={() => setBanner(true)}>{slides.length ? 'Family photos' : 'Add family photos'}</button>}
           </div>
         </div>
-        {south && <div className="b-weave"><WovenBorder kind={border} /></div>}
+        {border && <div className="b-weave"><WovenBorder kind={border} /></div>}
       </div>
 
       {/* you */}

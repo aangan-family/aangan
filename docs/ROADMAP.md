@@ -12,7 +12,7 @@
 - **Community packs**: Hindi, Punjabi, Bengali, Marathi, Gujarati, Urdu, Tamil, Telugu, Kannada, Malayalam, and English only. Family words in English letters and in the community's own script, menus in each language, each relative chooses their own
 - **Calendars**: Tamil, Malayalam and Bengali solar months; lunar months (Amanta and Purnimanta) with tithis; Hijri dates
 - **Festivals** in groups each person switches on: all-India Hindu, North Indian, Tamil, Kerala, Bengali, Punjabi, Marathi, Gujarati, Telugu, Kannada, Sikh, Muslim, Christian, Jain, Buddhist, national days. Checked against published 2025–26 dates
-- South Indian art (woven borders, kolam, gopuram) shown only with South Indian traditions
+- Woven borders from every community's dress, on the site and in emails (South Indian kolam and gopuram only with South Indian traditions)
 - Free setup (Google sign-in on `.pages.dev`) and own-domain setup; hosting and privacy guides
 
 ## Gaps, in order of importance
@@ -34,10 +34,10 @@ The packs are a careful first draft. Words vary by region, caste and religion (a
 Menus are translated; page text isn't. Translating the whole interface (about 1,500 phrases) into ten languages needs a translation system and volunteers.
 
 ### 4. Art for every community
-North, East and West Indian families get a plain design for now. Ideas: rangoli, phulkari and bandhani borders, alpana, a banyan tree for the generations (instead of the gopuram), crescent-and-star or church motifs for families who want them. The home-screen icon is still a gopuram.
+**Borders done (Nov 2026):** 22 woven borders from each community's dress (phulkari, khes, bandhani, ajrak, paithani, pheta, laal paar, dhuti, Banarasi, leheriya, chikankari, zardozi, Pochampally, Ilkal, Mysore peta, kasavu, Sambalpuri, mekhela, gamosa, kunbi, kani, gara), chosen in Theme and carried on every email. Still to do: rangoli, alpana and other backgrounds in place of the kolam, a banyan tree for the generations (instead of the gopuram), crescent-and-star or church motifs for families who want them, and a home-screen icon that isn't a gopuram. The textile drawings would also benefit from a weaver's or designer's eye.
 
-### 5. Emails follow Tamil traditions
-Welcome and reminder emails still use the South Indian woven border, and the Worker's reminder calendar knows only the Tamil festivals. They should follow each member's traditions.
+### 5. Emails follow each family's traditions
+**Done (Nov 2026):** emails carry each member's own border (their Theme choice, else the family's traditions' default); the welcome and sign-in emails speak of the family's own calendar and family words; phone notifications and the weekly email list only the festivals of the family's traditions; the writing help knows the family's words. Still to do: members' own festival and tradition choices live on their devices, so the server uses the family's default for festivals.
 
 ### 6. Tradition fields
 Gotra and family deity are named per community; sutram and vedam show only with South Indian traditions. Still missing: fields Sikh families use (e.g. the gurdwara or village of the family), Muslim families (e.g. family line), Christian families (baptism, parish), and the milestones list (upanayanam, shashtiabdapoorthi) is Hindu and South Indian.

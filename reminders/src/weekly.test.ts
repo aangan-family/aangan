@@ -15,7 +15,8 @@ describe('This week in the family', () => {
     const texts = up.map((u) => u.text);
     expect(texts).toContain('Asha Iyer’s birthday');
     expect(texts).toContain('Remembering Ramaswamy Iyer');
-    expect(texts.some((t) => /Karthigai/.test(t))).toBe(true);
+    expect(texts.some((t) => /Karthigai/.test(t))).toBe(false);   // a Tamil festival; the sample settings are Hindi
+    expect(upcoming([], day('2026-11-01')).map((u) => u.text)).toContain('Dhanteras');   // the family's own festivals are listed
     expect(up.map((u) => u.day.getTime())).toEqual([...up.map((u) => u.day.getTime())].sort((a, b) => a - b));
   });
   it('leaves out birthdays not shared with the whole family, Tamil birthdays, and anything after the week', () => {

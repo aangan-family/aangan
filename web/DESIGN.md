@@ -49,9 +49,13 @@ Check text contrast on `--surface` in both modes (4.5:1 for body text).
 
 The interface is dressed like a Kerala–Tamil Iyer home, quietly, on top of the Apple-like base:
 
-- **Woven border** by the signed-in person's gender (from the tree): men get the mayil kann (peacock-eye) veshti border
+- **Woven border** from the member's traditions' dress (`lib/textiles.ts`, drawn in `components/Textiles.tsx`):
+  with South Indian traditions, by gender (from the tree): men get the mayil kann (peacock-eye) veshti border
   in red or blue; women the Kanjeevaram saree border (peacock and medallion panels between creeper bands) in green or red;
-  anyone else the green saree. Full height (84 / 50 px) on the Home hero; slim (16–18 px) under the breadcrumb bar.
+  anyone else the green saree. Other traditions: their own textiles (phulkari and khes, bandhani and ajrak, paithani and
+  pheta, laal paar and dhuti, Banarasi and leheriya, Sambalpuri, mekhela and gamosa, kunbi, kani, gara, kasavu…), each an
+  edge colour, thin lines and a repeating motif; the default follows `who` wears it, and anyone may pick another in Theme.
+  Full height on the Home hero; slim (16–18 px) under the breadcrumb bar. English traditions: no border.
 - **Thoranam** of mango leaves and marigolds under the breadcrumb bar; sways 3–4 s, still under reduced motion.
 - **Names** in Malayalam and Tamil above each page's English headline (`lib/heritage.ts`); members choose Both, one
   script or English only. System fonts only.

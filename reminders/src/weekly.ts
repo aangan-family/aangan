@@ -8,7 +8,8 @@
  */
 import { box, button, C, esc, h2, layout, p, SITE } from './brand.ts';
 import { occasions, type Day, type FeedRow } from './messages.ts';
-import { findDay } from '../../web/src/lib/calendar';
+import { findDay, shownFor } from '../../web/src/lib/calendar';
+import { PACK } from './tradition.ts';
 
 export interface WeeklyData {
   recipients: { email: string; given_name: string }[];
@@ -40,7 +41,7 @@ export function upcoming(rows: FeedRow[], today: Day): Upcoming[] {
   }
   for (let i = 0; i < 7; i++) {
     const d = addDays(today, i);
-    for (const e of findDay(ymd(d))?.events || []) if (e.kind === 'festival') out.push({ day: d, icon: '🌼', text: e.title });
+    for (const e of findDay(ymd(d))?.events || []) if (e.kind === 'festival' && shownFor(e, PACK.festivals)) out.push({ day: d, icon: '🌼', text: e.title });
   }
   return out.sort((a, b) => a.day.getTime() - b.day.getTime());
 }
