@@ -4,12 +4,9 @@
 // the Edge Function only if the helper can't be reached. VITE_AANGAN_API overrides the helper's address.
 
 export const FUNCTION_URL = 'https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan';
-export const HELPER_URL = 'https://api.aangan.family';
-const OLD_HELPER = 'https://aangan-api.always4vicky.workers.dev';   // until api.aangan.family has settled everywhere
-// served from aangan.family itself: talk to the same address (the helper Worker serves both)
-const SAME = typeof location !== 'undefined' && /(^|\.)aangan\.family$/.test(location.hostname) ? location.origin : '';
-export const API = (import.meta.env?.VITE_AANGAN_API || SAME || HELPER_URL).replace(/\/$/, '');
-const ADDRESSES = [...new Set([API, OLD_HELPER, FUNCTION_URL])];
+export const HELPER_URL = 'https://aangan-api.always4vicky.workers.dev';
+export const API = (import.meta.env?.VITE_AANGAN_API || HELPER_URL).replace(/\/$/, '');
+const ADDRESSES = [...new Set([API, FUNCTION_URL])];
 
 const KEY = 'aangan-signup';
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } };
