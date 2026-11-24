@@ -9,6 +9,18 @@ export interface Release { date: string; title: string; notes: Note[] }
 
 export const RELEASES: Release[] = [
   {
+    date: '2026-11-26',
+    title: 'Your traditions, your language.',
+    notes: [
+      { icon: '🎨', text: 'A new look, Aangan: warm saffron, marigold and leaf green. Change it any time in Theme.' },
+      { icon: '🌸', text: 'Faint floor art behind the pages from your traditions: kolam, rangoli, alpana, jali or a vine. Turn it off in Theme → Background art.' },
+      { icon: '🌳', text: 'The generations as a banyan tree, with the founders as its roots (South Indian families keep the gopuram).', link: '#/tree' },
+      { icon: '🗣️', text: 'Pages in Hindi or Tamil, as a first draft: Theme → Menus in → Pages too. Names, posts and messages always stay as written.' },
+      { icon: '🕊️', text: 'Milestones for every family: naming, mundan, Amrit Sanchar, Dastar Bandi, Aqiqah, Hajj, Baptism, First Communion and more, and the family gurdwara.' },
+      { icon: '🪔', text: 'New traditions, first drafts: Nepali, Manipuri, Khasi, Mizo, Tulu, Kodava, Anglo-Indian, Bohra and Khoja, with dhaka, phanek, puan and jainsem borders.' },
+    ],
+  },
+  {
     date: '2026-11-25',
     title: 'More traditions.',
     notes: [
