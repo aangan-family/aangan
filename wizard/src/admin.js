@@ -21,18 +21,20 @@ export function adminPage() {
   };
   const login = (mode = 'signin', error = '') => {
     const input = h('input', { type: 'password', autocomplete: mode === 'claim' ? 'new-password' : 'current-password', 'aria-label': 'Admin password' });
+    const code = h('input', { type: 'text', autocomplete: 'one-time-code', spellcheck: 'false', 'aria-label': 'Setup code' });
     const err = h('p', { class: 'bad', role: 'alert' }, error);
     root.replaceChildren(h('div', { class: 'card narrow' },
       h('h2', {}, mode === 'claim' ? 'Choose the admin password.' : 'Admin numbers.'),
-      h('p', {}, mode === 'claim' ? 'This is the first time. Choose a password of at least 12 characters and keep it safe: it is stored only as a fingerprint, so nobody can tell you what it was.' : 'Sign in with the admin password.'),
+      h('p', {}, mode === 'claim' ? 'This is the first time. Type the one-time setup code you were given, then choose a password of at least 12 characters and keep it safe: it is stored only as a fingerprint, so nobody can tell you what it was.' : 'Sign in with the admin password.'),
       h('form', { onsubmit: async (e) => {
         e.preventDefault(); err.textContent = '';
-        if (mode === 'claim') { try { await admin.claim(input.value); } catch (x) { err.textContent = x.message; return; } }
+        if (mode === 'claim') { try { await admin.claim(input.value, code.value.trim()); } catch (x) { err.textContent = x.message; return; } }
         key = input.value; show();
-      } }, h('label', { class: 'field' }, h('span', { class: 'lbl' }, 'Password'), input), err,
+      } }, mode === 'claim' ? h('label', { class: 'field' }, h('span', { class: 'lbl' }, 'Setup code'), code) : null,
+        h('label', { class: 'field' }, h('span', { class: 'lbl' }, mode === 'claim' ? 'New password' : 'Password'), input), err,
         h('div', { class: 'row' }, h('button', { class: 'btn', type: 'submit' }, mode === 'claim' ? 'Set it and open the numbers' : 'Open the numbers'),
           mode === 'signin' ? h('button', { class: 'link', type: 'button', onclick: () => login('claim') }, 'First time here?') : null))));
-    setTimeout(() => input.focus(), 0);
+    setTimeout(() => (mode === 'claim' ? code : input).focus(), 0);
   };
   key ? show() : login();
   return root;

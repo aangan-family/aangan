@@ -12,5 +12,6 @@ No family data ever comes here: the family sheet is read only on the person's ow
 
 What a sign-up keeps: name, email, and optionally family name, traditions, city, country, and rough family size,
 with the consent text they agreed to; which setup steps they reached (step names only); and per-day page counts (no cookies, no addresses).
-Anyone can delete their own sign-up from the site (**Delete my sign-up**). The admin password is stored only as a hash; to reset it,
-delete the row in `admin_key` and set a new one from the admin page.
+Anyone can delete their own sign-up from the site (**Delete my sign-up**). The admin password is stored only as a hash. Setting it needs a one-time setup code (also kept only as a hash,
+used up when the password is set), so nobody else can claim `#admin` first. To reset a lost password: delete the row in
+`admin_key`, insert a new setup code (see `migrations/0003_admin_setup_code.sql`) and set a new password from the admin page.

@@ -74,6 +74,6 @@ export async function forget() {
 }
 
 export const admin = {
-  claim: (key) => post('/admin/claim', { key }),
+  claim: (key, code) => post('/admin/claim', { key, code }),
   stats: (key) => post('/admin/stats', { key }, { timeout: 20000 }),
 };

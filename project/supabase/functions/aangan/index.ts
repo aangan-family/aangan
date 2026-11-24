@@ -93,6 +93,9 @@ Deno.serve(async (req) => {
       if (key.length < 12) return reply({ error: 'Choose a password of at least 12 characters.' }, 400);
       const { data: have } = await db.from('admin_key').select('id').maybeSingle();
       if (have) return reply({ error: 'An admin password is already set. Sign in with it.' }, 409);
+      // only the owner can set it: a one-time setup code, kept only as a fingerprint and used up here
+      const { data: used } = await db.from('admin_setup_code').delete().eq('hash', await sha256('aangan-setup:' + text(b.code, 100))).select('hash');
+      if (!used?.length) return reply({ error: 'That setup code is not right. Check it, or ask for a new one.' }, 403);
       await db.from('admin_key').insert({ hash: await sha256('aangan-admin:' + key) });
       return reply({ ok: true });
     }

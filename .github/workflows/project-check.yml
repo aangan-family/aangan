@@ -1,0 +1,44 @@
+name: project check
+# Live check of the Aangan project site's sign-up service: makes a made-up sign-up, records a step,
+# deletes it again, and checks the admin page refuses a wrong setup code. Runs after the service changes,
+# daily, and by hand. Also checks the Cloudflare helper once the AANGAN_API_URL variable is set.
+on:
+  push:
+    branches: [main]
+    paths: ['project/**', '.github/workflows/project-check.yml']
+  schedule: [{ cron: '30 1 * * *' }]
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  check:
+    if: github.repository == 'aangan-family/aangan'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        via: [direct, helper]
+    env:
+      DIRECT: https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan
+      HELPER: ${{ vars.AANGAN_API_URL }}
+      VIA: ${{ matrix.via }}
+    steps:
+      - name: Sign up, record a step, delete it
+        run: |
+          set -euo pipefail
+          if [ "$VIA" = helper ]; then
+            if [ -z "$HELPER" ]; then echo "AANGAN_API_URL is not set yet: skipping the helper check."; exit 0; fi
+            API="${HELPER%/}"
+          else API="$DIRECT"; fi
+          post() { curl -sS -m 20 -X POST "$API$1" -H 'content-type: application/json' -H 'origin: https://aangan-family.github.io' -d "$2" -w '\n%{http_code}'; }
+          out=$(post /view '{"page":"home"}'); echo "view: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 200 ]
+          email="check-$(date +%s)-$RANDOM@aangan-check.test"
+          out=$(post /signup "{\"name\":\"Made-up Check\",\"email\":\"$email\",\"community\":\"hindi\",\"country\":\"India\",\"consent\":true}")
+          code=$(echo "$out" | tail -1); body=$(echo "$out" | head -n -1); echo "signup: $code"
+          [ "$code" = 200 ]
+          token=$(echo "$body" | jq -r .token); [ -n "$token" ] && [ "$token" != null ]
+          out=$(post /step "{\"token\":\"$token\",\"step\":\"sheet_checked\"}"); echo "step: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 200 ]
+          out=$(post /forget "{\"token\":\"$token\"}"); echo "forget: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 200 ]
+          out=$(post /signup '{"name":"x","email":"x@aangan-check.test"}'); echo "signup without consent: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 400 ]
+          out=$(post /admin/claim '{"key":"not-the-real-one-123","code":"wrong-code"}'); c=$(echo "$out" | tail -1); echo "claim with a wrong code: $c"
+          [ "$c" = 403 ] || [ "$c" = 409 ]
+          echo "All good via $VIA."
