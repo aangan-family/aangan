@@ -16,7 +16,8 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - id: on
-        run: if [ -z "$CLOUDFLARE_API_TOKEN" ]; then echo "Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets to deploy the helper."; echo "go=no" >> "$GITHUB_OUTPUT"; else echo "go=yes" >> "$GITHUB_OUTPUT"; fi
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then echo "Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets to deploy the helper."; echo "go=no" >> "$GITHUB_OUTPUT"; else echo "go=yes" >> "$GITHUB_OUTPUT"; fi
       - if: steps.on.outputs.go == 'yes'
         uses: actions/checkout@v4
       - if: steps.on.outputs.go == 'yes'
@@ -24,4 +25,8 @@ jobs:
         with: { node-version: 22 }
       - if: steps.on.outputs.go == 'yes'
         working-directory: project/api
-        run: npm install --no-audit --no-fund && npx wrangler deploy | tee deploy.log && grep -o 'https://[^ ]*workers.dev' deploy.log | head -1 | sed 's/^/Helper address (set it as the repository variable AANGAN_API_URL): /'
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy | tee deploy.log
+          echo "Helper address - set it as the repository variable AANGAN_API_URL:"
+          grep -o 'https://[^ ]*workers.dev' deploy.log | head -1
