@@ -7,8 +7,10 @@ No family data ever comes here: the family sheet is read only on the person's ow
 - `supabase/` — the project's tables (`migrations/`) and its Edge Function `aangan` (sign-up, step, view, forget, admin).
   Project: `aangan` in the maintainers' Supabase organisation, Mumbai. Tables have RLS on and no policies: only the function reads or writes.
 - `api/` — a Cloudflare Worker that passes requests through to the function, because some Indian providers block supabase.co.
-  Deployed by `.github/workflows/project-api.yml` when the repository has `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets.
-  Then set the repository variable `AANGAN_API_URL` to the Worker's address, and the site uses it.
+  Live as `aangan-api` at https://aangan-api.always4vicky.workers.dev (the site's `HELPER_URL` in `wizard/src/api.js`; it falls back
+  to the function only if the helper can't be reached). Edit it in the Cloudflare dashboard, or let `.github/workflows/project-api.yml`
+  redeploy it on changes once the repository has `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets.
+  `.github/workflows/project-check.yml` tests a made-up sign-up through both addresses every day.
 
 What a sign-up keeps: name, email, and optionally family name, traditions, city, country, and rough family size,
 with the consent text they agreed to; which setup steps they reached (step names only); and per-day page counts (no cookies, no addresses).

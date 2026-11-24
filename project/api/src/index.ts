@@ -1,6 +1,7 @@
 // Pass-through to the aangan Edge Function. Only the paths the site uses, only POST/OPTIONS, small bodies.
 // The function itself checks origins, input and the admin password; this adds the visitor's address for rate limits.
-interface Env { FUNCTION_URL: string }
+interface Env { FUNCTION_URL?: string }
+const FUNCTION_URL = 'https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan';
 const PATHS = new Set(['/view', '/signup', '/step', '/forget', '/admin/claim', '/admin/stats']);
 
 export default {
@@ -14,7 +15,7 @@ export default {
       const v = req.headers.get(h); if (v) headers.set(h, v);
     }
     headers.set('x-forwarded-for', req.headers.get('cf-connecting-ip') || '');
-    const res = await fetch(env.FUNCTION_URL + url.pathname, { method: req.method, headers, body });
+    const res = await fetch((env.FUNCTION_URL || FUNCTION_URL) + url.pathname, { method: req.method, headers, body });
     return new Response(res.body, { status: res.status, headers: res.headers });
   },
 };

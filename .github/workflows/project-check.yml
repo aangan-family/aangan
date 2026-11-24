@@ -19,7 +19,7 @@ jobs:
         via: [direct, helper]
     env:
       DIRECT: https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan
-      HELPER: ${{ vars.AANGAN_API_URL }}
+      HELPER: ${{ vars.AANGAN_API_URL || 'https://aangan-api.always4vicky.workers.dev' }}
       VIA: ${{ matrix.via }}
     steps:
       - name: Sign up, record a step, delete it

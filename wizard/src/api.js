@@ -1,9 +1,12 @@
 // The Aangan project site's backend (project/ in the repository): sign-ups, setup progress, daily page counts.
 // Only what the person types into the sign-up form, step names and page names are ever sent. Never the family sheet.
-// Goes through the Cloudflare helper when it's set up (VITE_AANGAN_API), else straight to the Edge Function.
+// Goes through the Cloudflare helper (project/api, because some Indian providers block supabase.co), and straight to
+// the Edge Function only if the helper can't be reached. VITE_AANGAN_API overrides the helper's address.
 
 export const FUNCTION_URL = 'https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan';
-export const API = (import.meta.env?.VITE_AANGAN_API || FUNCTION_URL).replace(/\/$/, '');
+export const HELPER_URL = 'https://aangan-api.always4vicky.workers.dev';
+export const API = (import.meta.env?.VITE_AANGAN_API || HELPER_URL).replace(/\/$/, '');
+const ADDRESSES = [...new Set([API, FUNCTION_URL])];
 
 const KEY = 'aangan-signup';
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } };
@@ -13,10 +16,19 @@ const write = (v) => { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : 
 export const me = () => read();
 export const signedUp = () => !!read();
 
-async function post(path, body, { timeout = 12000 } = {}) {
+async function post(path, body, opts) {
+  let last;
+  for (const base of ADDRESSES) {
+    try { return await postTo(base, path, body, opts); }
+    catch (e) { if (e.status) throw e; last = e; }   // only a network failure tries the next address
+  }
+  throw last;
+}
+
+async function postTo(base, path, body, { timeout = 12000 } = {}) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), timeout);
   try {
-    const res = await fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: ctl.signal, credentials: 'omit' });
+    const res = await fetch(base + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: ctl.signal, credentials: 'omit' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) { const e = new Error(data.error || 'Something went wrong. Please try again.'); e.status = res.status; e.data = data; throw e; }
     return data;
