@@ -2,7 +2,7 @@
 // The function itself checks origins, input and the admin password; this adds the visitor's address for rate limits.
 interface Env { FUNCTION_URL?: string }
 const FUNCTION_URL = 'https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan';
-const PATHS = new Set(['/view', '/signup', '/step', '/forget', '/admin/claim', '/admin/stats']);
+const PATHS = new Set(['/view', '/signup', '/step', '/forget', '/admin/claim', '/admin/stats', '/address', '/family/start', '/family/status']);
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {

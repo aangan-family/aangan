@@ -17,3 +17,15 @@ with the consent text they agreed to; which setup steps they reached (step names
 Anyone can delete their own sign-up from the site (**Delete my sign-up**). The admin password is stored only as a hash. Setting it needs a one-time setup code (also kept only as a hash,
 used up when the password is set), so nobody else can claim `#admin` first. To reset a lost password: delete the row in
 `admin_key`, insert a new setup code (see `migrations/0003_admin_setup_code.sql`) and set a new password from the admin page.
+
+## Hosted edition (docs/HOSTED.md)
+
+Migration `0004_hosted.sql` adds what Aangan keeps about each hosted family: `families` (address, family name,
+traditions, admin email, the declaration they accepted, status), `subscriptions` and `provision_events` (each setup
+step's plain message). Never any family data: the tree and everything in it live only in the family's own database.
+
+Endpoints in `functions/aangan`: `/address` (is an address free), `/family/start` (address + declaration for a
+signed-up browser; payment comes next), `/family/status` (progress page, only for the browser that signed up),
+`/progress` (reports from `scripts/setup.mjs` in hosted mode; needs the Edge Function secret `PROVISION_TOKEN`, set
+once with the operations repository's matching secret). `/admin/stats` now includes hosted families by status.
+The helper (`api/`) forwards the three browser endpoints; `/progress` comes from GitHub Actions straight to Supabase.

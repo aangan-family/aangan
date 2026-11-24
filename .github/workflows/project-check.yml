@@ -40,4 +40,11 @@ jobs:
           out=$(post /signup '{"name":"x","email":"x@aangan-check.test"}'); echo "signup without consent: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 400 ]
           out=$(post /admin/claim '{"key":"not-the-real-one-123","code":"wrong-code"}'); c=$(echo "$out" | tail -1); echo "claim with a wrong code: $c"
           [ "$c" = 403 ] || [ "$c" = 409 ]
+          # hosted edition: address checks, and setup reports only with the operations token
+          out=$(post /address '{"slug":"admin"}'); echo "reserved address: $(echo "$out" | head -n -1 | jq -c .available)"; [ "$(echo "$out" | head -n -1 | jq -r .available)" = false ]
+          out=$(post /address "{\"slug\":\"check-$RANDOM\"}"); echo "free address: $(echo "$out" | head -n -1 | jq -c .available)"; [ "$(echo "$out" | head -n -1 | jq -r .available)" = true ]
+          if [ "$VIA" = direct ]; then
+            out=$(post /progress '{"slug":"x","status":"working"}'); c=$(echo "$out" | tail -1); echo "setup report without the token: $c"; [ "$c" = 403 ] || [ "$c" = 503 ]
+          fi
+          out=$(post /family/start '{"token":"00000000-0000-0000-0000-000000000000","slug":"check-x","declaration":{}}'); c=$(echo "$out" | tail -1); echo "start without ticks: $c"; [ "$c" = 400 ]
           echo "All good via $VIA."
