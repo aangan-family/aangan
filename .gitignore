@@ -2,6 +2,8 @@ data/
 node_modules/
 web/node_modules/
 web/dist/
+wizard/node_modules/
+wizard/dist/
 .env
 .env.*
 !.env.example

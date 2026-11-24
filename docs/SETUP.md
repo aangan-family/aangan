@@ -10,6 +10,8 @@ About an afternoon. You don't need to know how to code: you'll copy and paste, a
 
 Tick each step off as you go.
 
+> **Prefer clicking to typing? Use the [setup wizard](https://aangan-family.github.io/aangan/).** It does steps 2, 4.3 and 5 in your browser, with no Codespace and no commands: it checks your sheet and shows your tree, writes `site.config.json`, `reminders/wrangler.toml` and your family's `seed.sql`, and lists every other step below with your own addresses ready to copy. Your sheet is read on your computer and never uploaded (the page can't connect to any other site). This guide stays the full reference.
+
 ---
 
 ## 1. Make your own private copy

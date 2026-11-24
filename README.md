@@ -44,6 +44,8 @@ Phone numbers, emails and addresses are never imported, even if the sheet has th
 
 Details in **[docs/HOSTING.md](docs/HOSTING.md)**; step by step in **[docs/SETUP.md](docs/SETUP.md)**, written so that a 16-year-old comfortable with a laptop can do it in an afternoon.
 
+**Easiest start: the [setup wizard](https://aangan-family.github.io/aangan/)**. It checks your family sheet in your browser (it's never uploaded), shows your tree, writes your settings and database files, and walks you through each account with your own values filled in.
+
 Try it now on your computer:
 
 ```bash
@@ -71,7 +73,8 @@ Read **[docs/PRIVACY-GUIDE.md](docs/PRIVACY-GUIDE.md)** before you set up: it co
 | `web/src/lib/community/` | **Community packs**: family words, menus, calendars and festivals for each tradition |
 | `reminders/` | A Cloudflare Worker: emails, reminders, notifications, sign-in helpers, health checks |
 | `supabase/` | The database: tables, privacy rules, consent text (`setup.sql` = everything in one file) |
-| `scripts/` | Excel/CSV and Family Echo importers, settings check, template maker |
+| `wizard/` | The browser setup wizard (static; published to GitHub Pages; can't connect to any other site) |
+| `scripts/` | Excel/CSV and Family Echo importers, settings check, template maker (`scripts/lib/` is shared with the wizard) |
 | `templates/` | The Excel template and the made-up sample family |
 | `tests/` | Privacy-rule tests on a real Postgres, importer tests |
 | `site.config.json` | **Your family's settings**: the only file you need to edit |

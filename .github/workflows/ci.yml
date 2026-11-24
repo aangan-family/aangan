@@ -19,6 +19,9 @@ jobs:
         env:
           VITE_SUPABASE_URL: https://example.supabase.co
           VITE_SUPABASE_ANON_KEY: ci-placeholder
+      - name: Setup wizard builds
+        working-directory: wizard
+        run: npm ci && npm run build
       - name: Reminder messages
         working-directory: reminders
         run: npm ci && npm test && npx tsc -p .

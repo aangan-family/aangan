@@ -1,0 +1,15 @@
+{
+  "name": "aangan-setup-wizard",
+  "private": true,
+  "type": "module",
+  "description": "Browser setup wizard: checks the family sheet on your own computer, previews the tree, writes your settings and walks you through each account.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "exceljs": "^4.4.0",
+    "vite": "^7.1.0"
+  }
+}

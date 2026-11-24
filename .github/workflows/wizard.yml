@@ -1,0 +1,32 @@
+name: setup wizard
+# Publishes the browser setup wizard (wizard/) to GitHub Pages: https://aangan-family.github.io/aangan/
+# Only from the project's own repository; family copies never publish anything.
+on:
+  push:
+    branches: [main]
+    paths: ['wizard/**', 'scripts/lib/**', 'templates/**', 'supabase/setup.sql', 'reminders/wrangler.toml', '.github/workflows/wizard.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  publish:
+    if: github.repository == 'aangan-family/aangan'
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: '${{ steps.deploy.outputs.page_url }}' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Tests (the wizard shares the importer and settings check)
+        run: npm ci && npm test
+      - name: Build
+        working-directory: wizard
+        run: npm ci && npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: wizard/dist }
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -12,6 +12,7 @@ Each family runs its own copy: its own Supabase project, Cloudflare account and 
 - `npm run check` validates it and copies values into `reminders/wrangler.toml`.
 - `templates/` — Excel template + made-up sample family (`npm run template`); `scripts/import-sheet.mjs` → seed SQL (`npm run import`).
 - `supabase/setup.sql` = all migrations, each in its own transaction (`npm run sql`; regenerate after adding a migration).
+- **Setup wizard** (`wizard/`, Vite, plain JS, published to GitHub Pages by `.github/workflows/wizard.yml` from aangan-family/aangan only): reads the sheet in the browser (`wizard/src/read.js`, exceljs), previews the tree (`tree.js` `buildPreview`), settings form → `site.config.json` + `wrangler.toml`, `seed.sql` made locally, account walkthrough (`steps.js` `accountSteps`, keep in step with docs/SETUP.md). CSP `connect-src 'self'`: it must never send anything to another site; only settings and ticks go in localStorage, never the sheet. Shares `scripts/lib/` (`sheet.mjs`, `sql.mjs`, `config.mjs`) with the command line; tests in `tests/wizard.test.mjs`.
 - `0051_first_admin.sql`: on a new site, the SQL editor (auth.uid() null) may add the first admin invitation once.
 
 ## Layout
