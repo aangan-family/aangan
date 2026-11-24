@@ -5,5 +5,11 @@ main = "src/index.ts"
 compatibility_date = "2026-11-01"
 workers_dev = true
 
+# The Aangan site itself (wizard/dist, built by project-api.yml) is served from here too, at aangan.family:
+# files first, then the API paths below fall through to the Worker.
+[assets]
+directory = "../../wizard/dist"
+not_found_handling = "single-page-application"
+
 [vars]
 FUNCTION_URL = "https://hpabuhhqdguxyfjwoxik.supabase.co/functions/v1/aangan"

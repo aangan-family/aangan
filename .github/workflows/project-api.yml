@@ -4,7 +4,7 @@ name: project api
 on:
   push:
     branches: [main]
-    paths: ['project/api/**', '.github/workflows/project-api.yml']
+    paths: ['project/api/**', 'wizard/**', 'scripts/lib/**', 'supabase/setup.sql', 'templates/**', '.github/workflows/project-api.yml']
   workflow_dispatch:
 permissions: { contents: read }
 jobs:
@@ -26,6 +26,7 @@ jobs:
       - if: steps.on.outputs.go == 'yes'
         working-directory: project/api
         run: |
+          (cd ../../wizard && npm ci --no-audit --no-fund && npm run build)
           npm install --no-audit --no-fund
           npx wrangler deploy | tee deploy.log
           echo "Helper address - set it as the repository variable AANGAN_API_URL:"
