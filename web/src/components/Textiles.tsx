@@ -92,6 +92,19 @@ export const SPECS: Record<string, Spec> = {
     {petals(9, 13, 3.4, 5, 2.4, '#F2A7C3', 'g')}<circle cx="9" cy="13" r="1.6" fill="#FBF8F0" />
     <path d="M14 15 C18 12 21 14 24 10" fill="none" stroke="#6DBE8C" strokeWidth="1" /><ellipse cx="19" cy="12" rx="2.2" ry="1.1" fill="#6DBE8C" transform="rotate(-30 19 12)" />
     <circle cx="22" cy="21" r="1.2" fill="#FBF8F0" /></> },
+  // Nov 2026 (2): the north-east and Nepal
+  dhaka: { edge: '#B3122E', line: '#1F2A44', ground: '#FBF8F0', w: 24, h: 24, tile: () => <>
+    <path d="M0 24 L6 12 L12 24 Z" fill="#B3122E" /><path d="M12 24 L18 12 L24 24 Z" fill="#1F2A44" /><path d="M6 12 L12 0 L18 12 Z" fill="#E0A21B" />
+    <path d={diamond(12, 17, 2.2)} fill="#2E7D4F" /><path d={diamond(0, 6, 2.2)} fill="#2E7D4F" /><path d={diamond(24, 6, 2.2)} fill="#2E7D4F" /></> },
+  phanek: { edge: '#4A1A5C', line: '#C2185B', ground: '#5E1F78', w: 18, h: 24, tile: () => <>
+    <rect y="3" width="18" height="2" fill="#C2185B" /><rect y="8" width="18" height="1" fill="#F3D77A" /><rect y="12" width="18" height="3" fill="#2B0F38" />
+    <rect y="18" width="18" height="1" fill="#F3D77A" /><rect y="20" width="18" height="2" fill="#C2185B" /></> },
+  puan: { edge: '#111111', line: '#D7263D', ground: '#111111', w: 24, h: 26, tile: () => <>
+    <rect y="4" width="24" height="3" fill="#D7263D" /><rect y="19" width="24" height="3" fill="#D7263D" />
+    <path d="M2 13 L6 9 L10 13 L6 17 Z M14 13 L18 9 L22 13 L18 17 Z" fill="none" stroke="#F2C14E" strokeWidth="1.2" /><path d={diamond(12, 13, 1.6)} fill="#2E8B57" /></> },
+  jainsem: { edge: '#7A1F2B', line: '#E8C468', ground: '#9C2A36', w: 20, h: 22, tile: () => <>
+    <rect x="9" width="2" height="22" fill="#7A1F2B" /><rect y="10" width="20" height="2" fill="#7A1F2B" />
+    <rect x="3" width="1" height="22" fill="#E8C468" opacity=".8" /><rect y="4" width="20" height="1" fill="#E8C468" opacity=".8" /><rect x="15" width="1" height="22" fill="#E8C468" opacity=".8" /><rect y="17" width="20" height="1" fill="#E8C468" opacity=".8" /></> },
 };
 
 /** A border from a community's dress. `slim` is the thin band under the breadcrumb bar. `width` fixes the size (emails). */

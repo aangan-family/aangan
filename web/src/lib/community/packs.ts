@@ -14,6 +14,7 @@ export type CommunityId =
   | 'hindi' | 'punjabi' | 'bengali' | 'marathi' | 'gujarati' | 'urdu'
   | 'tamil' | 'telugu' | 'kannada' | 'malayalam'
   | 'odia' | 'assamese' | 'konkani' | 'sindhi' | 'kashmiri' | 'parsi' | 'goan_catholic' | 'syrian_christian'
+  | 'nepali' | 'manipuri' | 'khasi' | 'mizo' | 'tulu' | 'kodava' | 'anglo_indian' | 'bohra' | 'khoja'
   | 'english';
 
 /** Festival groups a member can switch on in the calendar. */
@@ -388,6 +389,49 @@ const SYRIAN: KinTable = {
 };
 
 // ---------------------------------------------------------------------------------------------- registry
+// ---------------------------------------------------------------------------------------------- first drafts, Nov 2026 (2)
+// Only words we're sure of; the rest show in English until a native speaker fills them in (docs/review).
+const NEPALI: KinTable = {
+  father: 'Buwa|बुवा', mother: 'Aama|आमा',
+  gfP: 'Hajurbuwa|हजुरबुवा', gmP: 'Hajuraama|हजुरआमा', gfM: 'Hajurbuwa|हजुरबुवा', gmM: 'Hajuraama|हजुरआमा',
+  son: 'Chhora|छोरा', daughter: 'Chhori|छोरी', sonSon: 'Naati|नाति', sonDau: 'Naatini|नातिनी', dauSon: 'Naati|नाति', dauDau: 'Naatini|नातिनी',
+  husband: 'Shrimaan|श्रीमान', wife: 'Shrimati|श्रीमती', fil: 'Sasura|ससुरा', mil: 'Saasu|सासु',
+  sonInLaw: 'Juwaai|ज्वाइँ', dauInLaw: 'Buhaari|बुहारी',
+  eBro: 'Daai|दाइ', yBro: 'Bhaai|भाइ', eSis: 'Didi|दिदी', ySis: 'Bahini|बहिनी',
+  fEBro: 'Thulobuwa|ठूलोबुवा', fYBro: 'Kaakaa|काका', fSis: 'Phupu|फुपू', mBro: 'Maamaa|मामा',
+  fEBroW: 'Thuliaama|ठूलीआमा', fYBroW: 'Kaaki|काकी', fSisH: 'Phupaaju|फुपाजु', mBroW: 'Maaiju|माइजु',
+  eBroW: 'Bhauju|भाउजु', eSisH: 'Bhinaaju|भिनाजु',
+};
+const MANIPURI: KinTable = {
+  father: 'Ipa', mother: 'Ima', gfP: 'Ipu', gmP: 'Ibok', gfM: 'Ipu', gmM: 'Ibok',
+  eBro: 'Tamo', eSis: 'Iche',
+};
+const KHASI: KinTable = { father: 'Kpa', mother: 'Kmie', mBro: 'Kñi', husband: 'Tnga', wife: 'Tnga' };
+const MIZO: KinTable = {
+  father: 'Pa', mother: 'Nu', gfP: 'Pu', gmP: 'Pi', gfM: 'Pu', gmM: 'Pi', husband: 'Pasal', wife: 'Nupui',
+  eBro: 'U', eSis: 'U', yBro: 'Nau', ySis: 'Nau',
+};
+const TULU: KinTable = {
+  father: 'Amme|ಅಮ್ಮೆ', mother: 'Appe|ಅಪ್ಪೆ', gfP: 'Ajjer|ಅಜ್ಜೆರ್', gmP: 'Ajji|ಅಜ್ಜಿ', gfM: 'Ajjer|ಅಜ್ಜೆರ್', gmM: 'Ajji|ಅಜ್ಜಿ',
+  son: 'Mage|ಮಗೆ', daughter: 'Magal|ಮಗಳ್', husband: 'Kandane|ಕಂಡನೆ', wife: 'Bodedi|ಬೊಡೆದಿ', eBro: 'Anna|ಅಣ್ಣ', eSis: 'Akka|ಅಕ್ಕ', mBro: 'Maame|ಮಾಮೆ',
+};
+const KODAVA: KinTable = {
+  father: 'Appa|ಅಪ್ಪ', mother: 'Avva|ಅವ್ವ', gfP: 'Ajja|ಅಜ್ಜ', gmP: 'Ajji|ಅಜ್ಜಿ', gfM: 'Ajja|ಅಜ್ಜ', gmM: 'Ajji|ಅಜ್ಜಿ',
+  eBro: 'Anna|ಅಣ್ಣ', eSis: 'Akka|ಅಕ್ಕ', mBro: 'Maava|ಮಾವ',
+};
+const ANGLO: KinTable = {
+  father: 'Daddy', mother: 'Mummy', husband: 'Hubby', wife: 'Wife', gfP: 'Grandpa', gmP: 'Granny', gfM: 'Grandpa', gmM: 'Granny',
+  fBro: 'Uncle', mBro: 'Uncle', fSis: 'Aunty', mSis: 'Aunty', fSisH: 'Uncle', mSisH: 'Uncle', fBroW: 'Aunty', mBroW: 'Aunty',
+};
+const BOHRA: KinTable = {
+  father: 'Bawaji|બાવાજી', mother: 'Maaji|માજી',
+  fBro: 'Kaka|કાકા', fSis: 'Phui|ફોઈ', mBro: 'Mama|મામા', mSis: 'Masi|માસી',
+};
+const KHOJA: KinTable = {
+  father: 'Bapa|બાપા', mother: 'Ma|મા', gfP: 'Dada|દાદા', gmP: 'Dadi|દાદી', gfM: 'Nana|નાના', gmM: 'Nani|નાની',
+  fBro: 'Kaka|કાકા', fSis: 'Phui|ફોઈ', mBro: 'Mama|મામા', mSis: 'Masi|માસી',
+};
+
 const G = (gothram: string, kuladeivam: string) => ({ gothram, kuladeivam });
 export const PACKS: Record<CommunityId, Pack> = {
   hindi: { id: 'hindi', name: 'Hindi', native: 'हिन्दी', lang: 'hi', hello: 'Namaste', term: (r) => fromTable(HINDI, r), menus: MENUS.hi, labels: G('Gotra', 'Kuldevta / Kuldevi'), date: 'purnimanta', festivals: ['national', 'hindu', 'north'], starBirthday: false, art: 'plain' },
@@ -420,8 +464,17 @@ export const PACKS: Record<CommunityId, Pack> = {
   parsi: { id: 'parsi', name: 'Parsi', native: 'પારસી', lang: 'gu', hello: 'Sahebji', term: (r) => fromTable(PARSI, r), menus: MENUS.gu, menusFrom: 'Gujarati', labels: G('Family line', 'Fire temple (Agiary)'), date: 'none', festivals: ['national', 'parsi'], starBirthday: false, art: 'plain', draft: true },
   goan_catholic: { id: 'goan_catholic', name: 'Goan Catholic', native: 'Konknni (Romi)', lang: 'en', hello: 'Hello', term: (r) => fromTable(GOAN, r), menus: MENUS.kok, menusFrom: 'Konkani (Devanagari)', labels: G('Family house / village', 'Parish'), date: 'none', festivals: ['national', 'christian', 'goa'], starBirthday: false, art: 'plain', draft: true },
   syrian_christian: { id: 'syrian_christian', name: 'Syrian Christian (Kerala)', native: 'നസ്രാണി', lang: 'ml', hello: 'Namaskaram', term: dravidian(SYRIAN, (s) => (s === 'm' ? 'Machunan|മച്ചുനൻ' : s === 'f' ? 'Machuni|മച്ചുനി' : undefined), ['Marumakan|മരുമകൻ', 'Marumakal|മരുമകൾ']), menus: MENUS.ml, labels: G('Family house (Tharavad)', 'Parish'), date: 'malayalam', festivals: ['national', 'christian', 'kerala_christian', 'kerala'], starBirthday: false, art: 'plain', draft: true },
+  nepali: { id: 'nepali', name: 'Nepali', native: 'नेपाली', lang: 'hi', hello: 'Namaste', term: (r) => fromTable(NEPALI, r), menus: MENUS.hi, menusFrom: 'Hindi', labels: G('Gotra', 'Kuldevta'), date: 'purnimanta', festivals: ['national', 'hindu', 'north', 'buddhist'], starBirthday: false, art: 'plain', draft: true },
+  manipuri: { id: 'manipuri', name: 'Manipuri (Meitei)', native: 'Meiteilon', lang: 'en', hello: 'Khurumjari', term: (r) => fromTable(MANIPURI, r), menus: {}, labels: G('Yek salai / Sagei', 'Apokpa (ancestral deity)'), date: 'none', festivals: ['national', 'hindu'], starBirthday: false, art: 'plain', draft: true },
+  khasi: { id: 'khasi', name: 'Khasi', native: 'Ka Ktien Khasi', lang: 'en', hello: 'Khublei', term: (r) => fromTable(KHASI, r), menus: {}, labels: G('Kur (clan)', 'Iing (family house)'), date: 'none', festivals: ['national', 'christian'], starBirthday: false, art: 'plain', draft: true },
+  mizo: { id: 'mizo', name: 'Mizo', native: 'Mizo ṭawng', lang: 'en', hello: 'Chibai', term: (r) => fromTable(MIZO, r), menus: {}, labels: G('Hnam (clan)', 'Church'), date: 'none', festivals: ['national', 'christian'], starBirthday: false, art: 'plain', draft: true },
+  tulu: { id: 'tulu', name: 'Tulu', native: 'ತುಳು', lang: 'kn', hello: 'Namaskara', term: (r) => fromTable(TULU, r), menus: MENUS.kn, menusFrom: 'Kannada', labels: G('Bari (clan)', 'Daiva (family spirit)'), date: 'none', festivals: ['national', 'hindu', 'karnataka'], starBirthday: false, art: 'plain', draft: true },
+  kodava: { id: 'kodava', name: 'Kodava', native: 'ಕೊಡವ', lang: 'kn', hello: 'Namaskara', term: (r) => fromTable(KODAVA, r), menus: MENUS.kn, menusFrom: 'Kannada', labels: G('Okka (family house)', 'Kaimada (ancestral shrine)'), date: 'none', festivals: ['national', 'hindu', 'karnataka'], starBirthday: false, art: 'plain', draft: true },
+  anglo_indian: { id: 'anglo_indian', name: 'Anglo-Indian', native: 'English', lang: 'en', hello: 'Hello', term: (r) => fromTable(ANGLO, r), menus: {}, labels: G('Family name', 'Parish'), date: 'none', festivals: ['national', 'christian'], starBirthday: false, art: 'plain', draft: true },
+  bohra: { id: 'bohra', name: 'Bohra', native: 'Lisan ud-Dawat', lang: 'gu', hello: 'Salaam', term: (r) => fromTable(BOHRA, r), menus: MENUS.gu, menusFrom: 'Gujarati', labels: G('Family line', 'Masjid / Jamaat'), date: 'hijri', festivals: ['national', 'muslim'], starBirthday: false, art: 'plain', draft: true },
+  khoja: { id: 'khoja', name: 'Khoja', native: 'ખોજા', lang: 'gu', hello: 'Ya Ali madad', term: (r) => fromTable(KHOJA, r), menus: MENUS.gu, menusFrom: 'Gujarati', labels: G('Family line', 'Jamatkhana'), date: 'hijri', festivals: ['national', 'muslim'], starBirthday: false, art: 'plain', draft: true },
   english: { id: 'english', name: 'English only', native: 'English', lang: 'en', hello: 'Hello', term: () => null, menus: {}, labels: G('Gotra / Gothram', 'Family deity'), date: 'none', festivals: ['national'], starBirthday: false, art: 'plain' },
 };
 
-export const PACK_LIST: Pack[] = ['hindi', 'punjabi', 'bengali', 'marathi', 'gujarati', 'urdu', 'tamil', 'telugu', 'kannada', 'malayalam', 'odia', 'assamese', 'konkani', 'sindhi', 'kashmiri', 'parsi', 'goan_catholic', 'syrian_christian', 'english'].map((k) => PACKS[k as CommunityId]);
+export const PACK_LIST: Pack[] = ['hindi', 'punjabi', 'bengali', 'marathi', 'gujarati', 'urdu', 'tamil', 'telugu', 'kannada', 'malayalam', 'odia', 'assamese', 'konkani', 'sindhi', 'kashmiri', 'parsi', 'goan_catholic', 'syrian_christian', 'nepali', 'manipuri', 'khasi', 'mizo', 'tulu', 'kodava', 'anglo_indian', 'bohra', 'khoja', 'english'].map((k) => PACKS[k as CommunityId]);
 export const isCommunity = (s: unknown): s is CommunityId => typeof s === 'string' && s in PACKS;

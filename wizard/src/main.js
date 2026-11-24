@@ -27,7 +27,7 @@ const state = {
 };
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ s: state.s, done: state.done })); } catch { /* private mode: fine */ } };
 
-const LABELS = { hindi: 'Hindi', punjabi: 'Punjabi', bengali: 'Bengali', marathi: 'Marathi', gujarati: 'Gujarati', urdu: 'Urdu', tamil: 'Tamil', telugu: 'Telugu', kannada: 'Kannada', malayalam: 'Malayalam', odia: 'Odia (first draft)', assamese: 'Assamese (first draft)', konkani: 'Konkani (first draft)', sindhi: 'Sindhi (first draft)', kashmiri: 'Kashmiri (first draft)', parsi: 'Parsi (first draft)', goan_catholic: 'Goan Catholic (first draft)', syrian_christian: 'Syrian Christian, Kerala (first draft)', english: 'English only' };
+const LABELS = { hindi: 'Hindi', punjabi: 'Punjabi', bengali: 'Bengali', marathi: 'Marathi', gujarati: 'Gujarati', urdu: 'Urdu', tamil: 'Tamil', telugu: 'Telugu', kannada: 'Kannada', malayalam: 'Malayalam', odia: 'Odia (first draft)', assamese: 'Assamese (first draft)', konkani: 'Konkani (first draft)', sindhi: 'Sindhi (first draft)', kashmiri: 'Kashmiri (first draft)', parsi: 'Parsi (first draft)', goan_catholic: 'Goan Catholic (first draft)', syrian_christian: 'Syrian Christian, Kerala (first draft)', nepali: 'Nepali', manipuri: 'Manipuri (Meitei)', khasi: 'Khasi', mizo: 'Mizo', tulu: 'Tulu', kodava: 'Kodava', anglo_indian: 'Anglo-Indian', bohra: 'Bohra', khoja: 'Khoja', english: 'English only' };
 
 /** The settings form → site.config.json */
 function config() {

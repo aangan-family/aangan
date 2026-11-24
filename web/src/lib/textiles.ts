@@ -34,6 +34,10 @@ export const TEXTILES: Textile[] = [
   { id: 'kunbi', name: 'Kunbi', from: 'Goan checked saree' },
   { id: 'kani', name: 'Kani paisley', from: 'Kashmiri shawl' },
   { id: 'gara', name: 'Gara', from: 'Parsi embroidered saree' },
+  { id: 'dhaka', name: 'Dhaka', from: 'Nepali dhaka topi and shawl', who: 'm' },
+  { id: 'phanek', name: 'Phanek', from: 'Manipuri striped wrap', who: 'f' },
+  { id: 'puan', name: 'Puan', from: 'Mizo puanchei', who: 'f' },
+  { id: 'jainsem', name: 'Jainsem', from: 'Khasi dress' , who: 'f' },
 ];
 export const TEXTILE = new Map(TEXTILES.map((t) => [t.id, t]));
 export type Border = string;
@@ -58,6 +62,15 @@ export const COMMUNITY_TEXTILES: Record<string, string[]> = {
   kashmiri: ['kani'],
   parsi: ['gara'],
   syrian_christian: ['kasavu'],
+  nepali: ['dhaka'],
+  manipuri: ['phanek'],
+  khasi: ['jainsem'],
+  mizo: ['puan'],
+  tulu: ['ilkal'],
+  kodava: ['mysore-peta'],
+  anglo_indian: [],
+  bohra: ['zardozi', 'bandhani'],
+  khoja: ['bandhani', 'ajrak'],
   english: [],
 };
 /** The South's first four keep the old rule: veshti for men, saree for women. */

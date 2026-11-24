@@ -1,4 +1,4 @@
--- The whole family website database: privacy rules, tables and functions (53 steps).
+-- The whole family website database: privacy rules, tables and functions (54 steps).
 -- Paste all of this into Supabase → SQL Editor → New query, and press Run. Run it once, on a new project.
 -- Made by: npm run sql (from supabase/migrations/). Don't edit this file; edit the migrations.
 
@@ -4481,4 +4481,13 @@ alter table public.profile_fields add constraint profile_fields_milestone_format
   or value ~ '^[0-9]{8}$');
 alter table public.profile_fields drop constraint if exists profile_fields_gurdwara_len;
 alter table public.profile_fields add constraint profile_fields_gurdwara_len check (field <> 'gurdwara' or char_length(value) <= 120);
+commit;
+
+-- ===================================================== 0054_more_borders.sql
+begin;
+-- 0054: borders for the north-east and Nepal: dhaka (Nepali), phanek (Manipuri), puan (Mizo), jainsem (Khasi).
+-- Keep in step with web/src/lib/textiles.ts TEXTILES (a test checks they match).
+alter table public.member_prefs drop constraint if exists member_prefs_border_check;
+alter table public.member_prefs add constraint member_prefs_border_check
+  check (border in ('', 'veshti-red', 'veshti-blue', 'saree-green', 'saree-red', 'kasavu', 'pochampally', 'ilkal', 'mysore-peta', 'banarasi', 'leheriya', 'phulkari', 'khes', 'bandhani', 'ajrak', 'paithani', 'pheta', 'laal-paar', 'dhuti', 'chikankari', 'zardozi', 'sambalpuri', 'mekhela', 'gamosa', 'kunbi', 'kani', 'gara', 'dhaka', 'phanek', 'puan', 'jainsem'));
 commit;

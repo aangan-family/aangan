@@ -12,6 +12,9 @@ export const MOTIF: Record<string, Motif | null> = {
   bengali: 'alpana', odia: 'alpana', assamese: 'alpana',
   urdu: 'jali', kashmiri: 'jali',
   goan_catholic: 'vine', syrian_christian: 'vine',
+  nepali: 'rangoli', tulu: 'rangoli', kodava: 'rangoli', manipuri: 'rangoli',
+  khasi: 'vine', mizo: 'vine', anglo_indian: 'vine',
+  bohra: 'jali', khoja: 'jali',
   english: null,
 };
 

@@ -113,8 +113,10 @@ describe('every pack', () => {
     for (const p of PACK_LIST) {
       if (p.id === 'english') { expect(w('english', 'Appa')).toBeNull(); continue; }
       expect(kinTerm(f, 'Appa', 'Arjun', p), p.id).not.toBeNull();
-      expect(kinTerm(f, 'Kavya', 'Arjun', p), p.id).not.toBeNull();
-      expect(Object.keys(p.menus).length, p.id).toBe(Object.keys(MENUS.ta).length);
+      // a first draft leaves out words nobody has confirmed yet (the English shows); finished packs have them all
+      if (!p.draft) expect(kinTerm(f, 'Kavya', 'Arjun', p), p.id).not.toBeNull();
+      // packs whose language is written in English letters keep English menus
+      if (p.lang !== 'en') expect(Object.keys(p.menus).length, p.id).toBe(Object.keys(MENUS.ta).length);
     }
   });
 });

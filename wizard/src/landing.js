@@ -7,7 +7,10 @@ export const TRADITIONS = [
   ['gujarati', 'Gujarati', 'ગુજરાતી'], ['urdu', 'Urdu', 'اردو'], ['tamil', 'Tamil', 'தமிழ்'], ['telugu', 'Telugu', 'తెలుగు'],
   ['kannada', 'Kannada', 'ಕನ್ನಡ'], ['malayalam', 'Malayalam', 'മലയാളം'], ['odia', 'Odia', 'ଓଡ଼ିଆ'], ['assamese', 'Assamese', 'অসমীয়া'],
   ['konkani', 'Konkani', 'कोंकणी'], ['sindhi', 'Sindhi', 'Sindhi'], ['kashmiri', 'Kashmiri', 'Koshur'], ['parsi', 'Parsi', 'પારસી'],
-  ['goan_catholic', 'Goan Catholic', 'Konknni'], ['syrian_christian', 'Syrian Christian', 'നസ്രാണി'], ['english', 'English only', ''],
+  ['goan_catholic', 'Goan Catholic', 'Konknni'], ['syrian_christian', 'Syrian Christian', 'നസ്രാണി'],
+  ['nepali', 'Nepali', 'नेपाली'], ['manipuri', 'Manipuri', 'Meiteilon'], ['khasi', 'Khasi', 'Khasi'], ['mizo', 'Mizo', 'Mizo'],
+  ['tulu', 'Tulu', 'ತುಳು'], ['kodava', 'Kodava', 'ಕೊಡವ'], ['anglo_indian', 'Anglo-Indian', ''], ['bohra', 'Bohra', ''], ['khoja', 'Khoja', 'ખોજા'],
+  ['english', 'English only', ''],
 ];
 const BORDERS = [['phulkari', 'Phulkari'], ['bandhani', 'Bandhani'], ['paithani', 'Paithani'], ['laal-paar', 'Laal paar'], ['saree-red', 'Kanjeevaram'],
   ['sambalpuri', 'Sambalpuri'], ['mekhela', 'Mekhela'], ['kasavu', 'Kasavu'], ['kunbi', 'Kunbi'], ['kani', 'Kani'], ['ajrak', 'Ajrak'], ['gamosa', 'Gamosa']];
