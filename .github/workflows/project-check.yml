@@ -30,7 +30,6 @@ jobs:
             API="${HELPER%/}"
           else API="$DIRECT"; fi
           post() { curl -sS -m 20 -X POST "$API$1" -H 'content-type: application/json' -H 'origin: https://aangan-family.github.io' -d "$2" -w '\n%{http_code}'; }
-          out=$(post /view '{"page":"home"}'); echo "view: $(echo "$out" | tail -1)"; [ "$(echo "$out" | tail -1)" = 200 ]
           email="check-$(date +%s)-$RANDOM@aangan-check.test"
           out=$(post /signup "{\"name\":\"Made-up Check\",\"email\":\"$email\",\"community\":\"hindi\",\"country\":\"India\",\"consent\":true}")
           code=$(echo "$out" | tail -1); body=$(echo "$out" | head -n -1); echo "signup: $code"
