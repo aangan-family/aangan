@@ -16,7 +16,7 @@ jobs:
   publish:
     if: github.repository == 'aangan-family/aangan'
     runs-on: ubuntu-latest
-    environment: { name: github-pages, url: '${{ steps.deploy.outputs.page_url }}' }
+    environment: { name: github-pages, url: '${{ steps.first.outputs.page_url || steps.second.outputs.page_url }}' }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,5 +29,12 @@ jobs:
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with: { path: wizard/dist }
-      - id: deploy
+      # GitHub sometimes hasn't registered the upload yet when the deploy looks for it: wait and try once more
+      - id: first
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+      - if: steps.first.outcome == 'failure'
+        run: sleep 45
+      - id: second
+        if: steps.first.outcome == 'failure'
         uses: actions/deploy-pages@v5
