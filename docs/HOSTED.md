@@ -79,10 +79,13 @@ In short:
 
 ## Build order
 
-1. **Hosted mode for setup** (`scripts/setup.mjs --hosted`): Aangan's tokens, subdomains under the Aangan domain,
-   shared sending domain, first admin invitation, progress callbacks. Tested with fake APIs like today.
-2. **Project backend tables**: families (address, config, status), subscriptions, provisioning runs; RLS locked to the
-   service role. The progress page and admin dashboard read them.
+1. ✅ **Hosted mode for setup** (24 Nov): `AANGAN_HOSTED=1` with `AANGAN_DOMAIN`, `AANGAN_MAIL_DOMAIN`, `AANGAN_SLUG`,
+   `AANGAN_ADMIN_EMAIL`, `AANGAN_PROGRESS_URL/TOKEN`, Aangan's Supabase, Cloudflare and Resend keys. Strict address
+   rules (`checkSlug`), names `aangan-<slug>`, shared sending domain with a send-only key per family, first admin
+   invited once, progress reported step by step. Tested with fake services (`tests/setup.test.mjs`).
+2. ✅ **Project backend** (24 Nov, `project/supabase/migrations/0004_hosted.sql`, Edge Function v4): families,
+   subscriptions, provision events; `/address`, `/family/start`, `/family/status`, `/progress`; checked daily by
+   `project-check.yml`. Still to set: the `PROVISION_TOKEN` Edge Function secret, together with the ops repository.
 3. **Ops repository + provisioning workflow**, started by the project backend after payment.
 4. **Import family on the site** (Admin → Import family), reusing `scripts/lib/sheet.mjs` in the browser.
 5. **Sign-up journey** on the Aangan site: address, agreement, payment, progress, ready.
