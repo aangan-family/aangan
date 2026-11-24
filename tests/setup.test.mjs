@@ -3,14 +3,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { setup, pagesName, vapidKeys, workerName } from '../scripts/setup.mjs';
+import { setup, pagesName, vapidKeys, workerName, checkSlug, hostedNames } from '../scripts/setup.mjs';
 
 const REF = 'abcdefghijklmnopqrst';
 const read = (p) => readFileSync(new URL('../' + p, import.meta.url), 'utf8');
 
-function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
+function world({ free = false, hosted = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
   const s = {
-    projects: [], tables: false, persons: 0, keys: [], auth: {}, zones: free ? [] : [{ id: 'z1', name: 'raokutumba.in' }],
+    projects: [], tables: false, persons: 0, keys: [], auth: {}, zones: free ? [] : [{ id: 'z1', name: hosted ? 'aangan.family' : 'raokutumba.in' }], invites: [], progress: [],
     dns: [], workerSecrets: [], pages: [], pageDomains: [], resendDomains: [], resendKeys: 0, rules: [], addresses: [],
     calls: [], execs: [], files: {},
   };
@@ -23,11 +23,12 @@ function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
     community: 'kannada', emailSignIn: !free,
   });
   s.files['reminders/wrangler.toml'] = read('reminders/wrangler.toml');
+  if (hosted) s.resendDomains.push({ id: 'd1', name: 'mail.aangan.family', records: [] });
   s.files['supabase/setup.sql'] = '-- setup';
   s.files['data/seed.sql'] = '-- seed';
   const reply = (status, body) => ({ ok: status < 400, status, statusText: String(status), text: async () => (body === undefined ? '' : JSON.stringify(body)) });
   const cfOk = (result) => reply(200, { success: true, errors: [], result });
-  const fetch = async (url, { method, body }) => {
+  const fetch = async (url, { method, body, headers }) => {
     const u = new URL(url), p = u.pathname, b = body ? JSON.parse(body) : undefined;
     s.calls.push(`${method} ${u.host} ${p}`);
     if (u.host === 'api.supabase.com') {
@@ -42,6 +43,7 @@ function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
         if (q.includes('count(*)')) return reply(201, [{ n: s.persons }]);
         if (q === '-- setup') { s.tables = true; s.setupRuns = (s.setupRuns || 0) + 1; return reply(201, []); }
         if (q === '-- seed') { s.persons = 7; return reply(201, []); }
+        if (q.startsWith('insert into public.invitations')) { s.inviteSql = q; if (s.invites.length) return reply(201, []); s.invites.push(q); return reply(201, [{ code: 'abc123def456' }]); }
       }
       if (p.endsWith('/api-keys') && method === 'GET') return reply(200, s.keys);
       if (p.endsWith('/api-keys') && method === 'POST') { s.keys.push({ type: b.type, name: b.name, api_key: b.type === 'secret' ? 'sb_secret_SHH' : 'sb_publishable_pub' }); return reply(201, s.keys.at(-1)); }
@@ -52,7 +54,7 @@ function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
       const q = p.replace('/client/v4', '');
       if (q === '/zones') return cfOk(s.zones.filter((z) => z.name === u.searchParams.get('name')));
       if (q === '/accounts/acc1/workers/subdomain') return cfOk({ subdomain: 'raos' });
-      if (q === '/accounts/acc1/workers/scripts/family-reminders/secrets') return s.deployed ? cfOk(s.workerSecrets.map((name) => ({ name }))) : reply(404, { success: false, errors: [{ message: 'no script' }] });
+      if (/^\/accounts\/acc1\/workers\/scripts\/[\w-]+\/secrets$/.test(q)) return s.deployed ? cfOk(s.workerSecrets.map((name) => ({ name }))) : reply(404, { success: false, errors: [{ message: 'no script' }] });
       if (q === '/zones/z1/dns_records' && method === 'GET') return cfOk(s.dns.filter((r) => (!u.searchParams.get('type') || r.type === u.searchParams.get('type')) && r.name === u.searchParams.get('name')));
       if (q === '/zones/z1/dns_records' && method === 'POST') { s.dns.push(b); return cfOk(b); }
       let m;
@@ -76,6 +78,7 @@ function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
       if (p === '/domains/d1/verify') return reply(200, {});
       if (p === '/api-keys') { s.resendKeys++; s.keyBody = b; return reply(201, { id: 'k', token: 're_SEND' + s.resendKeys }); }
     }
+    if (u.host === 'ops.aangan.test') { s.progress.push({ auth: headers?.authorization, ...b }); return reply(200, {}); }
     return reply(599, { message: `fake has no ${method} ${url}` });
   };
   const exec = (cmd, args, opts = {}) => {
@@ -87,7 +90,9 @@ function world({ free = false, orgs = [{ id: 'org1', slug: 'rao' }] } = {}) {
     return { code: 0 };
   };
   const io = {
-    env: { SUPABASE_ACCESS_TOKEN: 'sbp', CLOUDFLARE_API_TOKEN: 'cft', CLOUDFLARE_ACCOUNT_ID: 'acc1', REMINDER_EMAIL: 'mohan@gmail.com', RESEND_API_KEY: free ? '' : 're_full' },
+    env: { SUPABASE_ACCESS_TOKEN: 'sbp', CLOUDFLARE_API_TOKEN: 'cft', CLOUDFLARE_ACCOUNT_ID: 'acc1', REMINDER_EMAIL: hosted ? 'ops@aangan.family' : 'mohan@gmail.com', RESEND_API_KEY: free ? '' : 're_full',
+      ...(hosted ? { AANGAN_HOSTED: '1', AANGAN_DOMAIN: 'aangan.family', AANGAN_MAIL_DOMAIN: 'mail.aangan.family', AANGAN_SLUG: 'rao-kutumba', AANGAN_ADMIN_EMAIL: 'Mohan.Rao@gmail.com',
+        AANGAN_PROGRESS_URL: 'https://ops.aangan.test/progress', AANGAN_PROGRESS_TOKEN: 'tok' } : {}) },
     read: (p) => { if (!(p in s.files)) throw new Error('no file ' + p); return s.files[p]; },
     write: (p, t) => { s.files[p] = t; }, exists: (p) => p in s.files,
     fetch, exec, sleep: async () => {}, log: () => {},
@@ -203,4 +208,66 @@ test('helpers', () => {
   const v = vapidKeys();
   assert.equal(Buffer.from(v.publicKey, 'base64url').length, 65);
   assert.equal(Buffer.from(v.privateKey, 'base64url').length, 32);
+});
+
+test('hosted: family addresses are checked strictly', () => {
+  for (const ok of ['sharma', 'rao-kutumba', 'iyer2']) assert.equal(checkSlug(ok), null, ok);
+  for (const bad of ['ab', 'Sharma', 'x--y', '9lives', 'sharma-', 'a b', "o'neil", 'api', 'admin', 'sharma-api', 'x'.repeat(31)]) assert.ok(checkSlug(bad), bad);
+  assert.deepEqual(hostedNames('rao', 'aangan.family', 'mail.aangan.family'), { siteUrl: 'https://rao.aangan.family', apiUrl: 'https://rao-api.aangan.family', emailFrom: 'rao@mail.aangan.family', project: 'aangan-rao' });
+});
+
+test('hosted: makes the family\'s own site on Aangan\'s accounts, under Aangan\'s domain', async () => {
+  const { s, io } = world({ hosted: true });
+  const { todo } = await setup(io);
+  await new Promise((r) => setTimeout(r, 0));   // progress reports are sent in the background
+  assert.equal(s.created.name, 'aangan-rao-kutumba');
+  const cfg = JSON.parse(s.files['site.config.json']);
+  assert.equal(cfg.siteUrl, 'https://rao-kutumba.aangan.family');
+  assert.equal(cfg.apiUrl, 'https://rao-kutumba-api.aangan.family');
+  assert.equal(cfg.emailFrom, 'rao-kutumba@mail.aangan.family');
+  assert.equal(cfg.emailSignIn, true);
+  assert.match(s.files['reminders/wrangler.toml'], /^name = "aangan-rao-kutumba"$/m);
+  assert.match(s.files['reminders/wrangler.toml'], /pattern = "rao-kutumba-api\.aangan\.family"/);
+  // first admin: the person who signed up, lower-cased, once
+  assert.match(s.inviteSql, /values|select 'mohan\.rao@gmail\.com', 'admin'/);
+  // shared sending domain: no DNS records added for email, one send-only key per family
+  assert.equal(s.keyBody.name, 'aangan-rao-kutumba');
+  assert.equal(s.keyBody.permission, 'sending_access');
+  assert.ok(!s.dns.some((r) => r.type === 'MX' || r.type === 'TXT'));
+  assert.equal(s.auth.smtp_admin_email, 'rao-kutumba@mail.aangan.family');
+  // website at the family's address
+  assert.ok(s.pages.includes('aangan-rao-kutumba'));
+  assert.ok(s.pageDomains.includes('rao-kutumba.aangan.family'));
+  assert.ok(s.dns.some((r) => r.type === 'CNAME' && r.name === 'rao-kutumba.aangan.family' && r.content === 'aangan-rao-kutumba.pages.dev'));
+  // no email forwarding on Aangan's domain
+  assert.equal(s.rules.length, 0);
+  // the secret key only ever goes to the Worker
+  assert.equal(s.secretsFile.SUPABASE_SERVICE_KEY, 'sb_secret_SHH');
+  assert.ok(!JSON.stringify(s.progress).includes('sb_secret_'));
+  // progress reached Aangan's backend, ending in ready
+  assert.ok(s.progress.length > 5);
+  assert.equal(s.progress.at(-1).status, 'ready');
+  assert.equal(s.progress[0].auth, 'Bearer tok');
+  assert.equal(todo.length, 1);
+});
+
+test('hosted: running again changes nothing and doesn\'t invite a second admin', async () => {
+  const { s, io } = world({ hosted: true });
+  await setup(io);
+  const keys = s.resendKeys, pages = s.pages.length, dns = s.dns.length;
+  await setup(io);
+  assert.equal(s.invites.length, 1);
+  assert.equal(s.projects.length, 1);
+  assert.equal(s.resendKeys, keys);
+  assert.equal(s.pages.length, pages);
+  assert.equal(s.dns.length, dns);
+});
+
+test('hosted: refuses a bad address or a missing setting before touching anything', async () => {
+  for (const [k, v, msg] of [['AANGAN_SLUG', 'admin', /kept for Aangan/], ['AANGAN_SLUG', 'Bad Name', /small letters/], ['AANGAN_ADMIN_EMAIL', "x'; drop table persons; --@a.in", /not an email/], ['AANGAN_DOMAIN', '', /AANGAN_DOMAIN/]]) {
+    const { s, io } = world({ hosted: true });
+    io.env[k] = v;
+    await assert.rejects(setup(io), msg);
+    assert.equal(s.calls.length, 0, `${k}: nothing was called`);
+  }
 });

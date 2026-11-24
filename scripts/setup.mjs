@@ -31,6 +31,27 @@ export const workerName = (toml) => (/^name = "([^"]+)"/m.exec(toml) || [])[1] |
 export const pagesName = (cfg) => { const h = host(cfg.siteUrl); return h.endsWith('.pages.dev') ? h.slice(0, -'.pages.dev'.length) : h.replace(/[^a-z0-9]+/gi, '-').toLowerCase().slice(0, 58); };
 export const password = (n = 24) => randomBytes(n).toString('base64url');
 
+// ---- hosted edition (docs/HOSTED.md): Aangan runs the site on its own accounts ------------------------------
+/** Addresses that can't be a family's: they're Aangan's own, or would confuse people. */
+export const RESERVED = new Set(['www', 'api', 'app', 'admin', 'mail', 'email', 'smtp', 'support', 'help', 'status', 'blog', 'docs',
+  'aangan', 'privacy', 'legal', 'terms', 'billing', 'pay', 'login', 'signin', 'signup', 'account', 'accounts', 'ops', 'test', 'demo', 'dev', 'staging']);
+/** A family's address: 3–30 lowercase letters, digits and single hyphens, starting with a letter, not ending in -api. */
+export function checkSlug(slug) {
+  if (typeof slug !== 'string' || !/^[a-z](?:[a-z0-9]|-(?!-)){1,28}[a-z0-9]$/.test(slug)) return 'Use 3–30 small letters, numbers or hyphens, starting with a letter (for example sharma or rao-kutumba).';
+  if (RESERVED.has(slug) || slug.endsWith('-api')) return 'That address is kept for Aangan itself. Please choose another.';
+  return null;
+}
+/** Everything a hosted family's addresses and names are made from. */
+export function hostedNames(slug, domain, mailDomain) {
+  return {
+    siteUrl: `https://${slug}.${domain}`,
+    apiUrl: `https://${slug}-api.${domain}`,   // one level under the domain, so the free certificate covers it
+    emailFrom: `${slug}@${mailDomain}`,
+    project: `aangan-${slug}`,                 // Supabase project, Worker and Pages project all share this name
+  };
+}
+const EMAIL = /^[^@\s'"\\;]+@[^@\s'"\\;]+\.[a-z]{2,}$/i;
+
 /** VAPID key pair for phone notifications: public = base64url uncompressed point, private = base64url d (reminders/src/push.ts). */
 export function vapidKeys() {
   const { publicKey, privateKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
@@ -66,15 +87,34 @@ function client(io, name, base, token, { unwrap = false } = {}) {
  */
 export async function setup(io, { seed } = {}) {
   const env = io.env, done = [], todo = [];
-  const ok = (s) => { done.push(s); io.log('✓ ' + s); };
+  const hosted = env.AANGAN_HOSTED === '1';
+  // hosted: tell Aangan's backend how far we've got, so the family's progress page can show it (best effort)
+  const report = (status, message) => {
+    if (!hosted || !env.AANGAN_PROGRESS_URL) return;
+    Promise.resolve().then(() => io.fetch(env.AANGAN_PROGRESS_URL, { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${env.AANGAN_PROGRESS_TOKEN || ''}` },
+      body: JSON.stringify({ slug: env.AANGAN_SLUG, status, message, step: done.length }) })).catch(() => {});
+  };
+  const ok = (s) => { done.push(s); io.log('✓ ' + s); report('working', s); };
   const mask = (v) => { if (v && env.GITHUB_ACTIONS === 'true') io.log(`::add-mask::${v}`); return v; };
 
   // ---- 0. what we have ---------------------------------------------------------------------------------
-  const missing = ['SUPABASE_ACCESS_TOKEN', 'CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'REMINDER_EMAIL'].filter((k) => !env[k]);
+  const missing = ['SUPABASE_ACCESS_TOKEN', 'CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'REMINDER_EMAIL',
+    ...(hosted ? ['AANGAN_DOMAIN', 'AANGAN_MAIL_DOMAIN', 'AANGAN_SLUG', 'AANGAN_ADMIN_EMAIL', 'RESEND_API_KEY'] : [])].filter((k) => !env[k]);
   if (missing.length) throw new StepError(`Add ${missing.join(', ')} as ${env.GITHUB_ACTIONS === 'true' ? 'repository secrets (Settings → Secrets and variables → Actions)' : 'environment variables'}, then run this again. docs/SETUP.md, "One-click setup", says where each comes from.`);
   const cfg = JSON.parse(io.read('site.config.json'));
-  const free = host(cfg.siteUrl).endsWith('.pages.dev');
-  const early = checkConfig(cfg).blocking.filter((l) => !/^(supabaseProjectUrl|supabasePublishableKey|googleClientId)/.test(l) && !(free && /^apiUrl/.test(l)));
+  const names = hosted ? hostedNames(env.AANGAN_SLUG, env.AANGAN_DOMAIN, env.AANGAN_MAIL_DOMAIN) : null;
+  if (hosted) {
+    const bad = checkSlug(env.AANGAN_SLUG);
+    if (bad) throw new StepError(`Family address "${env.AANGAN_SLUG}": ${bad}`);
+    if (!EMAIL.test(env.AANGAN_ADMIN_EMAIL)) throw new StepError('AANGAN_ADMIN_EMAIL is not an email address.');
+    // the addresses are Aangan's to choose, never the sheet's
+    Object.assign(cfg, { siteUrl: names.siteUrl, apiUrl: names.apiUrl, emailFrom: names.emailFrom, otherSiteUrls: [], emailSignIn: true,
+      privacyEmail: env.AANGAN_PRIVACY_EMAIL || cfg.privacyEmail || `privacy@${env.AANGAN_DOMAIN}` });
+  }
+  const free = !hosted && host(cfg.siteUrl).endsWith('.pages.dev');
+  // hosted: the addresses and sender are Aangan's (different domains on purpose); the admin's phone is optional
+  const hostedSkip = (l) => hosted && /^(apiUrl|emailFrom|admin\.phone)/.test(l);
+  const early = checkConfig(cfg).blocking.filter((l) => !/^(supabaseProjectUrl|supabasePublishableKey|googleClientId)/.test(l) && !(free && /^apiUrl/.test(l)) && !hostedSkip(l));
   if (early.length) throw new StepError('First fill in site.config.json (the setup wizard writes it for you):\n  • ' + early.join('\n  • '));
   const domain = host(cfg.siteUrl);
   const acct = env.CLOUDFLARE_ACCOUNT_ID;
@@ -82,14 +122,16 @@ export async function setup(io, { seed } = {}) {
   const cf = client(io, 'Cloudflare', 'https://api.cloudflare.com/client/v4', env.CLOUDFLARE_API_TOKEN, { unwrap: true });
   const rs = env.RESEND_API_KEY ? client(io, 'Resend', 'https://api.resend.com', env.RESEND_API_KEY) : null;
   let toml = io.read('reminders/wrangler.toml');
+  if (hosted) toml = toml.replace(/^name = "[^"]*"/m, `name = "${names.project}"`);
   const worker = workerName(toml);
+  const projectName = hosted ? names.project : cfg.familyName;
 
   // ---- 1. Supabase project -----------------------------------------------------------------------------
   let ref = placeholder(cfg.supabaseProjectUrl) ? null : host(cfg.supabaseProjectUrl).split('.')[0];
   let project = ref ? await sb('GET', `/v1/projects/${ref}`) : null;
   if (ref && !project) throw new StepError(`site.config.json points to Supabase project ${ref}, but this access token can't see it. Check the token's account, or clear supabaseProjectUrl to make a new project.`);
   if (!project) {
-    project = ((await sb('GET', '/v1/projects')) || []).find((p) => p.name === cfg.familyName) || null;
+    project = ((await sb('GET', '/v1/projects')) || []).find((p) => p.name === projectName) || null;
     if (project) ok(`Found your Supabase project "${project.name}"`);
   } else ok(`Found your Supabase project "${project.name}"`);
   if (!project) {
@@ -97,8 +139,8 @@ export async function setup(io, { seed } = {}) {
     const org = env.SUPABASE_ORG ? orgs.find((o) => o.slug === env.SUPABASE_ORG || o.id === env.SUPABASE_ORG) : orgs.length === 1 ? orgs[0] : null;
     if (!org) throw new StepError(orgs.length ? `You have ${orgs.length} Supabase organisations. Add a SUPABASE_ORG secret with one of: ${orgs.map((o) => o.slug || o.id).join(', ')}.` : 'Your Supabase account has no organisation yet. Open supabase.com once and create one (free).');
     const dbPass = mask(env.SUPABASE_DB_PASSWORD || password());
-    project = await sb('POST', '/v1/projects', { name: cfg.familyName, organization_id: org.id, db_pass: dbPass, region: env.SUPABASE_REGION || 'ap-south-1' });
-    ok(`Created the Supabase project "${cfg.familyName}" (${env.SUPABASE_REGION || 'ap-south-1'})`);
+    project = await sb('POST', '/v1/projects', { name: projectName, organization_id: org.id, db_pass: dbPass, region: env.SUPABASE_REGION || 'ap-south-1' });
+    ok(`Created the Supabase project "${projectName}" (${env.SUPABASE_REGION || 'ap-south-1'})`);
     if (!env.SUPABASE_DB_PASSWORD) todo.push('Backups need the database password, which was made up and not shown. Set a new one in Supabase → Database → Settings → Reset database password, and keep it safe.');
   }
   ref = project.id || project.ref;
@@ -121,11 +163,18 @@ export async function setup(io, { seed } = {}) {
     if (!again?.[0]?.ok) throw new StepError('setup.sql ran but the tables are not there. Open Supabase → SQL Editor and run supabase/setup.sql by hand to see the error.');
     ok('Created the tables and privacy rules');
   }
+  if (hosted) {
+    // the first admin: the person who signed up, as the site's own Family Admin login (0051, 0036)
+    const e = env.AANGAN_ADMIN_EMAIL.toLowerCase().replace(/'/g, "''");
+    const r = await sql(`insert into public.invitations (email, role) select '${e}', 'admin' where not exists (select 1 from public.members where role = 'admin') and not exists (select 1 from public.invitations where role = 'admin' and accepted_at is null) returning code`);
+    ok(r?.length ? `Invited ${env.AANGAN_ADMIN_EMAIL} as the first admin` : 'The first admin is already invited');
+  }
   const people = (await sql('select count(*)::int as n from public.persons'))?.[0]?.n || 0;
   if (seed) {
     if (people) ok(`The tree already has ${people} people; not loading ${seed} again`);
     else { await sql(io.read(seed)); ok(`Loaded your family from ${seed}`); }
-  } else if (!people) todo.push('Load your family: in the setup wizard (Database step) download seed.sql, then Supabase → SQL Editor → New query → paste → Run. Then delete the file.');
+  } else if (!people && hosted) todo.push('The family loads its tree on its own site: Admin → Import family.');
+  else if (!people) todo.push('Load your family: in the setup wizard (Database step) download seed.sql, then Supabase → SQL Editor → New query → paste → Run. Then delete the file.');
   else ok(`The tree has ${people} people`);
 
   // ---- 3. API keys ---------------------------------------------------------------------------------------
@@ -141,10 +190,11 @@ export async function setup(io, { seed } = {}) {
 
   // ---- 4. Cloudflare: domain or workers.dev ------------------------------------------------------------
   let zone = null;
+  const zoneName = hosted ? env.AANGAN_DOMAIN : domain;
   if (!free) {
-    zone = ((await cf('GET', `/zones?name=${encodeURIComponent(domain)}&account.id=${acct}`)) || [])[0] || null;
-    if (!zone) throw new StepError(`${domain} isn't in this Cloudflare account yet. Add it (Cloudflare → Add a domain) or buy it there, then run this again.`);
-    ok(`Found ${domain} in Cloudflare`);
+    zone = ((await cf('GET', `/zones?name=${encodeURIComponent(zoneName)}&account.id=${acct}`)) || [])[0] || null;
+    if (!zone) throw new StepError(`${zoneName} isn't in this Cloudflare account yet. Add it (Cloudflare → Add a domain) or buy it there, then run this again.`);
+    ok(`Found ${zoneName} in Cloudflare`);
   }
   if (free) {
     const sub = (await cf('GET', `/accounts/${acct}/workers/subdomain`))?.subdomain;
@@ -163,7 +213,7 @@ export async function setup(io, { seed } = {}) {
   io.write('reminders/wrangler.toml', toml);
   ok('Wrote site.config.json and reminders/wrangler.toml');
   const left = checkConfig(cfg);
-  left.blocking = left.blocking.filter((l) => !/^googleClientId/.test(l));   // Google comes later: it is on the to-do list
+  left.blocking = left.blocking.filter((l) => !/^googleClientId/.test(l) && !hostedSkip(l));   // Google comes later: it is on the to-do list
   if (left.blocking.length) throw new StepError('site.config.json still needs:\n  • ' + left.blocking.join('\n  • '));
 
   // ---- 6. sign-in email templates in the family's name -------------------------------------------------
@@ -178,7 +228,15 @@ export async function setup(io, { seed } = {}) {
 
   // ---- 8. emails (Resend), own domain only -------------------------------------------------------------
   let resendKey = null;
-  if (!free && rs) {
+  if (hosted) {
+    const d = ((await rs('GET', '/domains'))?.data || []).find((x) => x.name === env.AANGAN_MAIL_DOMAIN);
+    if (!d) throw new StepError(`Aangan's sending domain ${env.AANGAN_MAIL_DOMAIN} isn't in Resend. Add and verify it once (operations), then run this again.`);
+    if (!existing.has('RESEND_API_KEY') || !auth.smtp_host) {
+      // one send-only key per family, so one family's key can be withdrawn without touching the others
+      resendKey = mask((await rs('POST', '/api-keys', { name: names.project, permission: 'sending_access', domain_id: d.id }))?.token);
+      ok(`Emails will come from "${cfg.familyName}" <${cfg.emailFrom}>`);
+    }
+  } else if (!free && rs) {
     let d = ((await rs('GET', '/domains'))?.data || []).find((x) => x.name === domain);
     if (!d) { d = await rs('POST', '/domains', { name: domain }); ok(`Added ${domain} to Resend`); } else ok(`${domain} is in Resend`);
     const full = (await rs('GET', `/domains/${d.id}`)) || d;
@@ -234,7 +292,7 @@ export async function setup(io, { seed } = {}) {
   ok(`Put the helper service online at ${cfg.apiUrl} with its secrets (${Object.keys(secrets).join(', ')})`);
 
   // ---- 11. the website (Pages) -------------------------------------------------------------------------
-  const pages = pagesName(cfg);
+  const pages = hosted ? names.project : pagesName(cfg);
   if (!(await cf('GET', `/accounts/${acct}/pages/projects/${pages}`))) {
     try { await cf('POST', `/accounts/${acct}/pages/projects`, { name: pages, production_branch: 'main' }); }
     catch (e) { throw new StepError(free ? `The name ${pages}.pages.dev is taken. Choose another website name in the setup wizard (Settings), update site.config.json, and run this again.` : e.message); }
@@ -245,14 +303,15 @@ export async function setup(io, { seed } = {}) {
   run('npx', ['wrangler', 'pages', 'deploy', '../web/dist', '--project-name', pages, '--branch', 'main', '--commit-dirty=true'], { cwd: 'reminders', env: cfEnv });
   if (!free) {
     const doms = (await cf('GET', `/accounts/${acct}/pages/projects/${pages}/domains`)) || [];
+    // own domain: the apex; hosted: the family's address under Aangan's domain
     if (!doms.some((d) => d.name === domain)) await cf('POST', `/accounts/${acct}/pages/projects/${pages}/domains`, { name: domain });
     const apex = (await cf('GET', `/zones/${zone.id}/dns_records?name=${encodeURIComponent(domain)}`)) || [];
     if (!apex.some((r) => ['A', 'AAAA', 'CNAME'].includes(r.type))) await cf('POST', `/zones/${zone.id}/dns_records`, { type: 'CNAME', name: domain, content: `${pages}.pages.dev`, proxied: true, ttl: 1 });
   }
   ok(`Put the website online at ${cfg.siteUrl}${free ? '' : ' (the certificate can take up to 15 minutes)'}`);
 
-  // ---- 12. replies to family@ and privacy@ reach you (best effort) -------------------------------------
-  if (!free) {
+  // ---- 12. replies to family@ and privacy@ reach you (best effort; own domain only) ---------------------
+  if (!free && !hosted) {
     try {
       await cf('POST', `/zones/${zone.id}/email/routing/enable`, {}).catch(() => null);
       await cf('POST', `/accounts/${acct}/email/routing/addresses`, { email: env.REMINDER_EMAIL }).catch((e) => { if (!/exist/i.test(e.message)) throw e; });
@@ -266,6 +325,10 @@ export async function setup(io, { seed } = {}) {
   }
 
   // ---- 13. what's left ---------------------------------------------------------------------------------
+  if (hosted) {
+    report('ready', `${cfg.siteUrl} is ready`);
+    return { done, todo: [`${env.AANGAN_ADMIN_EMAIL} signs in at ${cfg.siteUrl}, turns on 2-step sign-in and imports the family.`], cfg };
+  }
   todo.push(`In about 10 minutes, open ${cfg.siteUrl} and sign in with the admin email from your seed.sql. Turn on 2-step sign-in within 7 days (My privacy).`);
   todo.push('Backups (recommended): repository → Settings → Secrets and variables → Actions → add SUPABASE_DB_URL (Supabase → Connect → Session pooler), SUPABASE_SERVICE_KEY and BACKUP_PASSPHRASE.');
   return { done, todo, cfg };
