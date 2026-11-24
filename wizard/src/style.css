@@ -206,3 +206,8 @@ footer { margin-top: 40px; background: var(--maroon); color: #FCE3C7; }
   .seg, .seg.three { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .progress .fill, .track .fill { transition: none; } }
+
+/* "Where to click" pictures in each account step */
+.picture { margin: 12px 0 14px; max-width: 560px; }
+.picture .pic { width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 2px 10px rgba(120, 70, 20, 0.10); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.picture figcaption { font-size: 0.8rem; color: var(--muted, #7a6a58); margin-top: 6px; }

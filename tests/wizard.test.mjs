@@ -6,6 +6,7 @@ import { rowsToRecords } from '../scripts/lib/sheet.mjs';
 import { checkConfig, applyToWrangler } from '../scripts/lib/config.mjs';
 import { buildPreview, fullName } from '../wizard/src/tree.js';
 import { accountSteps, oneClickSteps } from '../wizard/src/steps.js';
+import { PICTURES } from '../wizard/src/pictures.js';
 
 // made-up people only
 const COLS = { ID: '', 'First name': '', Surname: '', Gender: '', Father: '', Mother: '', Spouse: '', Living: '', Born: '' };
@@ -101,4 +102,16 @@ test('one-click walkthrough: secrets to copy, the button, then loading the famil
   assert.ok(!free.find((s) => s.id === 'domain'));
   assert.ok(!free.find((s) => s.id === 'keys').items.some((i) => i.copy === 'RESEND_API_KEY'));
   for (const s of own) assert.ok(s && s.title && s.items.length, 'no empty steps');
+});
+
+test('every account step has a where-to-click picture, using the step\'s own words', () => {
+  const cfgs = [good, { ...good, siteUrl: 'https://raos.pages.dev', apiUrl: 'https://w.raos.workers.dev' }];
+  for (const cfg of cfgs) for (const st of [...accountSteps(cfg), ...oneClickSteps(cfg)]) {
+    const p = PICTURES[st.id];
+    assert.ok(p, `picture for ${st.id}`);
+    const text = st.items.map((i) => (typeof i === 'string' ? i : i.text)).join(' ');
+    // the highlighted menu item (or, with no menu, the button) is named in the step, so they can't drift apart
+    const named = p.on >= 0 && p.nav.length ? p.nav[p.on] : p.button;
+    if (!(st.id === 'signin' && !cfg.siteUrl.endsWith('.pages.dev'))) assert.ok(text.includes(named), `${st.id}: "${named}" in the step text`);
+  }
 });

@@ -1,0 +1,19 @@
+name: An idea
+description: Something that would help families use Aangan.
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help, and for whom?
+      placeholder: Our grandparents would like to … because …
+    validations: { required: true }
+  - type: dropdown
+    id: community
+    attributes:
+      label: Is it about one community's traditions?
+      options: [No, all families, Yes (say which below)]
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else

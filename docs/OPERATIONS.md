@@ -26,3 +26,19 @@ Your `site.config.json` is yours; keep your lines if Git asks.
 
 ## Adding an admin or steward
 Admin → Members & roles. New admins must turn on 2-step sign-in within 7 days.
+
+## If something goes wrong
+
+If you think someone got into the site who shouldn't have, or a key was shared by mistake:
+
+1. **Sign everyone out.** As admin: My privacy → **Sign out everywhere** signs you out on every device. To sign out every member,
+   in Supabase → Authentication → Users, sign out the affected users (or all of them).
+2. **Rotate the server key.** Supabase → Project Settings → API keys: create a new secret key, delete the old one, then put the new one
+   in the Worker (`npx wrangler secret put SUPABASE_SERVICE_KEY` in `reminders/`, or re-run **Set up my site**) and in the backup secret.
+3. **Check who has access.** Admin → Members & roles: suspend anyone you don't recognise; check the **2-step** column for admins.
+4. **Look at what changed.** Every change is in the audit log (Supabase → Table editor → `audit_log`), with who and when.
+5. **Restore if needed.** The nightly encrypted backup (GitHub → Actions → backup) can be restored; the restore test shows how.
+6. **Tell the family** in plain words what happened and what you did (Admin → Messages → **Notify everyone**).
+   Under India's DPDP Act, a breach of personal data must also be reported to the Data Protection Board and to the people affected.
+
+If you found a weakness in Aangan itself, please report it privately: see [SECURITY.md](../SECURITY.md).

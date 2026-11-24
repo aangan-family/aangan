@@ -1,0 +1,31 @@
+name: Something isn't working
+description: A problem on a family site, in the setup pages or in one-click setup.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. **Never include a real family's data** (names, emails, photos, screenshots of a live family site).
+        For a security problem, please report it privately instead: Security tab → Report a vulnerability.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did it happen?
+      options: [A family website, The setup pages (aangan-family.github.io/aangan), One-click setup (Set up my site), Emails or reminders, Something else]
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: I tapped … and saw … I expected …
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can we see it ourselves?
+      description: Steps with the made-up sample family (npm run demo) if you can.
+  - type: input
+    id: device
+    attributes:
+      label: Phone or computer, and browser
+      placeholder: Android, Chrome

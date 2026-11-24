@@ -1,0 +1,26 @@
+name: Add my community
+description: Ask for your community's family words, festivals or calendar.
+labels: [community]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Community and language
+      placeholder: Tulu (Mangalore)
+    validations: { required: true }
+  - type: textarea
+    id: words
+    attributes:
+      label: Family words you use at home
+      description: A few to start — what you call your father's elder brother, mother's sister, elder sister's husband, and so on. English letters and your own script if you can.
+  - type: textarea
+    id: days
+    attributes:
+      label: Festivals and special days
+      description: Which ones matter to your families, and how their dates are worked out if you know.
+  - type: checkboxes
+    id: review
+    attributes:
+      label: Can you help?
+      options:
+        - label: I can review the first draft of my community's words

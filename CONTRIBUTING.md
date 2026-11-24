@@ -6,7 +6,7 @@ Thank you. The most useful help right now:
 2. **Festivals and calendars** for your community.
 3. **Trying the setup guide** and telling us where you got stuck.
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still to build.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still to build. Please read the [code of conduct](CODE_OF_CONDUCT.md); report security problems privately ([SECURITY.md](SECURITY.md)).
 
 ## Rules that never bend
 

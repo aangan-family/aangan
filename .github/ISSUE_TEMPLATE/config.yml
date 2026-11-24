@@ -1,5 +1,8 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
+  - name: Report a security problem privately
+    url: https://github.com/aangan-family/aangan/security/advisories/new
+    about: Please don't post security problems in public.
   - name: Setup help
-    url: https://github.com/aangan-family/aangan/discussions
-    about: Stuck setting up your family's site? Ask in Discussions (never share family details).
+    url: https://aangan-family.github.io/aangan/
+    about: The setup pages walk you through each step. Stuck? Open "Something isn't working" (never share family details).

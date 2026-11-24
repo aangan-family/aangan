@@ -8,6 +8,7 @@ import wranglerToml from '../../reminders/wrangler.toml?raw';
 import { readSheetFile } from './read.js';
 import { buildPreview, fullName } from './tree.js';
 import { accountSteps, oneClickSteps } from './steps.js';
+import { picture } from './pictures.js';
 import { h, download, copy, logo, people } from './ui.js';
 import { signedUp, me, step, view, retryPending } from './api.js';
 import { landingPage } from './landing.js';
@@ -281,6 +282,7 @@ function accountsPage() {
     steps.map((st, i) => h('details', { class: 'acct' + (state.done[key(st)] ? ' done' : ''), open: i === firstOpen ? true : null },
       h('summary', {}, h('span', { class: 'n' }, state.done[key(st)] ? '✓' : i + 1), h('span', {}, h('b', {}, st.title), h('span', { class: 'site' }, st.site))),
       h('p', { class: 'muted' }, st.why),
+      (() => { const pic = picture(st.id, (() => { try { return new URL(config().siteUrl).host; } catch { return undefined; } })()); return pic ? h('figure', { class: 'picture' }, pic, h('figcaption', {}, 'Where to click. A drawing: the real page may look a little different.')) : null; })(),
       h('ol', {}, st.items.map((it) => h('li', {},
         typeof it === 'string' ? it
           : it.copy ? [it.text, ' ', h('code', {}, it.copy), ' ', h('button', { class: 'copy', onclick: (e) => copy(it.copy, e.target) }, 'Copy')]
