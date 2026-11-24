@@ -8,6 +8,9 @@ export const FIELDS = [
   'janma_nakshatram', 'horoscope', 'shraddha_tithi',
   'upanayanam', 'sashtiabdapoorthi', 'bhimaratha_shanti', 'sathabhishekam',
   'engagement', 'engaged_to', 'marital_status',
+  // 0053: every tradition's milestones, and the family gurdwara
+  'naamkaran', 'annaprashan', 'mundan', 'amrit_sanchar', 'dastar_bandi',
+  'aqiqah', 'bismillah', 'hajj', 'baptism', 'first_communion', 'confirmation', 'gurdwara',
 ] as const;
 export type FieldName = (typeof FIELDS)[number];
 export const CONTACT_FIELDS: FieldName[] = ['phone', 'email', 'address'];
@@ -20,6 +23,8 @@ export const DEFAULT_VISIBILITY: Record<FieldName, Visibility> = {
   janma_nakshatram: 'close', horoscope: 'private', shraddha_tithi: 'family',
   upanayanam: 'family', sashtiabdapoorthi: 'family', bhimaratha_shanti: 'family', sathabhishekam: 'family',
   engagement: 'family', engaged_to: 'family', marital_status: 'family',
+  naamkaran: 'family', annaprashan: 'family', mundan: 'family', amrit_sanchar: 'family', dastar_bandi: 'family',
+  aqiqah: 'family', bismillah: 'family', hajj: 'family', baptism: 'family', first_communion: 'family', confirmation: 'family', gurdwara: 'family',
 };
 
 export const FIELD_LABEL: Record<FieldName, string> = {
@@ -30,7 +35,28 @@ export const FIELD_LABEL: Record<FieldName, string> = {
   shraddha_tithi: 'Shraddham tithi', upanayanam: 'Upanayanam', sashtiabdapoorthi: 'Shashtiabdapoorthi',
   bhimaratha_shanti: 'Bhimaratha Shanti', sathabhishekam: 'Sathabhishekam',
   engagement: 'Engagement', engaged_to: 'Engaged to', marital_status: 'Relationship status',
+  naamkaran: 'Naming ceremony', annaprashan: 'Annaprashan', mundan: 'Mundan', amrit_sanchar: 'Amrit Sanchar', dastar_bandi: 'Dastar Bandi',
+  aqiqah: 'Aqiqah', bismillah: 'Bismillah', hajj: 'Hajj', baptism: 'Baptism', first_communion: 'First Holy Communion', confirmation: 'Confirmation',
+  gurdwara: 'Family gurdwara',
 };
+
+/**
+ * Life ceremonies of each tradition (0053). `groups`: the festival groups a family's traditions need for the edit form
+ * to offer it (any one of them); a detail already filled in is always shown. `about` says what it is, in plain words.
+ */
+export const LIFE_EVENTS: { field: FieldName; name: string; about: string; groups: string[] }[] = [
+  { field: 'naamkaran', name: 'Naming ceremony', about: 'Naamkaran / Namakaranam', groups: ['hindu', 'jain'] },
+  { field: 'annaprashan', name: 'Annaprashan', about: 'First rice (Choroonu, Mukhe Bhaat)', groups: ['hindu'] },
+  { field: 'mundan', name: 'Mundan', about: 'First haircut (Chudakarana)', groups: ['hindu'] },
+  { field: 'amrit_sanchar', name: 'Amrit Sanchar', about: 'Took Amrit', groups: ['sikh'] },
+  { field: 'dastar_bandi', name: 'Dastar Bandi', about: 'First turban', groups: ['sikh'] },
+  { field: 'aqiqah', name: 'Aqiqah', about: 'Naming and thanksgiving after birth', groups: ['muslim'] },
+  { field: 'bismillah', name: 'Bismillah', about: 'First lesson', groups: ['muslim'] },
+  { field: 'hajj', name: 'Hajj', about: 'Performed Hajj', groups: ['muslim'] },
+  { field: 'baptism', name: 'Baptism', about: 'Baptised (Mammodisa)', groups: ['christian', 'goa', 'kerala_christian'] },
+  { field: 'first_communion', name: 'First Holy Communion', about: 'First Communion', groups: ['christian', 'goa', 'kerala_christian'] },
+  { field: 'confirmation', name: 'Confirmation', about: 'Confirmed', groups: ['christian', 'goa', 'kerala_christian'] },
+];
 
 /** relationship status (0042); the stored value is the key */
 export const MARITAL_STATUS: Record<string, string> = {

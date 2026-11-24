@@ -5,7 +5,7 @@ import { ageFrom, ago, firstName, fmtDate, fmtDay, fullName, yearOf } from '../l
 import { nextShraddham, nextTamilBirthday, unpackStar, unpackTithi } from '../lib/panchang';
 import { kinTerm, usePack } from '../lib/community';
 import { TRADITION_NOTE, starLabel, tithiLabel, tradition } from '../lib/traditions';
-import { MARITAL_STATUS, MILESTONES, VISIBILITY_LABEL, type FieldName } from '../lib/types';
+import { LIFE_EVENTS, MARITAL_STATUS, MILESTONES, VISIBILITY_LABEL, type FieldName } from '../lib/types';
 import { Avatar, go } from '../components/common';
 import { ElderSheet, isElder } from '../components/BringFamily';
 import { AddRelativeSheet, ConsentSheet, DeletePersonSheet, EditPersonSheet, EditSheet, InviteSheet, TrashIcon } from '../components/Sheets';
@@ -148,6 +148,7 @@ export function Person({ id }: { id: string }) {
           else if (k === 'gothram' && t.source === 'husband') add(k, label, 'Not recorded yet', `Follows her husband${who ? ` ${who}` : ''}’s family. ${who ? `Add it on ${who}’s profile.` : ''}`.trim());
         }
         add('native_place', 'Native place', f.native_place?.value);
+        add('gurdwara', 'Family gurdwara', f.gurdwara?.value);
         const star = unpackStar(f.janma_nakshatram?.value);
         const nb = star && p.is_living ? nextTamilBirthday(star.month, star.star) : null;
         add('janma_nakshatram', 'Janma nakshatram', f.janma_nakshatram && starLabel(f.janma_nakshatram.value), nb ? `Next Tamil birthday around ${fmtDay(nb)}` : undefined);
@@ -169,6 +170,7 @@ export function Person({ id }: { id: string }) {
 
       {(() => {
         const ms: { k: string; v: string; sub?: string; done: boolean; act?: () => void; actLabel?: string }[] = [];
+        for (const e of LIFE_EVENTS) { const v = f[e.field]; if (v) ms.push({ k: e.name, v: fmtDate(v.value) || 'Held', sub: e.name === e.about ? undefined : e.about, done: true }); }
         if (f.upanayanam) ms.push({ k: 'Upanayanam', v: fmtDate(f.upanayanam.value) || 'Held', done: true });
         if ((f.engagement || f.engaged_to) && !(family.spouses.get(id) || []).some((sp) => isEngaged(family, id, sp))) ms.push({ k: 'Engagement', v: (f.engagement && fmtDate(f.engagement.value)) || 'Engaged', sub: f.engaged_to?.value ? `to ${f.engaged_to.value}` : undefined, done: true });
         for (const sp of family.spouses.get(id) || []) {
@@ -188,7 +190,7 @@ export function Person({ id }: { id: string }) {
         for (const m of MILESTONES) {
           const held = f[m.field];
           if (held) { ms.push({ k: m.name, v: fmtDate(held.value) || 'Held', sub: m.about, done: true }); continue; }
-          if (!p.is_living || !p.birth_year) continue;
+          if (!p.is_living || !p.birth_year || pack.art !== 'south') continue;   // 60/70/80 are South Indian celebrations
           const year = p.birth_year + m.age;
           if (year >= thisYear && year <= thisYear + 15) ms.push({ k: m.name, v: year === thisYear ? 'This year' : `In ${year}`, sub: m.about, done: false });
         }

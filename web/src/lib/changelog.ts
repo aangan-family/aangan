@@ -9,7 +9,8 @@ const TREE_LABEL: Record<string, string> = {
   given_name: 'First name', surname: 'Surname', birth_surname: 'Surname at birth', gender: 'Gender',
   birth_year: 'Birth year', death_date: 'Date of passing', death_place: 'Place of passing',
 };
-const DATE_FIELDS = new Set(['birth_date', 'upanayanam', 'sashtiabdapoorthi', 'bhimaratha_shanti', 'sathabhishekam', 'engagement', 'death_date']);
+const DATE_FIELDS = new Set(['birth_date', 'upanayanam', 'sashtiabdapoorthi', 'bhimaratha_shanti', 'sathabhishekam', 'engagement', 'death_date',
+  'naamkaran', 'annaprashan', 'mundan', 'amrit_sanchar', 'dastar_bandi', 'aqiqah', 'bismillah', 'hajj', 'baptism', 'first_communion', 'confirmation']);
 
 function show(field: string | null, v: string | null): string {
   if (v === null || v === '') return '';

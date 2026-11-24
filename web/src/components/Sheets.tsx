@@ -6,7 +6,7 @@ import { preparePhoto } from '../lib/photos';
 import { ageFrom, firstName, fromInputDate, fullName, toInputDate } from '../lib/format';
 import { NAKSHATRAMS, TAMIL_MONTHS, TITHI_OPTIONS } from '../lib/panchang';
 import {
-  CONTACT_FIELDS, DEFAULT_VISIBILITY, VISIBILITY_LABEL,
+  CONTACT_FIELDS, DEFAULT_VISIBILITY, VISIBILITY_LABEL, LIFE_EVENTS,
   MARITAL_STATUS, type ConsentChoices, type FieldChange, type FieldName, type Person, type PersonInput, type RelativeKind, type Visibility,
   ROLES, ROLE_HELP, ROLE_LABEL, type Role, type Invitation,
 } from '../lib/types';
@@ -17,6 +17,8 @@ import { InviteShare } from './InviteShare';
 type Kind = 'text' | 'date' | 'textarea' | 'tel' | 'email' | 'star' | 'tithi' | 'milestone' | 'marital';
 /** South Indian traditions record sutram and vedam; every community names gotra and family deity its own way. */
 const south = () => currentPack().art === 'south';
+/** the family's traditions include any of these festival groups (Hindu, Sikh, Muslim, Christian…) */
+const keeps = (groups: string[]) => currentPack().festivals.some((g) => groups.includes(g));
 const labelOf = (f: { field: string; label: string }) => (f.field === 'gothram' ? currentPack().labels.gothram : f.field === 'kuladeivam' ? currentPack().labels.kuladeivam : f.label);
 interface Spec { field: FieldName; label: string; kind?: Kind; note?: string; wide?: boolean; list?: string; show?: (p: Person, age: number | null, c: { married: boolean; has: (f: FieldName) => boolean }) => boolean }
 
@@ -41,19 +43,21 @@ const SECTIONS: { title: string; hint?: string; fields: Spec[] }[] = [
     { field: 'sutram', label: 'Sutram', list: 'dl-sutram', show: (_p, _a, c) => south() || c.has('sutram') },
     { field: 'vedam', label: 'Vedam', list: 'dl-vedam', show: (_p, _a, c) => south() || c.has('vedam') },
     { field: 'kuladeivam', label: 'Kuladeivam' },
+    { field: 'gurdwara', label: 'Family gurdwara', note: 'The gurdwara the family goes to, or the village gurdwara', show: (_p, _a, c) => keeps(['sikh']) || c.has('gurdwara') },
     { field: 'native_place', label: 'Native place', note: 'Village or agraharam the family comes from', wide: true },
     { field: 'janma_nakshatram', label: 'Janma nakshatram', kind: 'star', note: 'Month and star (nakshatra) of birth. Used for the star birthday reminder.', wide: true, show: (_p, _a, c) => currentPack().starBirthday || c.has('janma_nakshatram') },
     { field: 'horoscope', label: 'Horoscope notes', kind: 'textarea', note: 'Rasi, lagnam, jathagam details. Kept to themselves unless they choose otherwise.', wide: true },
     { field: 'shraddha_tithi', label: 'Shraddham tithi', kind: 'tithi', note: 'Month and tithi of passing, for the yearly shraddh reminder.', wide: true, show: (p) => !p.is_living },
   ] },
   { title: 'Milestones', hint: 'Dates of ceremonies already held.', fields: [
+    ...LIFE_EVENTS.map((e): Spec => ({ field: e.field, label: e.field === 'naamkaran' || e.name === e.about ? e.name : `${e.name} (${e.about})`, kind: 'milestone', show: (_p, _a, c) => keeps(e.groups) || c.has(e.field) })),
     { field: 'upanayanam', label: 'Upanayanam / Janeu', kind: 'milestone', show: (p, _a, c) => (p.gender !== 'f' && currentPack().festivals.includes('hindu')) || c.has('upanayanam') },   // a ceremony for boys
     // engagement: for living people who aren't married yet (kept visible if already filled in)
     { field: 'engagement', label: 'Engagement', kind: 'milestone', show: (p, _a, c) => (p.is_living && !c.married) || c.has('engagement') },
     { field: 'engaged_to', label: 'Engaged to', note: 'Their name, if they aren’t in the family tree yet.', show: (p, _a, c) => (p.is_living && !c.married) || c.has('engaged_to') },
-    { field: 'sashtiabdapoorthi', label: 'Shashtiabdapoorthi (60)', kind: 'milestone', show: (p, age) => !p.is_living || (age ?? 0) >= 55 },
-    { field: 'bhimaratha_shanti', label: 'Bhimaratha Shanti (70)', kind: 'milestone', show: (p, age) => !p.is_living || (age ?? 0) >= 65 },
-    { field: 'sathabhishekam', label: 'Sathabhishekam (80)', kind: 'milestone', show: (p, age) => !p.is_living || (age ?? 0) >= 75 },
+    { field: 'sashtiabdapoorthi', label: 'Shashtiabdapoorthi (60)', kind: 'milestone', show: (p, age, c) => (south() && keeps(['hindu']) && (!p.is_living || (age ?? 0) >= 55)) || c.has('sashtiabdapoorthi') },
+    { field: 'bhimaratha_shanti', label: 'Bhimaratha Shanti (70)', kind: 'milestone', show: (p, age, c) => (south() && keeps(['hindu']) && (!p.is_living || (age ?? 0) >= 65)) || c.has('bhimaratha_shanti') },
+    { field: 'sathabhishekam', label: 'Sathabhishekam (80)', kind: 'milestone', show: (p, age, c) => (south() && keeps(['hindu']) && (!p.is_living || (age ?? 0) >= 75)) || c.has('sathabhishekam') },
   ] },
   { title: 'Story', fields: [{ field: 'about', label: 'Their story & memories', kind: 'textarea', wide: true }] },
 ];

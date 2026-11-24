@@ -1439,6 +1439,19 @@ update member_prefs set border = 'phulkari' where user_id = (select mp.user_id f
 select t.ok((select count(*) from email_borders() where border = 'phulkari') = 1, 'the server sees the saved choice as it is');
 update member_prefs set border = '' where border = 'phulkari';
 
+-- 0053: tradition fields for every family
+reset role;
+set role authenticated;
+select t.as_user('00000000-0000-0000-0000-00000000000a');   -- Asha, her own profile
+insert into profile_fields(person_id,field,value,visibility) values ('A','baptism','19840600','family')
+  on conflict (person_id, field) do update set value = excluded.value;
+select t.ok((select value = '19840600' from profile_fields where person_id = 'A' and field = 'baptism'), 'a member can record a baptism date (any tradition''s milestone)');
+select t.refused($$insert into profile_fields(person_id,field,value,visibility) values ('A','amrit_sanchar','last year','family')$$, 'milestones must be dates');
+select t.refused($$insert into profile_fields(person_id,field,value,visibility) values ('A','gurdwara',repeat('x',121),'family')$$, 'the gurdwara is a short place name');
+select t.refused($$insert into profile_fields(person_id,field,value,visibility) values ('A','caste','x','family')$$, 'only listed details can be stored');
+delete from profile_fields where person_id = 'A' and field = 'baptism';
+reset role;
+
 -- ---------------------------------------------------------------- 0051 first admin (setup only)
 reset role;
 select t.as_user('');
