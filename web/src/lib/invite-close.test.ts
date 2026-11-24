@@ -19,7 +19,7 @@ describe('closest relatives to invite', () => {
   });
   it('makes the links and messages', () => {
     expect(elderLink('abcdefghijkl')).toMatch(/\/\?elder=1#\/invite\/abcdefghijkl$/);
-    expect(elderLink('abcdefghijkl', true)).toMatch(/\/\?elder=1&ta=1#\/invite\/abcdefghijkl$/);
+    expect(elderLink('abcdefghijkl', 'hi')).toMatch(/\/\?elder=1&lang=hi#\/invite\/abcdefghijkl$/);
     expect(joinRequestMessage('Mani')).toMatch(/^Hi Mani 🙏[\s\S]*\/#\/join/);
   });
 });

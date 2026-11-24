@@ -14,7 +14,7 @@ import { InviteShare } from './InviteShare';
 import { ResendButton } from './ResendButton';
 import { ago } from '../lib/format';
 import { draft, relationToMe, wishRecipient, wishText } from '../lib/wishes';
-import { tamilTerm } from '../lib/tamil';
+import { kinTerm, usePack } from '../lib/community';
 import { SearchBox, Sheet, go } from './common';
 
 /* ---------- banner ---------- */
@@ -217,8 +217,11 @@ function RootsSheet({ onClose }: { onClose: () => void }) {
 }
 
 /* ---------- coming up ---------- */
-export function ComingUp({ items }: { items: Upcoming[] }) {
+export function ComingUp({ items: given }: { items: Upcoming[] }) {
   const { family, myId, snap } = useStore();
+  const pack = usePack();
+  // star (nakshatra) birthdays are a Tamil and Kerala custom
+  const items = pack.starBirthday ? given : given.filter((u) => u.kind !== 'tamil-birthday');
   const joined = useMemo(() => new Set(snap.joined), [snap.joined]);
   const [all, setAll] = useState<Set<string>>(new Set());
   const LIMIT = 6;
@@ -240,7 +243,7 @@ export function ComingUp({ items }: { items: Upcoming[] }) {
     const relOf = (id?: string) => (id ? relationToMe(family, id, myId) : null);
     const who = relOf(u.id) ? u.id : u.with && relOf(u.with) ? u.with : u.id;
     const rel = relOf(who);
-    const ta = myId && who !== myId ? tamilTerm(family, who, myId) : null;
+    const ta = myId && who !== myId ? kinTerm(family, who, myId, pack)?.word ?? null : null;
     const to = wishRecipient(family, u, myId, joined);
     return (
       <div className="up">
@@ -273,7 +276,7 @@ export function ComingUp({ items }: { items: Upcoming[] }) {
           </div>
         </div>
       ))}
-      {items.some((u) => u.kind === 'tamil-birthday' || u.kind === 'shraddham') && <p className="uphint">Tamil birthdays and shraddhams are worked out from the Tamil calendar. Please confirm with your panchangam.</p>}
+      {items.some((u) => u.kind === 'tamil-birthday' || u.kind === 'shraddham') && <p className="uphint">Star birthdays and shraddhams are worked out from the Hindu calendar (panchang). Please confirm with your own panchang.</p>}
     </section>
   );
 }

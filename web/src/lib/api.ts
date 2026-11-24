@@ -142,7 +142,7 @@ export const PROVIDER_LABEL: Record<SignInProvider, string> = {
   google: 'Google', azure: 'Microsoft (Outlook, Hotmail)', apple: 'Apple', 'custom:yahoo': 'Yahoo',
 };
 /** Which sign-in buttons to show. Each needs setting up in Supabase first (see README). */
-export const SIGNIN_PROVIDERS = ((import.meta.env.VITE_SIGNIN_PROVIDERS as string | undefined) || 'google,azure,custom:yahoo')
+export const SIGNIN_PROVIDERS = ((import.meta.env.VITE_SIGNIN_PROVIDERS as string | undefined) || 'google') // Microsoft and Yahoo need their own app setup: VITE_SIGNIN_PROVIDERS=google,azure,custom:yahoo
   .split(',').map((x) => x.trim()).filter((x): x is SignInProvider => x in PROVIDER_LABEL);
 
 export class ApiError extends Error {

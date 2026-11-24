@@ -2155,3 +2155,13 @@ html[data-mode=dark][data-theme=aurora]{--solid:#141a30}
 /* Tamil menus: a little more room for longer words */
 html[data-menu=ta] .navtext,html[data-menu=ta] .navgroup{line-height:1.35}
 html[data-menu=ta] .tabbar a span,html[data-menu=ta] .tabbar button span{font-size:10px;letter-spacing:0}
+
+/* generation counts when the traditions don't use the gopuram */
+.gen-counts{display:flex;flex-wrap:wrap;gap:10px 14px;margin:8px 0 0}
+.gen-counts span{display:flex;flex-direction:column;align-items:center;min-width:44px}
+.gen-counts b{font-size:22px;line-height:1.1}
+.gen-counts small{color:var(--muted,#6e6e73);font-size:11px}
+.gen-counts .mine b{color:var(--accent,#0a84ff)}
+.native{color:var(--muted,#6e6e73);font-weight:400}
+.themeselect{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line,#d2d2d7);background:var(--card,#fff);color:inherit;font:inherit;margin:4px 0 6px}
+.festgroups{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin:6px 0 10px}

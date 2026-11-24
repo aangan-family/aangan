@@ -5,6 +5,7 @@ import { friendly } from '../lib/api';
 import { firstName, fullName } from '../lib/format';
 import { relationToMe } from '../lib/wishes';
 import { closeRelatives, elderLink, isGmail, joinRequestMessage, maskEmail } from '../lib/invite';
+import { usePack } from '../lib/community';
 import type { Invitation } from '../lib/types';
 import { Sheet } from './common';
 import { InviteSheet } from './Sheets';
@@ -141,10 +142,11 @@ export function ElderSheet({ id, onClose }: { id: string; onClose: () => void })
   const [email, setEmail] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
-  const [tamil, setTamil] = useState(false);
+  const pack = usePack();
+  const [native, setNative] = useState(false);
   const [qr, setQr] = useState('');
   useEffect(() => { api.listInvitations().then((l) => setInv(l.find((i) => i.person_id === id && !i.accepted_at) || null), () => setInv(null)); }, [api, id]);
-  const link = inv?.code && inv.approved_at !== null ? elderLink(inv.code, tamil) : '';
+  const link = inv?.code && inv.approved_at !== null ? elderLink(inv.code, native ? pack.lang : '') : '';
   useEffect(() => { if (link) QRCode.toDataURL(link, { margin: 1, width: 240, errorCorrectionLevel: 'M' }).then(setQr, () => setQr('')); else setQr(''); }, [link]);
   const invitedByOther = inv === null && snap.invited.includes(id);
   async function save() {
@@ -174,11 +176,11 @@ export function ElderSheet({ id, onClose }: { id: string; onClose: () => void })
         <li>
           <b>Open the link on {first}’s phone.</b>
           {link ? (<>
-            <label className="themetoggle"><input type="checkbox" checked={tamil} onChange={(e) => setTamil(e.target.checked)} /> Menus in Tamil (தமிழ்)</label>
+            {pack.lang !== 'en' && <label className="themetoggle"><input type="checkbox" checked={native} onChange={(e) => setNative(e.target.checked)} /> Menus in {pack.name} ({pack.native})</label>}
             <div className="elder-qr">{qr && <img src={qr} width={200} height={200} alt={`QR code for ${first}’s link`} />}
               <p className="note">Point {first}’s phone camera at this code and tap the link that appears. Or send it to {first} on WhatsApp:</p>
               <a className="pill small" href={`https://wa.me/?text=${encodeURIComponent(waMsg)}`} target="_blank" rel="noopener noreferrer">Send on WhatsApp</a></div>
-            <p className="note small">The website opens on {first}’s phone with the largest text{tamil ? ' and the menus in Tamil' : ''}. {first} can change it later in Theme.</p>
+            <p className="note small">The website opens on {first}’s phone with the largest text{native ? ` and the menus in ${pack.name}` : ''}. {first} can change it later in Theme.</p>
           </>) : <p className="note">The link appears here once the invitation is ready.</p>}
         </li>
         <li><b>Sign in together.</b><p className="note">{inv && isGmail(inv.email) ? <>Tap <b>Continue with Google</b> and pick {first}’s account.</> : <>Tap <b>Email me a sign-in link</b>, then open the email on {first}’s phone and tap the button.</>}</p></li>

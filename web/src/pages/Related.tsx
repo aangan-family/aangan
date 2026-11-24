@@ -2,7 +2,7 @@ import { isEngaged } from '../lib/family';
 import { useEffect, useState } from 'react';
 import { useStore } from '../lib/store';
 import { describe, type Seg } from '../lib/kinship';
-import { tamilTerm } from '../lib/tamil';
+import { kinTerm, termText, usePack } from '../lib/community';
 import { fullName } from '../lib/format';
 import { SearchBox, go } from '../components/common';
 import { HelpTip } from '../components/Help';
@@ -13,8 +13,9 @@ export function Related({ initialA }: { initialA?: string }) {
   const [b, setB] = useState<string | undefined>(undefined);
   useEffect(() => { if (initialA) { setA(initialA); setB(undefined); } }, [initialA]);
   const rel = a && b ? describe(family, a, b) : null;
-  const ta = a && b ? tamilTerm(family, a, b) : null; // what b calls a
-  const tb = a && b ? tamilTerm(family, b, a) : null;
+  const pack = usePack();
+  const ta = a && b ? termText(kinTerm(family, a, b, pack)) : ''; // what b calls a
+  const tb = a && b ? termText(kinTerm(family, b, a, pack)) : '';
   const name = (id?: string) => (id ? fullName(family.byId.get(id)) : '');
   const render = (segs: Seg[]) => segs.map((s, i) => s.t === 'text' ? <span key={i}>{s.s}</span> : s.t === 'rel' ? <b key={i} className="rel">{s.s}</b> : <b key={i}>{name(s.id)}</b>);
 

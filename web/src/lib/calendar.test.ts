@@ -18,7 +18,7 @@ describe('festival dates match published Tamil calendars', () => {
   it('each festival appears once a year', () => {
     const count = new Map<string, number>();
     for (const d of yearDays(2025)) if (d.y === 2025) for (const e of d.events) if (e.kind === 'festival') count.set(e.title, (count.get(e.title) || 0) + 1);
-    for (const [t, n] of count) if (!['Vaikunta Ekadasi', 'Arudra Darshanam'].includes(t)) expect([t, n]).toEqual([t, 1]);
+    for (const [t, n] of count) if (!['Vaikunta Ekadasi', 'Arudra Darshanam', 'Guru Gobind Singh Jayanti'].includes(t)) expect([t, n]).toEqual([t, 1]);
   });
   it('Tamil dates', () => { expect(tamilDate(findDay('2026-01-14')!)).toBe('Thai 1'); expect(tamilDate(findDay('2026-04-14')!)).toBe('Chithirai 1'); });
   it('every month has an Amavasai and a Pournami', () => {

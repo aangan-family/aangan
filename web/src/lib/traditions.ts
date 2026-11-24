@@ -1,4 +1,5 @@
 import { isEngaged } from './family';
+import { currentPack } from './community';
 import type { Family } from './family';
 import { daysUntil, fmtDay, nextAnniversary } from './format';
 import { NAKSHATRAMS, TAMIL_MONTHS, nextShraddham, nextTamilBirthday, tithiName, unpackStar, unpackTithi } from './panchang';
@@ -21,9 +22,9 @@ export function upcomingFor(f: Family, id: string, fields: Fields, days = 60): U
   const within = (d: Date | null) => d && daysUntil(d) >= 0 && daysUntil(d) <= days;
   if (p.is_living) {
     const star = unpackStar(fields.janma_nakshatram?.value);
-    if (star) {
+    if (star && currentPack().starBirthday) {
       const d = nextTamilBirthday(star.month, star.star);
-      if (d && within(d)) out.push({ id, date: d, kind: 'tamil-birthday', title: 'Tamil birthday', sub: `${TAMIL_MONTHS[star.month]} ${NAKSHATRAMS[star.star]}` });
+      if (d && within(d)) out.push({ id, date: d, kind: 'tamil-birthday', title: 'Star birthday', sub: `${TAMIL_MONTHS[star.month]} ${NAKSHATRAMS[star.star]}` });
     }
     const bd = fields.birth_date?.value;
     const d = bd ? nextAnniversary(bd) : null;

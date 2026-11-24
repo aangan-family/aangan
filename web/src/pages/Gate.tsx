@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { EMAIL_FROM, FAMILY } from '../lib/site';
+import { EMAIL_FROM, FAMILY, EMAIL_SIGNIN } from '../lib/site';
 import type { Api } from '../lib/api';
 import type { JoinRequest, JoinRequestInput } from '../lib/types';
 import { helpFor } from '../lib/help';
@@ -56,12 +56,12 @@ export function Login({ api }: { api: Api }) {
             <button className="tlink" onClick={() => setSent(false)}>Use a different email</button></div>
         ) : (
           <form onSubmit={send} className="gate-form">
-            <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email address" autoComplete="email" />
+            {EMAIL_SIGNIN && <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email address" autoComplete="email" />}
             {inApp && <InAppNotice app={inApp} />}
-            {googleFirst && <GoogleButton api={api} hint={invited || undefined} onError={setErr} />}
-            <button className={`pill${googleFirst ? ' ghost' : ''}`} disabled={busy}>{busy ? 'Sending…' : 'Email me a sign-in link'}</button>
-            {providers.some((pv) => !(googleFirst && pv === 'google') && !(inApp && pv === 'google')) && <div className="or"><span>or</span></div>}
-            {providers.filter((pv) => !(googleFirst && pv === 'google')).map((pv) => (
+            {EMAIL_SIGNIN && googleFirst && <GoogleButton api={api} hint={invited || undefined} onError={setErr} />}
+            {EMAIL_SIGNIN && <button className={`pill${googleFirst ? ' ghost' : ''}`} disabled={busy}>{busy ? 'Sending…' : 'Email me a sign-in link'}</button>}
+            {EMAIL_SIGNIN && providers.some((pv) => !(googleFirst && pv === 'google') && !(inApp && pv === 'google')) && <div className="or"><span>or</span></div>}
+            {providers.filter((pv) => !(EMAIL_SIGNIN && googleFirst && pv === 'google')).map((pv) => (
               pv === 'google' ? (inApp ? null : <GoogleButton key={pv} api={api} hint={invited || undefined} onError={setErr} />) :
               <button key={pv} type="button" className={`pill ghost prov prov-${pv.replace(':', '-')}`} onClick={() => api.signInWith(pv).catch((x) => setErr(friendly(x)))}>
                 <ProviderIcon p={pv} />Continue with {PROVIDER_LABEL[pv]}</button>

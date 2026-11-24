@@ -8,7 +8,9 @@ import { useStore } from '../lib/store';
 import { lineageOf } from '../lib/family';
 import { daysUntil, firstName, fullName, ago } from '../lib/format';
 import type { Upcoming } from '../lib/traditions';
-import { findDay, starName, tamilDate, tithiName } from '../lib/calendar';
+import { findDay, shownFor, starName } from '../lib/calendar';
+import { useFestivals, usePack } from '../lib/community';
+import { regionalDate, tithiText } from '../lib/community/dates';
 import { todayIST } from '../lib/format';
 import { CATEGORY_ICON } from '../lib/types';
 import { plain } from '../pages/Talk';
@@ -53,6 +55,8 @@ function Card({ i, cls, label, onOpen, children }: { i: number; cls: string; lab
 
 export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: string; setQ: (s: string) => void }) {
   const { snap, family, myId, isAdmin, fileUrl, activeConsent } = useStore();
+  const pack = usePack();
+  const groups = useFestivals();
   const [banner, setBanner] = useState(false);
   const root = family.root ? family.byId.get(family.root) : null;
   const rootSp = root ? (family.spouses.get(root.id) || []).map((s) => family.byId.get(s)!)[0] : null;
@@ -64,7 +68,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
   const host = me ? (family.blood.has(me.id) ? me.id : (family.spouses.get(me.id) || []).find((s) => family.blood.has(s))) : undefined;
   const line = host ? lineageOf(family, host) : [];
   const gens = useMemo(() => Array.from({ length: family.maxGen }, (_, i) => snap.persons.filter((p) => family.gen.get(p.id) === i + 1).length), [family, snap.persons]);
-  const { border } = useHeritage();
+  const { border, south } = useHeritage();
   const myGen = me ? family.gen.get(me.id) : undefined;
   const threads = [...snap.threads].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.last_activity_at.localeCompare(a.last_activity_at)).slice(0, 2);
   const photos = [...snap.photos].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 4);
@@ -98,7 +102,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
             {isAdmin && <button className="tlink small nochev b-photo-edit" onClick={() => setBanner(true)}>{slides.length ? 'Family photos' : 'Add family photos'}</button>}
           </div>
         </div>
-        <div className="b-weave"><WovenBorder kind={border} /></div>
+        {south && <div className="b-weave"><WovenBorder kind={border} /></div>}
       </div>
 
       {/* you */}
@@ -129,13 +133,13 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
       <Card i={2} cls="b-up" label="Coming up" onOpen={() => go('calendar')}>
         <small className="b-k">Coming up</small>
         {(() => { const t = todayIST(); const d = findDay(t.toISOString().slice(0, 10)); if (!d) return null;
-          const fest = d.events.find((e) => e.kind === 'festival') || d.events.find((e) => e.title === 'Amavasai' || e.title === 'Pournami' || e.title === 'Ekadasi');
-          return <p className="b-today"><Lamp size={12} /> <b>Today</b> {tamilDate(d)} · {starName(d.star)} · {tithiName(d.tithi)}{fest ? <> · <span>{fest.icon} {fest.title}</span></> : null}</p>; })()}
+          const fest = d.events.find((e) => e.kind === 'festival' && shownFor(e, groups)) || d.events.find((e) => e.title === 'Amavasai' || e.title === 'Pournami' || e.title === 'Ekadasi');
+          return <p className="b-today"><Lamp size={12} /> <b>Today</b> {pack.date !== 'none' ? `${regionalDate(d, pack.date)} · ` : ''}{starName(d.star)} · {tithiText(d.tithi)}{fest ? <> · <span>{fest.icon} {fest.title}</span></> : null}</p>; })()}
         {next.length ? <ul className="b-list">{next.map((u) => {
           const n = daysUntil(u.date);
           return (
             <li key={u.id + u.kind}><span className={`b-date${u.kind === 'shraddham' || u.kind === 'remembrance' ? ' rem' : ''}`}>{u.kind === 'shraddham' || u.kind === 'remembrance' ? <Lamp size={9} /> : u.kind === 'birthday' || u.kind === 'tamil-birthday' ? <Marigold /> : null}<b>{u.date.getUTCDate()}</b><small>{MON[u.date.getUTCMonth()]}</small></span>
-              <span><b>{firstName(family.byId.get(u.id))}{u.with ? ` & ${firstName(family.byId.get(u.with))}` : ''}</b><small>{u.kind === 'shraddham' || u.kind === 'remembrance' ? 'Remembrance' : u.kind === 'tamil-birthday' ? 'Tamil birthday' : u.kind === 'milestone' ? u.title : u.kind === 'anniversary' ? `Anniversary · ${u.sub}` : 'Birthday'} · {n === 0 ? 'today' : n === 1 ? 'tomorrow' : `${DOW[u.date.getUTCDay()]}, in ${n} days`}</small></span></li>
+              <span><b>{firstName(family.byId.get(u.id))}{u.with ? ` & ${firstName(family.byId.get(u.with))}` : ''}</b><small>{u.kind === 'shraddham' || u.kind === 'remembrance' ? 'Remembrance' : u.kind === 'tamil-birthday' ? 'Star birthday' : u.kind === 'milestone' ? u.title : u.kind === 'anniversary' ? `Anniversary · ${u.sub}` : 'Birthday'} · {n === 0 ? 'today' : n === 1 ? 'tomorrow' : `${DOW[u.date.getUTCDay()]}, in ${n} days`}</small></span></li>
           );
         })}</ul> : <p className="b-empty">Nothing in the next two months.</p>}
         <div className="b-row"><button className="pill small ghost" onClick={() => go('calendar')}>Open the calendar</button></div>
@@ -179,7 +183,7 @@ export function Overview({ upcoming, q, setQ }: { upcoming: Upcoming[]; q: strin
       {/* generations */}
       <Card i={7} cls="b-gens" label="Every generation" onOpen={() => jump('h-generations')}>
         <small className="b-k">{WORDS[family.maxGen] || family.maxGen} generations</small>
-        <Gopuram compact counts={gens} mine={myGen} />
+        {south ? <Gopuram compact counts={gens} mine={myGen} /> : <p className="gen-counts">{gens.map((n, i) => <span key={i} className={i + 1 === myGen ? 'mine' : ''}><b>{n}</b> <small>Gen {i + 1}</small></span>)}</p>}
       </Card>
 
       {/* find anyone */}

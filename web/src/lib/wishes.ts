@@ -1,7 +1,7 @@
 import type { Family } from './family';
 import { firstName } from './format';
 import { describe } from './kinship';
-import { tamilTerm } from './tamil';
+import { kinTerm } from './community';
 import type { Upcoming } from './traditions';
 
 /**
@@ -30,12 +30,12 @@ export function relationToMe(f: Family, other: string, me: string | null): strin
   return null;
 }
 
-/** What you'd call them when writing: the Tamil word for elders ("Akka", "Periyappa"), otherwise their first name. */
+/** What you'd call them when writing: the family word for elders ("Didi", "Chacha", "Periyappa"), otherwise their first name. */
 export function addressAs(f: Family, other: string, me: string | null): string {
   const p = f.byId.get(other);
   const name = p ? firstName(p) : '';
   if (!me) return name;
-  const t = tamilTerm(f, other, me);
+  const t = kinTerm(f, other, me)?.word ?? null;
   const meP = f.byId.get(me);
   const elder = !!(p?.birth_year && meP?.birth_year && p.birth_year < meP.birth_year);
   if (t && elder && !t.includes('/')) return t;
@@ -64,7 +64,7 @@ export function wishText(f: Family, u: Upcoming, to: string, me: string | null):
   switch (u.kind) {
     case 'birthday': return `${hi}, wishing you a very happy birthday ${day}! 🎂🎉 Have a wonderful year ahead. 🙏`;
     case 'milestone': return `${hi}, wishing you a very happy ${u.sub.replace(/ year$/, '')} ${day}! 🙏🎉 ${u.title.replace('Turns', 'Turning')} is a blessing for all of us. Wishing you good health and happiness always.`;
-    case 'tamil-birthday': return `${hi}, happy Tamil birthday (${u.sub}) ${day}! 🪔🙏 Wishing you good health and happiness.`;
+    case 'tamil-birthday': return `${hi}, happy star birthday (${u.sub}) ${day}! 🪔🙏 Wishing you good health and happiness.`;
     case 'anniversary': {
       const other = u.with === to ? u.id : u.with;
       const partner = other ? firstName(f.byId.get(other)) : '';

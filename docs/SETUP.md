@@ -4,7 +4,8 @@ About an afternoon. You don't need to know how to code: you'll copy and paste, a
 
 **You'll need**
 - A laptop and a Gmail address (it will be the admin's sign-in)
-- About ₹800 a year for a domain name, e.g. `sharmaparivar.in`. Everything else is free.
+- About ₹500–900 a year for a domain name, e.g. `sharmaparivar.in`. Everything else is free. (Or nothing at all: see the free setup in [HOSTING.md](HOSTING.md).)
+- Read [PRIVACY-GUIDE.md](PRIVACY-GUIDE.md) first. You'll be looking after your relatives' private details.
 - Free accounts on: **GitHub** (the code), **Supabase** (the database), **Cloudflare** (the website and domain), **Resend** (sends the emails)
 
 Tick each step off as you go.
@@ -41,7 +42,9 @@ Want to see it before going further? `npm run import -- data/my-family.xlsx --de
 ## 3. Get your domain
 
 1. Sign up at **cloudflare.com**.
-2. Buy a domain in **Domain Registration → Register Domains** (or add one you already own under **Add a domain** and follow the steps to point it at Cloudflare).
+2. Buy a domain in **Domain Registration → Register Domains** (or add one you already own under **Add a domain** and follow the steps to point it at Cloudflare). Cloudflare doesn't sell `.in` domains: buy those from an Indian registrar and add them here.
+
+**No budget for a domain?** You can run the site free on a `.pages.dev` address with Google sign-in only. See [HOSTING.md](HOSTING.md), Level 1.
 
 ## 4. Create the database
 
@@ -70,6 +73,8 @@ Open `site.config.json` in the Codespace and fill in:
 | `admin.name`, `admin.shortName`, `admin.phone` | You. Your name and mobile go on the family's emails so relatives know they're genuine. |
 | `supabaseProjectUrl`, `supabasePublishableKey` | From step 4.5 (not the secret key) |
 | `familyStoryHint` | The first words of your family story, e.g. `Our family comes from…` |
+| `community` | Your family's traditions: `hindi`, `punjabi`, `bengali`, `marathi`, `gujarati`, `urdu`, `tamil`, `telugu`, `kannada`, `malayalam` or `english`. Family words, menus, calendar and festivals follow it. Each relative can still pick their own in Theme → Traditions. |
+| `emailSignIn` | `true` with your own domain; `false` on the free setup (Google sign-in only) |
 
 Then check and save:
 

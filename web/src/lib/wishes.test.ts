@@ -4,6 +4,10 @@ import { addressAs, relationToMe, wishRecipient, wishText } from './wishes';
 import type { Person } from './types';
 import type { Upcoming } from './traditions';
 
+// these tests use Tamil family words: pick the Tamil traditions on this 'device'
+const store: Record<string, string> = { 'fam-community': 'tamil' };
+(globalThis as { localStorage?: unknown }).localStorage = { getItem: (k: string) => store[k] ?? null, setItem: (k: string, v: string) => { store[k] = v; }, removeItem: (k: string) => { delete store[k]; } };
+
 const P = (id: string, given_name: string, gender: string, birth_year: number): Person => ({ id, given_name, surname: 'Iyer', birth_surname: '', gender, birth_year, is_living: true, death_date: null, death_place: null, sort_key: null });
 // Dad + Mom -> Ananya (1975, f), Arjun (1980, m), Kavi (1985, f); Ananya married Ravi
 const persons = [P('DAD', 'Hari', 'm', 1945), P('MOM', 'Saraswathi', 'f', 1950), P('RAG', 'Ananya', 'f', 1975), P('ME', 'Arjun', 'm', 1980), P('KAV', 'Kavi', 'f', 1985), P('RAV', 'Ravi', 'm', 1972)];

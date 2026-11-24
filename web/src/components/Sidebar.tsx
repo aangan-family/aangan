@@ -8,7 +8,8 @@ import { COLOURS, MODES, MODE_LABEL, STYLES, STYLE_HINT, THEME_LABEL, type Mode,
 import { hasUnseen } from '../lib/whatsnew';
 import { setHeritagePrefs, useHeritage } from './Heritage';
 import { BORDER_LABEL, SCRIPTS, borderChoices, type Border, type Scripts } from '../lib/heritage';
-import { setMenuLang, useMenuLang, useT, type MenuLang } from '../lib/menulang';
+import { setMenuLang, useMenuLang, useT } from '../lib/menulang';
+import { FAMILY_DEFAULT, FESTIVAL_GROUPS, PACK_LIST, PACKS, setCommunity, setFestivals, useCommunityId, useFestivals, usePack, type CommunityId, type FestivalGroup } from '../lib/community';
 
 /** Sign out and go back to the start, so the next person on a shared phone sees the sign-in page. */
 export function signOut(api: { signOut: () => Promise<void> }) {
@@ -139,6 +140,7 @@ export function ThemePicker({ api }: { api: { savePrefs: (p: Partial<Prefs>) => 
       <div className="seg four" role="radiogroup" aria-label="Names in">
         {SCRIPTS.map(([k, t, lang]) => <button key={k} role="radio" lang={lang} aria-checked={h.scripts === k} className={h.scripts === k ? 'on' : ''} onClick={() => save({ scripts: k as Scripts })}>{t}</button>)}
       </div>
+      <TraditionsRow />
       <MenuLangRow />
       <TextSizeRow />
       <label className="themetoggle"><input type="checkbox" checked={h.kolam} onChange={(e) => save({ kolam: e.target.checked })} /> Kolam background</label>
@@ -168,14 +170,39 @@ function TextSizeRow() {
   </>);
 }
 
-/** Menus in English or Tamil, on this device. */
+/** Menus in English or the member's language, on this device. */
 function MenuLangRow() {
   const l = useMenuLang();
+  const pack = usePack();
+  const opts: [string, string, string][] = [['en', 'English', 'en']];
+  if (pack.lang !== 'en') opts.push([pack.lang, pack.native, pack.lang]);
   return (<>
     <p className="themelabel">Menus in</p>
     <div className="seg" role="radiogroup" aria-label="Menus in">
-      {([['en', 'English', 'en'], ['ta', 'தமிழ்', 'ta']] as [MenuLang, string, string][]).map(([k, label, lang]) =>
+      {opts.map(([k, label, lang]) =>
         <button key={k} role="radio" lang={lang} aria-checked={l === k} className={l === k ? 'on' : ''} onClick={() => setMenuLang(k)}>{label}</button>)}
     </div>
+  </>);
+}
+
+/** Whose traditions: family words, menus, calendar and festivals. Per device; the family's default comes from site.config.json. */
+function TraditionsRow() {
+  const id = useCommunityId();
+  const fest = useFestivals();
+  const [open, setOpen] = useState(false);
+  const pick = (k: CommunityId) => { setCommunity(k); setMenuLang(PACKS[k].lang); };
+  const toggle = (g: FestivalGroup) => setFestivals(fest.includes(g) ? fest.filter((x) => x !== g) : [...fest, g]);
+  return (<>
+    <p className="themelabel">Traditions</p>
+    <select className="themeselect" aria-label="Traditions" value={id} onChange={(e) => pick(e.target.value as CommunityId)}>
+      {PACK_LIST.map((p) => <option key={p.id} value={p.id}>{p.id === 'english' ? p.name : `${p.name} · ${p.native}`}{p.id === FAMILY_DEFAULT ? ' (family default)' : ''}</option>)}
+    </select>
+    <p className="note small">Family words (Chacha, Mausi, Athai…), menus and the calendar follow this. Only on this device.</p>
+    <button className="tlink" onClick={() => setOpen(!open)}>{open ? 'Hide festival list' : 'Festivals in the calendar'}</button>
+    {open && <div className="festgroups">
+      {FESTIVAL_GROUPS.map(([g, label]) => (
+        <label key={g} className="themetoggle"><input type="checkbox" checked={fest.includes(g)} onChange={() => toggle(g)} /> {label}</label>
+      ))}
+    </div>}
   </>);
 }

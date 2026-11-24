@@ -2,9 +2,10 @@ import type { CoupleStatus } from '../lib/api';
 import { useMemo, useState } from 'react';
 import { useStore } from '../lib/store';
 import { friendly } from '../lib/api';
-import { LUNAR, dayKey, monthDays, starName, tamilDate, tithiName, type CalDay, type CalEvent } from '../lib/calendar';
+import { LUNAR, dayKey, monthDays, shownFor, starName, type CalDay, type CalEvent } from '../lib/calendar';
+import { useFestivals, usePack } from '../lib/community';
+import { REGIONAL_NAME, regionalCell, regionalDate, regionalSpan, tithiText } from '../lib/community/dates';
 import { familyDays } from '../lib/familyDays';
-import { TAMIL_MONTHS } from '../lib/panchang';
 import { firstName, fullName, todayIST, toInputDate, fromInputDate } from '../lib/format';
 import { Avatar, Sheet, go } from '../components/common';
 import { HelpTip } from '../components/Help';
@@ -14,13 +15,18 @@ const LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DOW_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 type Layer = 'family' | 'festival' | 'monthly' | 'tamil';
-const LAYERS: [Layer, string][] = [['family', '👨‍👩‍👧 Family'], ['festival', '🎉 Festivals'], ['monthly', '🌙 Monthly days'], ['tamil', '☀️ Tamil months']];
+const LAYERS: [Layer, string][] = [['family', '👨‍👩‍👧 Family'], ['festival', '🎉 Festivals'], ['monthly', '🌙 Monthly days'], ['tamil', '☀️ Months']];
 const layerOf = (e: CalEvent): Layer => (e.kind === 'festival' ? 'festival' : e.kind === 'observance' ? 'monthly' : e.kind === 'month' ? 'tamil' : 'family');
 const FAMILY_ORDER = ['birthday', 'tamil-birthday', 'anniversary', 'remembrance', 'shraddham'];
 
 /** Parses #/calendar/2026-11 or #/calendar/2026-11-17. */
 export function Calendar({ at }: { at?: string }) {
   const { snap, family, fieldsOf, activeConsent, canManage, myId } = useStore();
+  const pack = usePack();
+  const groups = useFestivals();
+  const style = pack.date;
+  // Tamil month starts are shown only with the Tamil calendar; festivals only for the groups this person keeps
+  const visible = (e: CalEvent) => (e.kind === 'month' ? style === 'tamil' : shownFor(e, groups));
   const today = todayIST();
   const todayKey = dayKey(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
   const [y, m] = at && /^\d{4}-\d{2}/.test(at) ? [+at.slice(0, 4), +at.slice(5, 7) - 1] : [today.getUTCFullYear(), today.getUTCMonth()];
@@ -33,7 +39,7 @@ export function Calendar({ at }: { at?: string }) {
   const fam = useMemo(() => familyDays(y, family, fieldsOf, snap.partners, (id) => !!activeConsent(id) || canManage(id)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [y, family, snap.fields, snap.partners]);
-  const eventsOf = (d: CalDay) => [...(fam.get(d.key) || []).sort((a, b) => FAMILY_ORDER.indexOf(a.kind) - FAMILY_ORDER.indexOf(b.kind)), ...d.events]
+  const eventsOf = (d: CalDay) => [...(fam.get(d.key) || []).sort((a, b) => FAMILY_ORDER.indexOf(a.kind) - FAMILY_ORDER.indexOf(b.kind)), ...d.events.filter(visible)]
     .filter((e) => layers.has(layerOf(e)));
   const selDay = days.find((d) => d.key === sel) || days[0];
 
@@ -43,7 +49,7 @@ export function Calendar({ at }: { at?: string }) {
     go(`calendar/${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}`);
   };
   const lead = days[0].date.getUTCDay();
-  const tamilSpan = [...new Set(days.map((d) => d.tamilMonth))].map((i) => TAMIL_MONTHS[i]).join(' – ');
+  const tamilSpan = regionalSpan(days, style);
   const agenda = days.map((d) => ({ d, es: eventsOf(d).filter((e) => e.kind !== 'observance' || e.title === 'Amavasai' || e.title === 'Pournami') })).filter((x) => x.es.length);
 
   // a nudge for my own wedding date, if missing
@@ -53,7 +59,7 @@ export function Calendar({ at }: { at?: string }) {
     <div className="wrap calpage">
       <section className="tree-hero">
         <h2 className="headline">Calendar.<HelpTip sections={['calendar']} /></h2>
-        <p className="subhead">Family birthdays, Tamil birthdays, remembrance and anniversaries, with the Tamil calendar, festivals and monthly days.</p>
+        <p className="subhead">Family birthdays, remembrance and anniversaries, with {REGIONAL_NAME[style] ? REGIONAL_NAME[style].toLowerCase() + ', ' : ''}the festivals you keep, and monthly days. Choose your traditions in Theme.</p>
       </section>
 
       <div className="calbar">
@@ -87,14 +93,14 @@ export function Calendar({ at }: { at?: string }) {
             {days.map((d) => {
               const es = eventsOf(d);
               const famEs = es.filter((e) => layerOf(e) === 'family');
-              const moon = d.events.find((e) => e.title === 'Amavasai' || e.title === 'Pournami');
+              const moon = style === 'amanta' || style === 'purnimanta' ? undefined : d.events.find((e) => e.title === 'Amavasai' || e.title === 'Pournami');
               const major = es.find((e) => e.major && e.kind === 'festival');
               return (
                 <button key={d.key} data-day={d.key} aria-pressed={sel === d.key} tabIndex={sel === d.key ? 0 : -1}
                   className={`calcell${d.key === todayKey ? ' today' : ''}${sel === d.key ? ' sel' : ''}${major ? ' fest' : ''}${d.date.getUTCDay() === 0 ? ' sun' : ''}`}
-                  onClick={() => setSel(d.key)} aria-label={`${d.d} ${LONG[m]}, ${tamilDate(d)}${es.length ? `, ${es.map((e) => e.title).join(', ')}` : ''}`}>
+                  onClick={() => setSel(d.key)} aria-label={`${d.d} ${LONG[m]}${style !== 'none' ? ', ' + regionalDate(d, style) : ''}${es.length ? `, ${es.map((e) => e.title).join(', ')}` : ''}`}>
                   <span className="cnum">{d.d}</span>
-                  <span className="ctamil">{d.tamilDay === 1 ? TAMIL_MONTHS[d.tamilMonth] : d.tamilDay}</span>
+                  <span className="ctamil">{regionalCell(d, style)}</span>
                   {moon && layers.has('monthly') && <span className="cmoon" title={moon.title}>{moon.icon}</span>}
                   <span className="cevents">
                     {es.filter((e) => e.kind !== 'observance' && e.kind !== 'month').slice(0, 3).map((e, i) => (
@@ -106,20 +112,20 @@ export function Calendar({ at }: { at?: string }) {
               );
             })}
           </div>
-          <p className="uphint">Tamil dates, stars, tithis and festivals are calculated for India (Lahiri). They may differ by a day from your panchangam; please check before an important ceremony.</p>
+          <p className="uphint">Dates, stars, tithis and festivals are calculated for India (Lahiri; Islamic days from the Umm al-Qura calendar). They may differ by a day from your local panchang or moon sighting; please check before an important ceremony.</p>
         </div>
 
         {selDay && (
           <aside className="calday" aria-live="polite">
             <p className="b-k">{DOW_LONG[selDay.date.getUTCDay()]}</p>
             <h3>{selDay.d} {LONG[selDay.m]} {selDay.y}</h3>
-            <p className="caltam">{tamilDate(selDay)}{selDay.lunar >= 0 ? ` · ${LUNAR[selDay.lunar]}${selDay.adhika ? ' (adhika)' : ''} masam` : ''}</p>
+            <p className="caltam">{style !== 'none' ? regionalDate(selDay, style) : ''}{style === 'tamil' && selDay.lunar >= 0 ? ` · ${LUNAR[selDay.lunar]}${selDay.adhika ? ' (adhika)' : ''} masam` : ''}</p>
             <div className="calpanch">
               <div><small>Nakshatram</small><b>{starName(selDay.star)}</b>{selDay.stars.length > 1 && <span>then {selDay.stars.slice(1).map(starName).join(', ')}</span>}</div>
-              <div><small>Tithi</small><b>{tithiName(selDay.tithi)}</b>{selDay.tithis.length > 1 && <span>then {selDay.tithis.slice(1).map(tithiName).join(', ')}</span>}</div>
+              <div><small>Tithi</small><b>{tithiText(selDay.tithi)}</b>{selDay.tithis.length > 1 && <span>then {selDay.tithis.slice(1).map(tithiText).join(', ')}</span>}</div>
             </div>
             {(() => {
-              const es = [...(fam.get(selDay.key) || []), ...selDay.events];
+              const es = [...(fam.get(selDay.key) || []), ...selDay.events.filter(visible)];
               if (!es.length) return <p className="emptyhint">Nothing special on this day.</p>;
               return (
                 <ul className="caldaylist">{es.map((e, i) => (
@@ -145,7 +151,7 @@ export function Calendar({ at }: { at?: string }) {
           <button key={d.key} className={`agday${d.key === todayKey ? ' today' : ''}`} onClick={() => { setSel(d.key); revealIn(document.querySelector('.calday'), { block: 'nearest' }); }}>
             <span className="agdate"><b>{d.d}</b><small>{DOW[d.date.getUTCDay()]}</small></span>
             <span className="agitems">{es.map((e, i) => <span key={i} className={`agi k-${e.kind}`}>{e.icon} <b>{e.title}</b>{e.sub ? <small> · {e.sub}</small> : null}</span>)}
-              <small className="agtam">{tamilDate(d)}</small></span>
+              {style !== 'none' && <small className="agtam">{regionalDate(d, style)}</small>}</span>
           </button>
         ))}</div>
       </section>

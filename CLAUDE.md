@@ -198,13 +198,19 @@ cd web && npm run demo      # after npm run import -- templates/sample-family.xl
 cd reminders && npm test     # reminder messages; preview live: GET <worker-url>/?key=<PREVIEW_KEY>&date=YYYY-MM-DD
 ```
 
+## Community packs (traditions)
+- `web/src/lib/kin/roles.ts` `roleOf(f, other, ego)` → a language-neutral role: key (parent, parent_sibling, cousin, spouse_sibling…), sex, ego's sex, side (P/M), via (sex of the linking relative), older (true/false/null).
+- `web/src/lib/community/packs.ts` — one pack per community (hindi, punjabi, bengali, marathi, gujarati, urdu, tamil, telugu, kannada, malayalam, english): `term(role)`, menus, labels for gothram/kuladeivam, date style, default festival groups, starBirthday, art (south/plain), rtl. Words are `'Roman|native'` (`terms.ts` `T()`); `fromTable()` for tables, `dravidian()` for cross/parallel cousins. Tamil keeps its own function (tests in `tamil.test.ts`; `lib/tamil.ts` `tamilTerm` wraps it).
+- `web/src/lib/community/index.ts` — choice per device (localStorage `fam-community`, `fam-festivals`), default `site.config.json` `community`; `usePack()`, `useFestivals()`, `kinTerm()`, `termText()`. Theme → **Traditions** (`Sidebar.tsx` `TraditionsRow`) also sets menu language.
+- `lib/menulang.ts` — menus in any pack language (`MENUS` in `community/menus.ts`); elder links `?elder=1&lang=hi`.
+- Calendar: every festival `CalEvent.groups`; `shownFor(e, groups)` filters in Calendar and Home. Evening festivals use `eveningTithi` (Diwali, Dhanteras, Karva Chauth), afternoon ones `afternoonTithi` (Holika Dahan, Vasant Panchami); `firstOf()` for month-start festivals (Ugadi, Gudi Padwa). Hijri via `Intl` (`hijri()`), Easter by computus. Dates tested in `festivals.test.ts`. `community/dates.ts` names the day per date style (tamil, malayalam, bengali, amanta, purnimanta, hijri).
+- Heritage art (`useHeritage().south`): borders, kolam, gopuram and Malayalam/Tamil page names only for South packs. Star birthdays only for packs with `starBirthday`.
+- `emailSignIn: false` in site.config.json hides the email form (free `.pages.dev` setup, Google only). Default sign-in providers: Google.
+
 ## Roadmap (open-source edition)
 Inherited and working: tree, profiles with per-detail visibility and consent, roles (member/steward/admin), invitations and join requests,
 under-18 accounts with parent approval, Talk, photos with tag approval, private messages, bell + phone notifications, calendar,
 reminders and weekly email, writing help, health checks, retention, backups, 2-step for admins. Added: site.config.json,
 Excel/CSV import with plain-language checks, made-up sample family, one-file database setup, first-admin bootstrap (0051).
-Next: **community packs** — today kinship words (`lib/tamil.ts`), traditions (`traditions.ts`, gothram/sutram/vedam),
-the calendar (`calendar.ts`, `panchang.ts`: Tamil solar months) and heritage art (`Heritage.tsx`: veshti/saree borders,
-gopuram, kolam) are the Tamil pack. Make them pluggable (`community` in site.config.json) and add Hindi/Punjabi/Bengali/
-Marathi/Gujarati/Telugu/Kannada/Malayalam kinship terms, regional calendars (Vikram Samvat, Bengali, Malayalam), and
-neutral art; keep Tamil as one pack. Then: a browser setup wizard (sheet upload checked in the browser, never uploaded).
+Community packs are in (see above). Next: docs/ROADMAP.md (setup wizard, native-speaker review, more communities,
+translated pages, art per community, emails per tradition).

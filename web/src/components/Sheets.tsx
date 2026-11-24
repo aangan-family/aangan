@@ -1,3 +1,4 @@
+import { currentPack } from '../lib/community';
 import { Fragment, useState } from 'react';
 import { useStore } from '../lib/store';
 import { friendly } from '../lib/api';
@@ -14,6 +15,9 @@ import { Avatar, Sheet, go } from './common';
 import { InviteShare } from './InviteShare';
 
 type Kind = 'text' | 'date' | 'textarea' | 'tel' | 'email' | 'star' | 'tithi' | 'milestone' | 'marital';
+/** South Indian traditions record sutram and vedam; every community names gotra and family deity its own way. */
+const south = () => currentPack().art === 'south';
+const labelOf = (f: { field: string; label: string }) => (f.field === 'gothram' ? currentPack().labels.gothram : f.field === 'kuladeivam' ? currentPack().labels.kuladeivam : f.label);
 interface Spec { field: FieldName; label: string; kind?: Kind; note?: string; wide?: boolean; list?: string; show?: (p: Person, age: number | null, c: { married: boolean; has: (f: FieldName) => boolean }) => boolean }
 
 const SECTIONS: { title: string; hint?: string; fields: Spec[] }[] = [
@@ -34,16 +38,16 @@ const SECTIONS: { title: string; hint?: string; fields: Spec[] }[] = [
   ] },
   { title: 'Family traditions', hint: 'Fill in what you know. Many families now record a daughter’s gothram of birth as well as her married one: your choice.', fields: [
     { field: 'gothram', label: 'Gothram', list: 'dl-gothram' },
-    { field: 'sutram', label: 'Sutram', list: 'dl-sutram' },
-    { field: 'vedam', label: 'Vedam', list: 'dl-vedam' },
+    { field: 'sutram', label: 'Sutram', list: 'dl-sutram', show: (_p, _a, c) => south() || c.has('sutram') },
+    { field: 'vedam', label: 'Vedam', list: 'dl-vedam', show: (_p, _a, c) => south() || c.has('vedam') },
     { field: 'kuladeivam', label: 'Kuladeivam' },
     { field: 'native_place', label: 'Native place', note: 'Village or agraharam the family comes from', wide: true },
-    { field: 'janma_nakshatram', label: 'Janma nakshatram', kind: 'star', note: 'Tamil month and star of birth. Used for the Tamil birthday reminder.', wide: true },
+    { field: 'janma_nakshatram', label: 'Janma nakshatram', kind: 'star', note: 'Month and star (nakshatra) of birth. Used for the star birthday reminder.', wide: true, show: (_p, _a, c) => currentPack().starBirthday || c.has('janma_nakshatram') },
     { field: 'horoscope', label: 'Horoscope notes', kind: 'textarea', note: 'Rasi, lagnam, jathagam details. Kept to themselves unless they choose otherwise.', wide: true },
-    { field: 'shraddha_tithi', label: 'Shraddham tithi', kind: 'tithi', note: 'Tamil month and tithi of passing, for the yearly shraddham reminder.', wide: true, show: (p) => !p.is_living },
+    { field: 'shraddha_tithi', label: 'Shraddham tithi', kind: 'tithi', note: 'Month and tithi of passing, for the yearly shraddh reminder.', wide: true, show: (p) => !p.is_living },
   ] },
   { title: 'Milestones', hint: 'Dates of ceremonies already held.', fields: [
-    { field: 'upanayanam', label: 'Upanayanam', kind: 'milestone', show: (p) => p.gender !== 'f' },   // a ceremony for boys
+    { field: 'upanayanam', label: 'Upanayanam / Janeu', kind: 'milestone', show: (p, _a, c) => (p.gender !== 'f' && currentPack().festivals.includes('hindu')) || c.has('upanayanam') },   // a ceremony for boys
     // engagement: for living people who aren't married yet (kept visible if already filled in)
     { field: 'engagement', label: 'Engagement', kind: 'milestone', show: (p, _a, c) => (p.is_living && !c.married) || c.has('engagement') },
     { field: 'engaged_to', label: 'Engaged to', note: 'Their name, if they aren’t in the family tree yet.', show: (p, _a, c) => (p.is_living && !c.married) || c.has('engaged_to') },
@@ -176,7 +180,7 @@ export function EditSheet({ id, onClose, draft }: { id: string; onClose: () => v
             <div className="full formsec"><h4>{sec.title}</h4>{sec.hint && <p className="note">{sec.hint}</p>}</div>
             {sec.fields.map((f) => (
               <div key={f.field} className={f.wide ? 'full' : ''}>
-                <div className="lblrow"><label htmlFor={`f-${f.field}`}>{f.label}</label>
+                <div className="lblrow"><label htmlFor={`f-${f.field}`}>{labelOf(f)}</label>
                   <VisSelect value={vis[f.field]} onChange={(v) => setVis({ ...vis, [f.field]: v })} label={f.label} /></div>
                 {input(f)}
                 {f.note && <div className="note">{f.note}</div>}

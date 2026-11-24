@@ -1,4 +1,5 @@
 import type { Family } from './family';
+import { currentPack } from './community';
 import { firstName, fullName } from './format';
 import { unpackStar, unpackTithi } from './panchang';
 import { dayKey, yearDays, type CalDay, type CalEvent } from './calendar';
@@ -40,8 +41,8 @@ export function familyDays(year: number, f: Family, fieldsOf: (id: string) => Fi
         });
       }
       const star = unpackStar(fl.janma_nakshatram?.value);
-      if (star) for (const d of inTamilMonth(days, year, star.month, (x) => x.star === star.star)) {
-        put(d.key, { kind: 'tamil-birthday', title: `${name}’s Tamil birthday`, ids: [p.id], icon: '✨', sub: 'By janma nakshatram' });
+      if (star && currentPack().starBirthday) for (const d of inTamilMonth(days, year, star.month, (x) => x.star === star.star)) {
+        put(d.key, { kind: 'tamil-birthday', title: `${name}’s star birthday`, ids: [p.id], icon: '✨', sub: 'By janma nakshatram' });
       }
     } else {
       if (full(p.death_date)) {

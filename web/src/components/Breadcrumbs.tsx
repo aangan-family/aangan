@@ -29,7 +29,7 @@ if (typeof window !== 'undefined') {
 export function Breadcrumbs({ route }: { route: Route }) {
   const t = useT();
   const { family, snap, isAdmin } = useStore();
-  const { border } = useHeritage();
+  const { border, south } = useHeritage();
   const [, tick] = useState(0);
   useEffect(() => { const f = () => tick((n) => n + 1); addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
   const crumbs = crumbsFor(route, {
@@ -58,7 +58,7 @@ export function Breadcrumbs({ route }: { route: Route }) {
           </li>
         ))}
       </ol>
-      <div className="crumbweave"><WovenBorder kind={border} slim /></div>
+      {south && <div className="crumbweave"><WovenBorder kind={border} slim /></div>}
     </nav>
   );
 }

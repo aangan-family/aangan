@@ -1,3 +1,4 @@
+import { usePack } from '../lib/community';
 import { useEffect, useId, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { Prefs } from '../lib/types';
 import { useStore } from '../lib/store';
@@ -16,11 +17,13 @@ export function useHeritage() {
   const over = useSyncExternalStore(subscribe, () => local);
   const gender = (myId && family.byId.get(myId)?.gender) || '';
   const p = { ...snap.prefs, ...over };
+  // South Indian art (veshti/saree borders, kolam, gopuram, Malayalam/Tamil page names) follows the member's traditions
+  const south = usePack().art === 'south';
   return {
-    gender,
+    gender, south,
     border: borderFor(gender, p.border),
-    scripts: ((p.scripts as ScriptsPref) || 'both') as ScriptsPref,
-    kolam: p.kolam !== false,
+    scripts: (south ? ((p.scripts as ScriptsPref) || 'both') : 'en') as ScriptsPref,
+    kolam: south && p.kolam !== false,
     doors: p.doors !== false,
   };
 }

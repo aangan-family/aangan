@@ -30,3 +30,5 @@ export const PUBLISHABLE_KEY: string = cfg.supabasePublishableKey;
 export const GOOGLE_ID: string = cfg.googleClientId;
 export const VAPID_KEY: string = cfg.vapidPublicKey;
 export const COMMUNITY: string = cfg.community;
+/** false on the free no-domain setup: sign-in is by Google only (email links need your own domain) */
+export const EMAIL_SIGNIN: boolean = (cfg as { emailSignIn?: boolean }).emailSignIn !== false;

@@ -1,5 +1,5 @@
 {
-  "_help": "Your family's settings. The setup guide (docs/SETUP.md) tells you what to put in each line. Nothing here is secret.",
+  "_help": "Your family's settings. The setup guide (docs/SETUP.md) tells you what to put in each line. Nothing here is secret. community: hindi, punjabi, bengali, marathi, gujarati, urdu, tamil, telugu, kannada, malayalam or english.",
   "familyName": "Our Family",
   "appName": "Our Family",
   "familyStoryHint": "Our family began with…",
@@ -18,6 +18,6 @@
   "supabasePublishableKey": "",
   "googleClientId": "",
   "vapidPublicKey": "",
-  "community": "tamil",
-  "menuLanguages": ["en", "ta"]
+  "community": "hindi",
+  "emailSignIn": true
 }

@@ -85,4 +85,5 @@ export function joinRequestMessage(first: string): string {
 }
 
 /** The invitation link for an elder's phone: opens with larger text (and menus in Tamil if asked), then the invitation. */
-export const elderLink = (code: string, tamil = false) => `${siteUrl()}/?elder=1${tamil ? '&ta=1' : ''}#/invite/${code}`;
+/** lang: menus in that language on the elder's phone ('hi', 'ta', 'bn'…; 'en' or empty for English) */
+export const elderLink = (code: string, lang = '') => `${siteUrl()}/?elder=1${lang && lang !== 'en' ? `&lang=${lang}` : ''}#/invite/${code}`;

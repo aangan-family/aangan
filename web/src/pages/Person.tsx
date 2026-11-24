@@ -3,7 +3,7 @@ import { useStore } from '../lib/store';
 import { hostOf, isEngaged, kindOf, lineageOf, siblingsOf } from '../lib/family';
 import { ageFrom, ago, firstName, fmtDate, fmtDay, fullName, yearOf } from '../lib/format';
 import { nextShraddham, nextTamilBirthday, unpackStar, unpackTithi } from '../lib/panchang';
-import { tamilTerm } from '../lib/tamil';
+import { kinTerm, usePack } from '../lib/community';
 import { TRADITION_NOTE, starLabel, tithiLabel, tradition } from '../lib/traditions';
 import { MARITAL_STATUS, MILESTONES, VISIBILITY_LABEL, type FieldName } from '../lib/types';
 import { Avatar, go } from '../components/common';
@@ -41,7 +41,8 @@ export function Person({ id }: { id: string }) {
   const eyebrow = [genNo !== undefined && genNo >= 1 ? `Generation ${genNo}` : '',
     branch && branch !== id ? `${family.byId.get(branch)!.given_name}’s family` : '',
     throughP ? `${firstName(throughP)}’s side` : ''].filter(Boolean).join(' · ');
-  const tamil = myId && myId !== id ? tamilTerm(family, id, myId) : null;
+  const pack = usePack();
+  const term = myId && myId !== id ? kinTerm(family, id, myId, pack) : null;
   const aka = [f.known_as ? `Known as ${f.known_as.value}` : '', p.birth_surname && p.birth_surname !== p.surname ? `Born ${first} ${p.birth_surname}` : ''].filter(Boolean).join(' · ');
   const age = ageFrom(f.birth_date?.value, p.birth_year, p.is_living);
   // joined the tree through a fiancé(e) in the family, not (yet) by marriage
@@ -104,7 +105,7 @@ export function Person({ id }: { id: string }) {
           <button className="tlink" onClick={() => go('related/' + id)}>How are {id === myId ? 'you' : 'they'} related to…</button>
         </div>
         <SuggestCorrection id={id} />
-        {tamil && <div className="tamil">You call {first} <b>{tamil}</b></div>}
+        {term && <div className="tamil">You call {first} <b>{term.word}</b>{term.native && <span className="native" lang={pack.lang} dir={pack.rtl ? 'rtl' : undefined}> {term.native}</span>}</div>}
         {kidSelf && <p className="emptyhint" style={{ marginTop: 14 }}>{consent ? 'You’re under 18, so a parent checks any change before the family sees it.' : 'You’re under 18, so a parent gives consent for you. Until they do, only you and your parents can see your details.'} <a href="#/child">See what’s waiting</a></p>}
         {needsConsent && <p className="emptyhint" style={{ marginTop: 14 }}>{relation === 'self' ? 'Your details are hidden from the family until you agree to the family privacy declaration.' : `${first}’s details stay hidden until you give consent as their parent.`}</p>}
         {manage && !needsConsent && p.is_living && relation === null && !isAdmin && <p className="emptyhint" style={{ marginTop: 14 }}>{snap.joined.includes(id) ? 'You look after this profile.' : `You can add details for ${first} until they join. Others in the family see them only once ${first} joins and agrees.`}</p>}
@@ -138,7 +139,7 @@ export function Person({ id }: { id: string }) {
         const add = (field: FieldName, k: string, v?: string, sub?: string) => { if (v) items.push({ k, v, sub, field }); };
         // gothram & co.: sons and unmarried daughters carry their father's; a married woman her husband's
         const ownOf = (k: FieldName) => (x: string) => fieldsOf(x)[k]?.value || undefined;
-        for (const [k, label] of [['gothram', 'Gothram'], ['sutram', 'Sutram'], ['vedam', 'Vedam'], ['kuladeivam', 'Kuladeivam']] as const) {
+        for (const [k, label] of [['gothram', pack.labels.gothram], ['sutram', 'Sutram'], ['vedam', 'Vedam'], ['kuladeivam', pack.labels.kuladeivam]] as const) {
           const t = tradition(family, id, k, ownOf(k), snap.info?.roots_person_id, snap.info?.[k]);
           if (!t) continue;
           if (t.source === 'own') { add(k, label, t.value!); continue; }
