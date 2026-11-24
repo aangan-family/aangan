@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup help
+    url: https://github.com/aangan-family/aangan/discussions
+    about: Stuck setting up your family's site? Ask in Discussions (never share family details).

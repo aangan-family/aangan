@@ -9,7 +9,8 @@
     "build": "vitest run && tsc --noEmit && vite build && node -e \"if(require('fs').existsSync('dist/demo-data.json')){console.error('demo data leaked into dist');process.exit(1)}\"",
     "build:demo": "tsc --noEmit && VITE_DEMO=1 vite build --outDir dist-demo",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "review-kit": "UPDATE_REVIEW=1 vitest run src/lib/community/review.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

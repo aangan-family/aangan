@@ -2,7 +2,7 @@
 
 Thank you. The most useful help right now:
 
-1. **Family words for your community.** Are they right? Are they the words your family uses at home?
+1. **Family words for your community.** Are they right? Are they the words your family uses at home? Fill in your language's sheet in [docs/review](docs/review/README.md): no coding needed.
 2. **Festivals and calendars** for your community.
 3. **Trying the setup guide** and telling us where you got stuck.
 
@@ -24,8 +24,9 @@ Everything for one community is in `web/src/lib/community/packs.ts`:
 - South Indian packs use `dravidian(…)`: cousins through a parent's same-sex sibling are brothers and sisters; cross-cousins get their own words.
 - Menus are in `web/src/lib/community/menus.ts`.
 - Add or fix a test in `web/src/lib/community.test.ts` (a small made-up family with every kind of relative).
+- Run `cd web && npm run review-kit` so the review sheets in `docs/review/` match (the tests check).
 
-**To add a new community:** copy the closest pack, change the words, add it to `PACKS` and `PACK_LIST`, give it menus, festival groups and a date style, and add it to `COMMUNITIES` in `scripts/check-config.mjs`.
+**To add a new community:** copy the closest pack, change the words, add it to `PACKS` and `PACK_LIST`, give it menus, festival groups and a date style, add it to `COMMUNITIES` in `scripts/lib/config.mjs`, and run `cd web && npm run review-kit` to make its review sheet.
 
 ## Festivals
 

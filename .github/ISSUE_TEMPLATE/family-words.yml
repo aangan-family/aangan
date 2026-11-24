@@ -1,0 +1,35 @@
+name: Family words
+description: Correct or add family words (Chacha, Athai, Mama…) or menu translations for a language.
+title: "Family words: "
+labels: ["family words"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Please write only **words**, never anyone's names, dates or details.
+        The easiest way: fill in your language's sheet from [docs/review](https://github.com/aangan-family/aangan/tree/main/docs/review) and attach it below.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Hindi, Punjabi, Bengali, Marathi, Gujarati, Urdu, Tamil, Telugu, Kannada, Malayalam, Another language]
+    validations: { required: true }
+  - type: input
+    id: where
+    attributes:
+      label: Where and who
+      description: Region, and community if it matters (e.g. "Thanjavur, Iyer", "Lucknow, Muslim", "Jaipur, Marwari").
+  - type: textarea
+    id: words
+    attributes:
+      label: The words
+      description: Attach the filled-in sheet, or list them as "Relationship — the site says … — we say … (in your script too)".
+      placeholder: |
+        Father's younger brother — the site says Chacha — we say Kaka / काका
+    validations: { required: true }
+  - type: checkboxes
+    id: credit
+    attributes:
+      label: Credit
+      options:
+        - label: You may add my GitHub name to the "Reviewed by" table.
